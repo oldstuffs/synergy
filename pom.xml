@@ -42,5 +42,6 @@
   <modules>
     <module>proto</module>
     <module>pulsar</module>
+    <module>client</module>
   </modules>
 </project>

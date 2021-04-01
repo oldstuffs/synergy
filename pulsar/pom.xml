@@ -33,6 +33,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>pulsar</artifactId>
+  <name>Pulsar</name>
   <dependencies>
     <dependency>
       <groupId>org.apache.pulsar</groupId>
