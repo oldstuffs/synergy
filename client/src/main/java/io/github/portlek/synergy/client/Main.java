@@ -26,6 +26,7 @@
 package io.github.portlek.synergy.client;
 
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * a main class of the client that Java runs first.
@@ -35,6 +36,7 @@ public final class Main {
   /**
    * the home.
    */
+  @Nullable
   private static String home;
 
   /**
