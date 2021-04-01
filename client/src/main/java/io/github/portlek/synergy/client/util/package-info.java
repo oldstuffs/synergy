@@ -22,28 +22,7 @@
  * SOFTWARE.
  *
  */
-
-package io.github.portlek.synergy.client;
-
-import io.github.portlek.synergy.client.util.SystemUtils;
-
 /**
- * a main class of the client that Java runs first.
+ * the package that contains utility classes.
  */
-public final class Main {
-
-  /**
-   * ctor.
-   */
-  private Main() {
-  }
-
-  /**
-   * Java runs this method first when the client starts.
-   *
-   * @param args the args to start.
-   */
-  public static void main(final String[] args) {
-    final var home = SystemUtils.getHome();
-  }
-}
+package io.github.portlek.synergy.client.util;

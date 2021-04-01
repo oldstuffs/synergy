@@ -25,6 +25,7 @@
 
 package io.github.portlek.synergy.client;
 
+import io.github.portlek.synergy.client.util.SystemUtils;
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
@@ -35,8 +36,8 @@ final class MainTest {
   void getHome() {
     new Assertion<>(
       "Homes with force/non-force parameter not equals!",
-      Main.getHome(),
-      new IsEqual<>(Main.getHome(true))
+      SystemUtils.getHome(),
+      new IsEqual<>(SystemUtils.getHome(true))
     ).affirm();
   }
 }

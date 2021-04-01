@@ -23,27 +23,64 @@
  *
  */
 
-package io.github.portlek.synergy.client;
+package io.github.portlek.synergy.client.util;
 
-import io.github.portlek.synergy.client.util.SystemUtils;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * a main class of the client that Java runs first.
+ * a class that contains utility methods for the system.
  */
-public final class Main {
+public final class SystemUtils {
+
+  /**
+   * the home.
+   */
+  @Nullable
+  private static String home;
 
   /**
    * ctor.
    */
-  private Main() {
+  private SystemUtils() {
   }
 
   /**
-   * Java runs this method first when the client starts.
+   * obtains the home.
    *
-   * @param args the args to start.
+   * @return home.
    */
-  public static void main(final String[] args) {
-    final var home = SystemUtils.getHome();
+  @NotNull
+  public static String getHome() {
+    return SystemUtils.getHome(false);
+  }
+
+  /**
+   * obtains the home.
+   *
+   * @param force the force to not use lazy initiated value.
+   *
+   * @return home.
+   */
+  @NotNull
+  public static String getHome(final boolean force) {
+    if (force) {
+      return SystemUtils.getHome0();
+    }
+    return SystemUtils.home == null
+      ? SystemUtils.home = SystemUtils.getHome0()
+      : SystemUtils.home;
+  }
+
+  /**
+   * obtains the home.
+   *
+   * @return home.
+   */
+  @NotNull
+  private static String getHome0() {
+    return System.getProperty("synergy_home",
+      System.getProperty("SYNERGY_HOME",
+        System.getProperty("user.dir")));
   }
 }
