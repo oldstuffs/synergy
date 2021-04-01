@@ -33,6 +33,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>ui</artifactId>
+  <name>Ui</name>
   <properties>
     <main.class>io.github.portlek.synergy.ui.Main</main.class>
   </properties>

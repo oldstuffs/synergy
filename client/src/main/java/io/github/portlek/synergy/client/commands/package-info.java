@@ -22,34 +22,7 @@
  * SOFTWARE.
  *
  */
-
-package io.github.portlek.synergy.client;
-
-import io.github.portlek.synergy.client.commands.ClientCommands;
-import io.github.portlek.synergy.client.util.SystemUtils;
-import picocli.CommandLine;
-
 /**
- * a main class of the client that Java runs first.
+ * the package that contains parser for Java program arguments.
  */
-public final class Bootstrap {
-
-  /**
-   * ctor.
-   */
-  private Bootstrap() {
-  }
-
-  /**
-   * Java runs this method first when the client starts.
-   *
-   * @param args the args to start.
-   */
-  public static void main(final String[] args) {
-    final var home = SystemUtils.getHome();
-    final var code = new CommandLine(ClientCommands.class).execute(args);
-    if (code != 0) {
-      return;
-    }
-  }
-}
+package io.github.portlek.synergy.client.commands;

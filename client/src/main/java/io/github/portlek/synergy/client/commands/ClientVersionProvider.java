@@ -23,33 +23,19 @@
  *
  */
 
-package io.github.portlek.synergy.client;
+package io.github.portlek.synergy.client.commands;
 
-import io.github.portlek.synergy.client.commands.ClientCommands;
-import io.github.portlek.synergy.client.util.SystemUtils;
 import picocli.CommandLine;
 
 /**
- * a main class of the client that Java runs first.
+ * a class that provides the client's version.
  */
-public final class Bootstrap {
+public final class ClientVersionProvider implements CommandLine.IVersionProvider {
 
-  /**
-   * ctor.
-   */
-  private Bootstrap() {
-  }
-
-  /**
-   * Java runs this method first when the client starts.
-   *
-   * @param args the args to start.
-   */
-  public static void main(final String[] args) {
-    final var home = SystemUtils.getHome();
-    final var code = new CommandLine(ClientCommands.class).execute(args);
-    if (code != 0) {
-      return;
-    }
+  @Override
+  public String[] getVersion() {
+    return new String[]{
+      "1.0.0-SNAPSHOT"
+    };
   }
 }

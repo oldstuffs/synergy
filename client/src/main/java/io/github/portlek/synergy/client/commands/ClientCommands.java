@@ -23,33 +23,32 @@
  *
  */
 
-package io.github.portlek.synergy.client;
+package io.github.portlek.synergy.client.commands;
 
-import io.github.portlek.synergy.client.commands.ClientCommands;
-import io.github.portlek.synergy.client.util.SystemUtils;
 import picocli.CommandLine;
 
 /**
- * a main class of the client that Java runs first.
+ * a class that that represents client's commands.
  */
-public final class Bootstrap {
+@CommandLine.Command(
+  name = "client",
+  mixinStandardHelpOptions = true,
+  exitCodeOnVersionHelp = -1,
+  exitCodeOnUsageHelp = -1,
+  versionProvider = ClientVersionProvider.class
+)
+public final class ClientCommands implements Runnable {
 
   /**
-   * ctor.
+   * the debug mode.
    */
-  private Bootstrap() {
-  }
+  @CommandLine.Option(names = {"-d", "--debug"},
+    description = "Debug mode. Helpful for troubleshooting.")
+  public static boolean debug = false;
 
-  /**
-   * Java runs this method first when the client starts.
-   *
-   * @param args the args to start.
-   */
-  public static void main(final String[] args) {
-    final var home = SystemUtils.getHome();
-    final var code = new CommandLine(ClientCommands.class).execute(args);
-    if (code != 0) {
-      return;
+  @Override
+  public void run() {
+    if (ClientCommands.debug) {
     }
   }
 }
