@@ -35,7 +35,7 @@ public final class ClientVersionProvider implements CommandLine.IVersionProvider
   @Override
   public String[] getVersion() {
     return new String[]{
-      "1.0.0-SNAPSHOT"
+      "%version%"
     };
   }
 }
