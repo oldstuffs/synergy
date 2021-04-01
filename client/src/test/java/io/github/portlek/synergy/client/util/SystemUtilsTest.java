@@ -23,14 +23,13 @@
  *
  */
 
-package io.github.portlek.synergy.client;
+package io.github.portlek.synergy.client.util;
 
-import io.github.portlek.synergy.client.util.SystemUtils;
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
 import org.llorllale.cactoos.matchers.Assertion;
 
-final class BootstrapTest {
+final class SystemUtilsTest {
 
   @Test
   void getHome() {
