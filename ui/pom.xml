@@ -34,7 +34,7 @@
   </parent>
   <artifactId>ui</artifactId>
   <properties>
-    <main.class>io.github.portlek.synergy.client.Main</main.class>
+    <main.class>io.github.portlek.synergy.ui.Main</main.class>
   </properties>
   <build>
     <plugins>

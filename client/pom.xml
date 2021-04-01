@@ -34,4 +34,7 @@
   </parent>
   <artifactId>client</artifactId>
   <name>Client</name>
+  <properties>
+    <main.class>io.github.portlek.synergy.client.Main</main.class>
+  </properties>
 </project>
