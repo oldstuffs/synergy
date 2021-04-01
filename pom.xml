@@ -39,6 +39,9 @@
   <properties>
     <java.version>11</java.version>
   </properties>
+  <build>
+    <finalName>${project.name}</finalName>
+  </build>
   <modules>
     <module>proto</module>
     <module>pulsar</module>
