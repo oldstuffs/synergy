@@ -25,6 +25,7 @@
 
 package io.github.portlek.synergy.client.commands;
 
+import io.github.portlek.synergy.client.Bootstrap;
 import picocli.CommandLine;
 
 /**
@@ -35,7 +36,7 @@ public final class ClientVersionProvider implements CommandLine.IVersionProvider
   @Override
   public String[] getVersion() {
     return new String[]{
-      "%version%"
+      Bootstrap.VERSION
     };
   }
 }
