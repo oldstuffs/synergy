@@ -61,14 +61,6 @@
       </plugin>
     </plugins>
   </build>
-  <modules>
-    <module>proto</module>
-    <module>pulsar</module>
-    <module>client</module>
-    <module>core</module>
-    <module>minecraft</module>
-    <module>ui</module>
-  </modules>
   <dependencies>
     <dependency>
       <groupId>org.cactoos</groupId>
@@ -77,4 +69,13 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  <modules>
+    <module>proto</module>
+    <module>pulsar</module>
+    <module>client</module>
+    <module>core</module>
+    <module>minecraft</module>
+    <module>ui</module>
+    <module>log</module>
+  </modules>
 </project>

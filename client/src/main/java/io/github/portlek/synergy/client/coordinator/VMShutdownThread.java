@@ -23,33 +23,29 @@
  *
  */
 
-package io.github.portlek.synergy.client.commands;
+package io.github.portlek.synergy.client.coordinator;
 
-import picocli.CommandLine;
+import io.github.portlek.synergy.client.Synergy;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that that represents client's commands.
+ * a thread that shuts down the V.M. if something goes wrong.
  */
-@CommandLine.Command(
-  name = "client",
-  mixinStandardHelpOptions = true,
-  exitCodeOnVersionHelp = -1,
-  exitCodeOnUsageHelp = -1,
-  versionProvider = ClientVersionProvider.class
-)
-public final class ClientCommands implements Runnable {
+@Log4j2
+@RequiredArgsConstructor
+public final class VMShutdownThread extends Thread {
 
   /**
-   * the debug mode.
+   * the synergy.
    */
-  @CommandLine.Option(names = {"-d", "--debug"},
-    description = "Debug mode. Helpful for troubleshooting.")
-  public static boolean debug = false;
+  @NotNull
+  private final Synergy synergy;
 
   @Override
   public void run() {
-    if (ClientCommands.debug) {
-      // @todo #7:5m Enable debug mode for log4j2.
-    }
+    VMShutdownThread.log.info("Shutting down synergy!");
+    this.synergy.onVMShutdown();
   }
 }
