@@ -26,18 +26,24 @@
 package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.util.SystemUtils;
-import org.hamcrest.core.IsEqual;
-import org.junit.jupiter.api.Test;
-import org.llorllale.cactoos.matchers.Assertion;
 
-final class MainTest {
+/**
+ * a main class of the client that Java runs first.
+ */
+public final class Bootstrap {
 
-  @Test
-  void getHome() {
-    new Assertion<>(
-      "Homes with force/non-force parameter not equals!",
-      SystemUtils.getHome(),
-      new IsEqual<>(SystemUtils.getHome(true))
-    ).affirm();
+  /**
+   * ctor.
+   */
+  private Bootstrap() {
+  }
+
+  /**
+   * Java runs this method first when the client starts.
+   *
+   * @param args the args to start.
+   */
+  public static void main(final String[] args) {
+    final var home = SystemUtils.getHome();
   }
 }
