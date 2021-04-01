@@ -49,6 +49,7 @@ public final class ClientCommands implements Runnable {
   @Override
   public void run() {
     if (ClientCommands.debug) {
+      // @todo #7:5m Enable debug mode for log4j2.
     }
   }
 }
