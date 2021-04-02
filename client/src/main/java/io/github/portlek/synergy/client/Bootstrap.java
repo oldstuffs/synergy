@@ -67,9 +67,6 @@ public final class Bootstrap {
    * @param args the args to start.
    */
   public static void main(final String[] args) {
-    final var code = new CommandLine(ClientCommands.class).execute(args);
-    if (code != 0) {
-      return;
-    }
+    new CommandLine(ClientCommands.class).execute(args);
   }
 }
