@@ -27,33 +27,44 @@ package io.github.portlek.synergy.core.netty;
 
 import io.github.portlek.synergy.core.Synergy;
 import io.github.portlek.synergy.proto.Protocol;
-import io.netty.channel.ChannelInitializer;
-import io.netty.channel.socket.nio.NioSocketChannel;
-import io.netty.handler.codec.protobuf.ProtobufDecoder;
-import io.netty.handler.codec.protobuf.ProtobufEncoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
-import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
+import io.github.portlek.synergy.proto.Protocols;
+import io.netty.channel.ChannelHandlerContext;
+import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that represents a synergy's channel initializer.
+ * a class that represents authenticated message handlers.
  */
+@Log4j2
 @RequiredArgsConstructor
-public final class SynergyInitializer extends ChannelInitializer<NioSocketChannel> {
+public final class AuthenticatedMessageHandler extends SimpleChannelInboundHandler<Protocol.AuthenticatedMessage> {
 
   /**
-   * the synergy.
+   * synergy.
    */
   @NotNull
   private final Synergy synergy;
 
   @Override
-  protected void initChannel(final NioSocketChannel ch) {
-    ch.pipeline().addLast("lengthDecoder", new ProtobufVarint32FrameDecoder());
-    ch.pipeline().addLast("protobufDecoder", new ProtobufDecoder(Protocol.AuthenticatedMessage.getDefaultInstance()));
-    ch.pipeline().addLast("lengthPrepender", new ProtobufVarint32LengthFieldPrepender());
-    ch.pipeline().addLast("protobufEncoder", new ProtobufEncoder());
-    ch.pipeline().addLast(new AuthenticatedMessageHandler(this.synergy));
+  public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
+    AuthenticatedMessageHandler.log.error("Caught an exception while listening to a channel (closing connection)",
+      cause);
+    ctx.channel().close();
+  }
+
+  @Override
+  protected void channelRead0(final ChannelHandlerContext ctx, final Protocol.AuthenticatedMessage msg) {
+    if (msg.getVersion() != Protocols.PROTOCOL_VERSION) {
+      AuthenticatedMessageHandler.log.error(String.format("Protocol version mismatch! Expected %d, got %d",
+        Protocols.PROTOCOL_VERSION, msg.getVersion()));
+      AuthenticatedMessageHandler.log.error("Disconnecting due to version mismatch.");
+      ctx.channel().close();
+      return;
+    }
+    if (!this.synergy.onReceive(msg, ctx.channel())) {
+      AuthenticatedMessageHandler.log.error("Message failed");
+    }
   }
 }

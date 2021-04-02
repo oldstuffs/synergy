@@ -29,6 +29,7 @@ import io.github.portlek.synergy.core.Server;
 import io.github.portlek.synergy.core.Synergy;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.netty.Connections;
+import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import java.util.Map;
 import java.util.Objects;
@@ -63,6 +64,11 @@ public final class Coordinator extends Synergy {
   @NotNull
   public Channel getChannel() {
     return Objects.requireNonNull(this.channel, "not initiated");
+  }
+
+  @Override
+  public boolean onReceive(@NotNull final Protocol.AuthenticatedMessage packet, @NotNull final Channel channel) {
+    return true;
   }
 
   @Override

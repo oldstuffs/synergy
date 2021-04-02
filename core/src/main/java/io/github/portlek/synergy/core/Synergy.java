@@ -28,6 +28,8 @@ package io.github.portlek.synergy.core;
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.portlek.synergy.core.coordinator.Coordinator;
 import io.github.portlek.synergy.core.coordinator.VMShutdownThread;
+import io.github.portlek.synergy.proto.Protocol;
+import io.netty.channel.Channel;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -124,6 +126,16 @@ public abstract class Synergy {
   public final <T> CompletableFuture<T> runAsync(@NotNull final Supplier<T> supplier) {
     return CompletableFuture.supplyAsync(supplier, this.asyncExecutor);
   }
+
+  /**
+   * runs when receive a packet.
+   *
+   * @param packet the packet to receive.
+   * @param channel the channel to receive.
+   *
+   * @return {@link false} if something goes wrong.
+   */
+  public abstract boolean onReceive(@NotNull Protocol.AuthenticatedMessage packet, @NotNull Channel channel);
 
   /**
    * runs when the V.M shut down.
