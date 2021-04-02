@@ -26,8 +26,10 @@
 package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.command.ClientCommands;
-import io.github.portlek.synergy.client.util.SystemUtils;
+import io.github.portlek.synergy.client.config.ClientConfig;
+import io.github.portlek.synergy.core.util.SystemUtils;
 import java.nio.file.Path;
+import java.util.Locale;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
@@ -89,6 +91,15 @@ public final class Bootstrap {
    */
   public static void main(final String[] args) {
     System.out.println(Bootstrap.ART);
-    new CommandLine(ClientCommands.class).execute(args);
+    ClientConfig.load();
+    new CommandLine(ClientCommands.class)
+      .registerConverter(Locale.class, s -> {
+        final var split = s.split("_");
+        if (split.length != 2) {
+          return null;
+        }
+        return new Locale(split[0], split[1].toUpperCase(Locale.ROOT));
+      })
+      .execute(args);
   }
 }

@@ -34,12 +34,7 @@
   </parent>
   <artifactId>shiruka</artifactId>
   <name>Shiruka</name>
-  <repositories>
-    <repository>
-      <url>http://repo.shiruka.net/repository/public/</url>
-      <id>shiruka</id>
-    </repository>
-  </repositories>
+  <packaging>pom</packaging>
   <dependencies>
     <dependency>
       <groupId>net.shiruka</groupId>

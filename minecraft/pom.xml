@@ -36,6 +36,20 @@
   <artifactId>minecraft</artifactId>
   <name>Minecraft</name>
   <packaging>pom</packaging>
+  <repositories>
+    <repository>
+      <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
+      <id>velocity</id>
+    </repository>
+    <repository>
+      <url>http://repo.shiruka.net/repository/public/</url>
+      <id>shiruka</id>
+    </repository>
+    <repository>
+      <url>https://papermc.io/repo/repository/maven-public/</url>
+      <id>papermc</id>
+    </repository>
+  </repositories>
   <modules>
     <module>paper</module>
     <module>shiruka</module>

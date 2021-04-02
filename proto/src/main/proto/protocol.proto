@@ -1,0 +1,12 @@
+syntax = "proto3";
+
+package io.github.portlek.synergy.proto;
+
+option java_outer_classname = "Protocol";
+
+message AuthenticatedMessage {
+  string uuid = 1;
+  string hash = 2;
+  bytes payload = 3;
+  uint32 version = 4;
+}
