@@ -33,6 +33,7 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <artifactId>shiruka</artifactId>
+  <name>Shiruka</name>
   <repositories>
     <repository>
       <url>http://repo.shiruka.net/repository/public/</url>

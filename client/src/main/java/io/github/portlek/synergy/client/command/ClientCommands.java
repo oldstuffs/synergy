@@ -39,9 +39,7 @@ import picocli.CommandLine;
   exitCodeOnVersionHelp = -1,
   exitCodeOnUsageHelp = -1,
   versionProvider = ClientVersionProvider.class,
-  subcommands = {
-    CoordinatorCommands.class
-  }
+  showDefaultValues = true
 )
 public final class ClientCommands implements Runnable {
 
@@ -61,5 +59,15 @@ public final class ClientCommands implements Runnable {
         .setLevel(Level.DEBUG);
       context.updateLoggers();
     }
+  }
+
+  /**
+   * runs the coordinator command.
+   */
+  @CommandLine.Command(
+    name = "coordinator"
+  )
+  void coordinator() {
+    this.run();
   }
 }
