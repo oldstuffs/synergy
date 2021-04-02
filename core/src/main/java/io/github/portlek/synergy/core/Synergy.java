@@ -65,6 +65,14 @@ public abstract class Synergy {
     final var synergy = Synergy.synergy = new Coordinator();
     Runtime.getRuntime().addShutdownHook(new VMShutdownThread(synergy));
     synergy.onStart();
+    while (true) {
+      try {
+        synergy.onTick();
+        Thread.sleep(50L);
+      } catch (final InterruptedException e) {
+        e.printStackTrace();
+      }
+    }
   }
 
   /**
@@ -105,10 +113,15 @@ public abstract class Synergy {
   /**
    * runs when the synergy starts.
    */
-  public abstract void onStart();
+  protected abstract void onStart();
+
+  /**
+   * runs every 50ms.
+   */
+  protected abstract void onTick();
 
   /**
    * runs when the V.M shut down.
    */
-  public abstract void onVMShutdown();
+  protected abstract void onVMShutdown();
 }

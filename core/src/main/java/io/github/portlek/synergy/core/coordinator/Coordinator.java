@@ -37,6 +37,10 @@ public final class Coordinator extends Synergy {
   }
 
   @Override
+  protected void onTick() {
+  }
+
+  @Override
   public void onVMShutdown() {
   }
 }
