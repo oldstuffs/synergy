@@ -35,12 +35,6 @@
   <artifactId>paper</artifactId>
   <name>Paper</name>
   <packaging>pom</packaging>
-  <repositories>
-    <repository>
-      <url>https://papermc.io/repo/repository/maven-public/</url>
-      <id>papermc</id>
-    </repository>
-  </repositories>
   <dependencies>
     <dependency>
       <groupId>com.destroystokyo.paper</groupId>

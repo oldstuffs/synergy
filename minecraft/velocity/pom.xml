@@ -34,12 +34,7 @@
   </parent>
   <artifactId>velocity</artifactId>
   <name>Velocity</name>
-  <repositories>
-    <repository>
-      <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
-      <id>velocity</id>
-    </repository>
-  </repositories>
+  <packaging>pom</packaging>
   <dependencies>
     <dependency>
       <groupId>com.velocitypowered</groupId>
