@@ -29,10 +29,11 @@ import com.google.common.util.concurrent.ThreadFactoryBuilder;
 import io.github.portlek.synergy.core.coordinator.Coordinator;
 import io.github.portlek.synergy.core.coordinator.VMShutdownThread;
 import java.util.Objects;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
-import lombok.Getter;
+import java.util.function.Supplier;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,8 +51,7 @@ public abstract class Synergy {
   /**
    * async pool executor.
    */
-  @Getter
-  public final ThreadPoolExecutor asyncExecutor = new ThreadPoolExecutor(
+  private final ThreadPoolExecutor asyncExecutor = new ThreadPoolExecutor(
     0, 4, 60L, TimeUnit.SECONDS,
     new LinkedBlockingQueue<>(),
     new ThreadFactoryBuilder()
@@ -75,6 +75,31 @@ public abstract class Synergy {
   @NotNull
   public static Synergy getInstance() {
     return Objects.requireNonNull(Synergy.instance, "not initiated");
+  }
+
+  /**
+   * runs the given runnable as async.
+   *
+   * @param runnable the runnable to run.
+   *
+   * @return completable future.
+   */
+  @NotNull
+  public final CompletableFuture<Void> runAsync(@NotNull final Runnable runnable) {
+    return CompletableFuture.runAsync(runnable, this.asyncExecutor);
+  }
+
+  /**
+   * runs the given supplier as async.
+   *
+   * @param supplier the supplier to run.
+   * @param <T> type of the value.
+   *
+   * @return completable future.
+   */
+  @NotNull
+  public final <T> CompletableFuture<T> runAsync(@NotNull final Supplier<T> supplier) {
+    return CompletableFuture.supplyAsync(supplier, this.asyncExecutor);
   }
 
   /**
