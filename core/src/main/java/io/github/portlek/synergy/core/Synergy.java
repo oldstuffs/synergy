@@ -43,10 +43,10 @@ import org.jetbrains.annotations.Nullable;
 public abstract class Synergy {
 
   /**
-   * the instance.
+   * the synergy.
    */
   @Nullable
-  private static Synergy instance;
+  private static Synergy synergy;
 
   /**
    * async pool executor.
@@ -62,7 +62,7 @@ public abstract class Synergy {
    * starts and returns a {@link Coordinator} instance.
    */
   public static void coordinator() {
-    final var synergy = Synergy.instance = new Coordinator();
+    final var synergy = Synergy.synergy = new Coordinator();
     Runtime.getRuntime().addShutdownHook(new VMShutdownThread(synergy));
     synergy.onStart();
   }
@@ -73,8 +73,8 @@ public abstract class Synergy {
    * @return instance.
    */
   @NotNull
-  public static Synergy getInstance() {
-    return Objects.requireNonNull(Synergy.instance, "not initiated");
+  public static Synergy getSynergy() {
+    return Objects.requireNonNull(Synergy.synergy, "not initiated");
   }
 
   /**
