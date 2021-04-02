@@ -28,12 +28,14 @@ package io.github.portlek.synergy.client;
 import io.github.portlek.synergy.client.command.ClientCommands;
 import io.github.portlek.synergy.client.util.SystemUtils;
 import java.nio.file.Path;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 /**
  * a main class of the client that Java runs first.
  */
+@Log4j2
 public final class Bootstrap {
 
   /**
@@ -54,6 +56,27 @@ public final class Bootstrap {
   public static final String VERSION = "1.0.0-SNAPSHOT";
 
   /**
+   * the ascii art for Snergy Client text.
+   */
+  private static final String ART = "" +
+    "(  ____ \\|\\     /|( (    /|(  ____ \\(  ____ )(  ____ \\|\\     /|\n" +
+    "| (    \\/( \\   / )|  \\  ( || (    \\/| (    )|| (    \\/( \\   / )\n" +
+    "| (_____  \\ (_) / |   \\ | || (__    | (____)|| |       \\ (_) / \n" +
+    "(_____  )  \\   /  | (\\ \\) ||  __)   |     __)| | ____   \\   /  \n" +
+    "      ) |   ) (   | | \\   || (      | (\\ (   | | \\_  )   ) (   \n" +
+    "/\\____) |   | |   | )  \\  || (____/\\| ) \\ \\__| (___) |   | |   \n" +
+    "\\_______)   \\_/   |/    )_)(_______/|/   \\__/(_______)   \\_/   \n" +
+    "                                                               \n" +
+    " _______  _       _________ _______  _       _________\n" +
+    "(  ____ \\( \\      \\__   __/(  ____ \\( (    /|\\__   __/\n" +
+    "| (    \\/| (         ) (   | (    \\/|  \\  ( |   ) (   \n" +
+    "| |      | |         | |   | (__    |   \\ | |   | |   \n" +
+    "| |      | |         | |   |  __)   | (\\ \\) |   | |   \n" +
+    "| |      | |         | |   | (      | | \\   |   | |   \n" +
+    "| (____/\\| (____/\\___) (___| (____/\\| )  \\  |   | |   \n" +
+    "(_______/(_______/\\_______/(_______/|/    )_)   )_(   ";
+
+  /**
    * ctor.
    */
   private Bootstrap() {
@@ -65,9 +88,7 @@ public final class Bootstrap {
    * @param args the args to start.
    */
   public static void main(final String[] args) {
-    final var code = new CommandLine(ClientCommands.class).execute(args);
-    if (code != 0) {
-      return;
-    }
+    System.out.println(Bootstrap.ART);
+    new CommandLine(ClientCommands.class).execute(args);
   }
 }
