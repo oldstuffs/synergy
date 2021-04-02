@@ -133,7 +133,7 @@ public abstract class Synergy {
    * @param packet the packet to receive.
    * @param channel the channel to receive.
    *
-   * @return {@link false} if something goes wrong.
+   * @return {@code false} if something goes wrong.
    */
   public abstract boolean onReceive(@NotNull Protocol.AuthenticatedMessage packet, @NotNull Channel channel);
 
@@ -144,6 +144,8 @@ public abstract class Synergy {
 
   /**
    * runs when the synergy starts.
+   *
+   * @throws InterruptedException if the current thread was interrupted.
    */
   protected abstract void onStart() throws InterruptedException;
 
