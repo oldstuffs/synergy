@@ -33,6 +33,10 @@ import io.github.portlek.synergy.core.Synergy;
 public final class Coordinator extends Synergy {
 
   @Override
+  public void onStart() {
+  }
+
+  @Override
   public void onVMShutdown() {
   }
 }

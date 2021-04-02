@@ -25,6 +25,7 @@
 
 package io.github.portlek.synergy.client.command;
 
+import io.github.portlek.synergy.core.Synergy;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -69,5 +70,6 @@ public final class ClientCommands implements Runnable {
   )
   void coordinator() {
     this.run();
+    Synergy.coordinator();
   }
 }

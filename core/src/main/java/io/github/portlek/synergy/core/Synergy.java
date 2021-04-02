@@ -25,10 +25,62 @@
 
 package io.github.portlek.synergy.core;
 
+import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.github.portlek.synergy.core.coordinator.Coordinator;
+import io.github.portlek.synergy.core.coordinator.VMShutdownThread;
+import java.util.Objects;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
+import lombok.Getter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 /**
  * an abstract class that represents synergy types.
  */
 public abstract class Synergy {
+
+  /**
+   * the instance.
+   */
+  @Nullable
+  private static Synergy instance;
+
+  /**
+   * async pool executor.
+   */
+  @Getter
+  public final ThreadPoolExecutor asyncExecutor = new ThreadPoolExecutor(
+    0, 4, 60L, TimeUnit.SECONDS,
+    new LinkedBlockingQueue<>(),
+    new ThreadFactoryBuilder()
+      .setNameFormat("Synergy Async Task Handler Thread - %1$d")
+      .build());
+
+  /**
+   * starts and returns a {@link Coordinator} instance.
+   */
+  public static void coordinator() {
+    final var synergy = Synergy.instance = new Coordinator();
+    Runtime.getRuntime().addShutdownHook(new VMShutdownThread(synergy));
+    synergy.onStart();
+  }
+
+  /**
+   * obtains the instance.
+   *
+   * @return instance.
+   */
+  @NotNull
+  public static Synergy getInstance() {
+    return Objects.requireNonNull(Synergy.instance, "not initiated");
+  }
+
+  /**
+   * runs when the synergy starts.
+   */
+  public abstract void onStart();
 
   /**
    * runs when the V.M shut down.
