@@ -85,8 +85,8 @@ public final class Coordinator extends Synergy {
 
   @Override
   public void onStart() throws InterruptedException {
-    Config.load();
-    this.channel = Connections.createConnection(new SynergyInitializer(this), Config.ip, Config.port)
+    CoordinatorConfig.load();
+    this.channel = Connections.createConnection(new SynergyInitializer(this), CoordinatorConfig.ip, CoordinatorConfig.port)
       .await()
       .channel();
   }

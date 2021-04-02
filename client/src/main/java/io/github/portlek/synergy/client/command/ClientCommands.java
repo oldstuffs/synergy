@@ -25,7 +25,9 @@
 
 package io.github.portlek.synergy.client.command;
 
+import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.core.Synergy;
+import java.util.Locale;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -51,6 +53,13 @@ public final class ClientCommands implements Runnable {
     description = "Debug mode. Helpful for troubleshooting.")
   public static boolean debug = false;
 
+  /**
+   * the client language.
+   */
+  @CommandLine.Option(names = {"-l", "--lang"},
+    description = "Client language. Change language of the client.")
+  public static Locale lang = Locale.US;
+
   @Override
   public void run() {
     if (ClientCommands.debug) {
@@ -60,6 +69,8 @@ public final class ClientCommands implements Runnable {
         .setLevel(Level.DEBUG);
       context.updateLoggers();
     }
+    ClientConfig.setLanguage(ClientCommands.lang);
+    ClientConfig.getLanguageBundle();
   }
 
   /**

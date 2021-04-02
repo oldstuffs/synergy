@@ -23,32 +23,63 @@
  *
  */
 
-package io.github.portlek.synergy.core.coordinator;
+package io.github.portlek.synergy.client.config;
 
 import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
+import io.github.portlek.configs.annotation.Ignore;
+import io.github.portlek.configs.configuration.FileConfiguration;
 import io.github.portlek.configs.json.JsonType;
 import io.github.portlek.synergy.core.util.SystemUtils;
+import java.util.Locale;
+import java.util.ResourceBundle;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * a class that represents config of the coordinators.
+ * a class that represents client's config.
  */
-public final class Config implements ConfigHolder {
+public final class ClientConfig implements ConfigHolder {
 
   /**
-   * the ipd.
+   * the configuration.
    */
-  public static String ip = "0.0.0.0";
+  private static FileConfiguration configuration;
 
   /**
-   * the port.
+   * the client's language.
    */
-  public static int port = 25501;
+  private static Locale lang = Locale.US;
+
+  /**
+   * the loader.
+   */
+  private static ConfigLoader loader;
+
+  /**
+   * lazy-init resource bundle.
+   */
+  @Nullable
+  @Ignore
+  private static ResourceBundle resource;
 
   /**
    * ctor.
    */
-  private Config() {
+  private ClientConfig() {
+  }
+
+  /**
+   * obtains the client language's resource bundle.
+   *
+   * @return resource bundle.
+   */
+  @NotNull
+  public static ResourceBundle getLanguageBundle() {
+    if (ClientConfig.resource == null) {
+      ClientConfig.resource = ResourceBundle.getBundle("Synergy", ClientConfig.lang);
+    }
+    return ClientConfig.resource;
   }
 
   /**
@@ -56,11 +87,22 @@ public final class Config implements ConfigHolder {
    */
   public static void load() {
     ConfigLoader.builder()
-      .setConfigHolder(new Config())
+      .setConfigHolder(new ClientConfig())
       .setConfigType(JsonType.get())
-      .setFileName("coordinator")
+      .setFileName("client")
       .setFolder(SystemUtils.getHomePath())
       .build()
       .load(true);
+  }
+
+  /**
+   * sets the client's language.
+   *
+   * @param lang the lang to set.
+   */
+  public static void setLanguage(@NotNull final Locale lang) {
+    ClientConfig.lang = lang;
+    ClientConfig.configuration.set("lang", lang.getLanguage() + "_" + lang.getCountry().toUpperCase(Locale.ROOT));
+    ClientConfig.loader.save();
   }
 }
