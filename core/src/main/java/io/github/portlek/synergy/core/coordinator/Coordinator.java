@@ -26,11 +26,17 @@
 package io.github.portlek.synergy.core.coordinator;
 
 import io.github.portlek.synergy.core.Synergy;
+import lombok.extern.log4j.Log4j2;
 
 /**
  * a class that represents coordinators.
  */
+@Log4j2
 public final class Coordinator extends Synergy {
+
+  @Override
+  public void onVMShutdown() {
+  }
 
   @Override
   public void onStart() {
@@ -38,9 +44,5 @@ public final class Coordinator extends Synergy {
 
   @Override
   protected void onTick() {
-  }
-
-  @Override
-  public void onVMShutdown() {
   }
 }
