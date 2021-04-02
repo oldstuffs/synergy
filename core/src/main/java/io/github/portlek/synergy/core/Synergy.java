@@ -111,6 +111,11 @@ public abstract class Synergy {
   }
 
   /**
+   * runs when the V.M shut down.
+   */
+  public abstract void onVMShutdown();
+
+  /**
    * runs when the synergy starts.
    */
   protected abstract void onStart();
@@ -119,9 +124,4 @@ public abstract class Synergy {
    * runs every 50ms.
    */
   protected abstract void onTick();
-
-  /**
-   * runs when the V.M shut down.
-   */
-  protected abstract void onVMShutdown();
 }
