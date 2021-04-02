@@ -23,20 +23,36 @@
  *
  */
 
-package io.github.portlek.synergy.client.commands;
+package io.github.portlek.synergy.client.command;
 
-import io.github.portlek.synergy.client.Bootstrap;
 import picocli.CommandLine;
 
 /**
- * a class that provides the client's version.
+ * a class that that represents client's commands.
  */
-public final class ClientVersionProvider implements CommandLine.IVersionProvider {
+@CommandLine.Command(
+  name = "client",
+  mixinStandardHelpOptions = true,
+  exitCodeOnVersionHelp = -1,
+  exitCodeOnUsageHelp = -1,
+  versionProvider = ClientVersionProvider.class,
+  subcommands = {
+    CoordinatorCommands.class
+  }
+)
+public final class ClientCommands implements Runnable {
+
+  /**
+   * the debug mode.
+   */
+  @CommandLine.Option(names = {"-d", "--debug"},
+    description = "Debug mode. Helpful for troubleshooting.")
+  public static boolean debug = false;
 
   @Override
-  public String[] getVersion() {
-    return new String[]{
-      Bootstrap.VERSION
-    };
+  public void run() {
+    if (ClientCommands.debug) {
+      // @todo #7:5m Enable debug mode for log4j2.
+    }
   }
 }

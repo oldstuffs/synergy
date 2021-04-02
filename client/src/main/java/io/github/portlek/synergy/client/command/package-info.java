@@ -25,4 +25,4 @@
 /**
  * the package that contains parser for Java program arguments.
  */
-package io.github.portlek.synergy.client.commands;
+package io.github.portlek.synergy.client.command;

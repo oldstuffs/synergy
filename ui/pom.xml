@@ -32,7 +32,9 @@
     <artifactId>synergy</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
+  <groupId>io.github.portlek.synergy</groupId>
   <artifactId>ui</artifactId>
+  <version>1.0.0-SNAPSHOT</version>
   <name>Ui</name>
   <properties>
     <main.class>io.github.portlek.synergy.ui.Main</main.class>

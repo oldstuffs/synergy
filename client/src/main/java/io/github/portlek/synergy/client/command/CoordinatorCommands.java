@@ -23,51 +23,23 @@
  *
  */
 
-package io.github.portlek.synergy.client;
+package io.github.portlek.synergy.client.command;
 
-import io.github.portlek.synergy.client.command.ClientCommands;
-import io.github.portlek.synergy.client.util.SystemUtils;
-import java.nio.file.Path;
-import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
 
 /**
- * a main class of the client that Java runs first.
+ * a class that represents coordinator commands.
  */
-public final class Bootstrap {
+@CommandLine.Command(
+  name = "coordinator",
+  mixinStandardHelpOptions = true,
+  exitCodeOnVersionHelp = -1,
+  exitCodeOnUsageHelp = -1,
+  versionProvider = ClientVersionProvider.class
+)
+public final class CoordinatorCommands implements Runnable {
 
-  /**
-   * the home.
-   */
-  @NotNull
-  public static final String HOME = SystemUtils.getHome();
-
-  /**
-   * the home path.
-   */
-  @NotNull
-  public static final Path HOME_PATH = Path.of(Bootstrap.HOME);
-
-  /**
-   * the synergy client version.
-   */
-  public static final String VERSION = "1.0.0-SNAPSHOT";
-
-  /**
-   * ctor.
-   */
-  private Bootstrap() {
-  }
-
-  /**
-   * Java runs this method first when the client starts.
-   *
-   * @param args the args to start.
-   */
-  public static void main(final String[] args) {
-    final var code = new CommandLine(ClientCommands.class).execute(args);
-    if (code != 0) {
-      return;
-    }
+  @Override
+  public void run() {
   }
 }

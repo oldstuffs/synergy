@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+  <Appenders>
+    <RollingRandomAccessFile name="File" fileName="logs/latest.log" filePattern="logs/%d{yyyy-MM-dd}-%i.log.gz">
+      <PatternLayout pattern="%d{[yyy-MM-dd HH:mm:ss} %level]: %msg%n" charset="UTF-8"/>
+      <Policies>
+        <TimeBasedTriggeringPolicy/>
+        <OnStartupTriggeringPolicy/>
+      </Policies>
+    </RollingRandomAccessFile>
+    <Console name="Console">
+      <PatternLayout pattern="%d{[yyy-MM-dd HH:mm:ss} %level]: %msg%n" charset="UTF-8"/>
+    </Console>
+  </Appenders>
+  <Loggers>
+    <Root level="INFO">
+      <AppenderRef ref="File"/>
+      <AppenderRef ref="Console"/>
+    </Root>
+  </Loggers>
+</Configuration>
