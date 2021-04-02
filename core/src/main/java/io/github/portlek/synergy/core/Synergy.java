@@ -30,6 +30,7 @@ import io.github.portlek.synergy.core.coordinator.Coordinator;
 import io.github.portlek.synergy.core.coordinator.VMShutdownThread;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
@@ -65,10 +66,11 @@ public abstract class Synergy {
     final var synergy = Synergy.synergy = new Coordinator();
     Runtime.getRuntime().addShutdownHook(new VMShutdownThread(synergy));
     synergy.onStart();
+    Executors.newSingleThreadScheduledExecutor()
+      .scheduleAtFixedRate(synergy::onTick, 0L, 50L, TimeUnit.MILLISECONDS);
     while (true) {
       try {
-        synergy.onTick();
-        Thread.sleep(50L);
+        Thread.sleep(5L);
       } catch (final InterruptedException e) {
         e.printStackTrace();
       }
