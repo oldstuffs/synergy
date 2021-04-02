@@ -26,7 +26,7 @@
 package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.command.ClientCommands;
-import io.github.portlek.synergy.client.util.SystemUtils;
+import io.github.portlek.synergy.core.util.SystemUtils;
 import java.nio.file.Path;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;

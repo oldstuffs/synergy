@@ -32,15 +32,19 @@ import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Supplier;
+import lombok.Getter;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
  * an abstract class that represents synergy types.
  */
+@Log4j2
 public abstract class Synergy {
 
   /**
@@ -60,19 +64,28 @@ public abstract class Synergy {
       .build());
 
   /**
+   * the scheduler.
+   */
+  @Getter
+  private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+
+  /**
    * starts and returns a {@link Coordinator} instance.
    */
   public static void coordinator() {
     final var synergy = Synergy.synergy = new Coordinator();
     Runtime.getRuntime().addShutdownHook(new VMShutdownThread(synergy));
-    synergy.onStart();
-    Executors.newSingleThreadScheduledExecutor()
-      .scheduleAtFixedRate(synergy::onTick, 0L, 50L, TimeUnit.MILLISECONDS);
+    try {
+      synergy.onStart();
+    } catch (final InterruptedException e) {
+      return;
+    }
+    synergy.scheduler.scheduleAtFixedRate(synergy::onTick, 0L, 50L, TimeUnit.MILLISECONDS);
     while (true) {
       try {
         Thread.sleep(5L);
       } catch (final InterruptedException e) {
-        e.printStackTrace();
+        Synergy.log.fatal("Caught an exception at bootstrap level while running local coordinator", e);
       }
     }
   }
@@ -120,7 +133,7 @@ public abstract class Synergy {
   /**
    * runs when the synergy starts.
    */
-  protected abstract void onStart();
+  protected abstract void onStart() throws InterruptedException;
 
   /**
    * runs every 50ms.

@@ -25,8 +25,17 @@
 
 package io.github.portlek.synergy.core.coordinator;
 
+import io.github.portlek.synergy.core.Server;
 import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.core.netty.SynergyInitializer;
+import io.github.portlek.synergy.netty.Connections;
+import io.netty.channel.Channel;
+import java.util.Map;
+import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * a class that represents coordinators.
@@ -34,12 +43,46 @@ import lombok.extern.log4j.Log4j2;
 @Log4j2
 public final class Coordinator extends Synergy {
 
-  @Override
-  public void onVMShutdown() {
+  /**
+   * the servers with id.
+   */
+  @NotNull
+  private final Map<String, Server> servers = new ConcurrentHashMap<>();
+
+  /**
+   * the channel.
+   */
+  @Nullable
+  private Channel channel;
+
+  /**
+   * obtains the channel.
+   *
+   * @return channel.
+   */
+  @NotNull
+  public Channel getChannel() {
+    return Objects.requireNonNull(this.channel, "not initiated");
   }
 
   @Override
-  public void onStart() {
+  public void onVMShutdown() {
+    Coordinator.log.info("VM shutting down, shutting down all servers (force)");
+    if (!this.getScheduler().isShutdown()) {
+      this.getScheduler().shutdownNow();
+    }
+    this.servers.values().forEach(Server::close);
+    if (this.channel != null && this.channel.isOpen()) {
+      this.channel.close();
+    }
+  }
+
+  @Override
+  public void onStart() throws InterruptedException {
+    Config.load();
+    this.channel = Connections.createConnection(new SynergyInitializer(this), Config.ip, Config.port)
+      .await()
+      .channel();
   }
 
   @Override

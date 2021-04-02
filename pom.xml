@@ -78,6 +78,7 @@
     <module>ui</module>
     <module>log</module>
     <module>redis</module>
+    <module>netty</module>
   </modules>
   <profiles>
     <profile>

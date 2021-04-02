@@ -33,8 +33,8 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <groupId>io.github.portlek.synergy</groupId>
-  <artifactId>core</artifactId>
-  <name>Core</name>
+  <artifactId>netty</artifactId>
+  <name>Netty</name>
   <dependencies>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
@@ -42,24 +42,9 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>netty</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.portlek</groupId>
-      <artifactId>configs-core</artifactId>
-      <version>5.11.0</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.portlek</groupId>
-      <artifactId>configs-json</artifactId>
-      <version>5.11.0</version>
-    </dependency>
-    <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
-      <version>30.1-jre</version>
+      <groupId>io.netty</groupId>
+      <artifactId>netty-all</artifactId>
+      <version>4.1.63.Final</version>
     </dependency>
   </dependencies>
 </project>

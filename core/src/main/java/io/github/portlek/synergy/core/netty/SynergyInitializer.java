@@ -23,64 +23,27 @@
  *
  */
 
-package io.github.portlek.synergy.client.util;
+package io.github.portlek.synergy.core.netty;
 
+import io.github.portlek.synergy.core.Synergy;
+import io.netty.channel.ChannelInitializer;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
- * a class that contains utility methods for the system.
+ * a class that represents a synergy's channel initializer.
  */
-public final class SystemUtils {
+@RequiredArgsConstructor
+public final class SynergyInitializer extends ChannelInitializer<NioSocketChannel> {
 
   /**
-   * the home.
-   */
-  @Nullable
-  private static String home;
-
-  /**
-   * ctor.
-   */
-  private SystemUtils() {
-  }
-
-  /**
-   * obtains the home.
-   *
-   * @return home.
+   * the synergy.
    */
   @NotNull
-  public static String getHome() {
-    return SystemUtils.getHome(false);
-  }
+  private final Synergy synergy;
 
-  /**
-   * obtains the home.
-   *
-   * @param force the force to not use lazy initiated value.
-   *
-   * @return home.
-   */
-  @NotNull
-  public static String getHome(final boolean force) {
-    if (force) {
-      return SystemUtils.getHome0();
-    }
-    return SystemUtils.home == null
-      ? SystemUtils.home = SystemUtils.getHome0()
-      : SystemUtils.home;
-  }
-
-  /**
-   * obtains the home.
-   *
-   * @return home.
-   */
-  @NotNull
-  private static String getHome0() {
-    return System.getProperty("synergy_home",
-      System.getProperty("SYNERGY_HOME",
-        System.getProperty("user.dir")));
+  @Override
+  protected void initChannel(final NioSocketChannel ch) {
   }
 }
