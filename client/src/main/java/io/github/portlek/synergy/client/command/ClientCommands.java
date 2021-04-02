@@ -25,6 +25,9 @@
 
 package io.github.portlek.synergy.client.command;
 
+import org.apache.logging.log4j.Level;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.core.LoggerContext;
 import picocli.CommandLine;
 
 /**
@@ -52,7 +55,11 @@ public final class ClientCommands implements Runnable {
   @Override
   public void run() {
     if (ClientCommands.debug) {
-      // @todo #7:5m Enable debug mode for log4j2.
+      final var context = (LoggerContext) LogManager.getContext(false);
+      context.getConfiguration()
+        .getLoggerConfig(LogManager.ROOT_LOGGER_NAME)
+        .setLevel(Level.DEBUG);
+      context.updateLoggers();
     }
   }
 }
