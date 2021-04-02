@@ -23,7 +23,7 @@
  *
  */
 
-package io.github.portlek.synergy.client.util;
+package io.github.portlek.synergy.core.util;
 
 import org.hamcrest.core.IsEqual;
 import org.junit.jupiter.api.Test;
