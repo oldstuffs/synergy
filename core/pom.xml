@@ -35,4 +35,11 @@
   <groupId>io.github.portlek.synergy</groupId>
   <artifactId>core</artifactId>
   <name>Core</name>
+  <dependencies>
+    <dependency>
+      <groupId>io.github.portlek.synergy</groupId>
+      <artifactId>log</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
 </project>

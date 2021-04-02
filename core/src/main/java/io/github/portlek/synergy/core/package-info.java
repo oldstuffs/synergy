@@ -22,17 +22,7 @@
  * SOFTWARE.
  *
  */
-
-package io.github.portlek.synergy.client.coordinator;
-
-import io.github.portlek.synergy.client.Synergy;
-
 /**
- * a class that represents coordinators.
+ * the package that contains core classes.
  */
-public final class Coordinator extends Synergy {
-
-  @Override
-  public void onVMShutdown() {
-  }
-}
+package io.github.portlek.synergy.core;

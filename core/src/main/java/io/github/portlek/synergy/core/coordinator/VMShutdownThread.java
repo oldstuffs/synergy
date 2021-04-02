@@ -23,9 +23,9 @@
  *
  */
 
-package io.github.portlek.synergy.client.coordinator;
+package io.github.portlek.synergy.core.coordinator;
 
-import io.github.portlek.synergy.client.Synergy;
+import io.github.portlek.synergy.core.Synergy;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;

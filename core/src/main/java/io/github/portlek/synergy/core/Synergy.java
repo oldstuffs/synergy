@@ -23,7 +23,7 @@
  *
  */
 
-package io.github.portlek.synergy.client;
+package io.github.portlek.synergy.core;
 
 /**
  * an abstract class that represents synergy types.
