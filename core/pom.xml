@@ -47,6 +47,11 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
+      <groupId>io.github.portlek.synergy</groupId>
+      <artifactId>proto</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+    <dependency>
       <groupId>io.github.portlek</groupId>
       <artifactId>configs-core</artifactId>
       <version>5.11.0</version>

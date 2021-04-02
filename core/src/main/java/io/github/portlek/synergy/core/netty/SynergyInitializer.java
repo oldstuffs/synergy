@@ -26,8 +26,13 @@
 package io.github.portlek.synergy.core.netty;
 
 import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import io.netty.handler.codec.protobuf.ProtobufDecoder;
+import io.netty.handler.codec.protobuf.ProtobufEncoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32FrameDecoder;
+import io.netty.handler.codec.protobuf.ProtobufVarint32LengthFieldPrepender;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
@@ -45,5 +50,10 @@ public final class SynergyInitializer extends ChannelInitializer<NioSocketChanne
 
   @Override
   protected void initChannel(final NioSocketChannel ch) {
+    ch.pipeline().addLast("lengthDecoder", new ProtobufVarint32FrameDecoder());
+    ch.pipeline().addLast("protobufDecoder", new ProtobufDecoder(Protocol.AuthenticatedMessage.getDefaultInstance()));
+    ch.pipeline().addLast("lengthPrepender", new ProtobufVarint32LengthFieldPrepender());
+    ch.pipeline().addLast("protobufEncoder", new ProtobufEncoder());
+    ch.pipeline().addLast(new AuthenticatedMessageHandler());
   }
 }
