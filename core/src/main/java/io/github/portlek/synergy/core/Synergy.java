@@ -33,6 +33,7 @@ import io.github.portlek.synergy.core.network.SynergyNetwork;
 import io.github.portlek.synergy.core.util.VMShutdownThread;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -151,6 +152,13 @@ public abstract class Synergy {
    * runs when the synergy stops.
    */
   public abstract void onClose() throws InterruptedException;
+
+  /**
+   * runs on initialization the channel.
+   *
+   * @param channel the channel to init.
+   */
+  public abstract void onInit(@NotNull NioSocketChannel channel);
 
   /**
    * runs when receive a packet.

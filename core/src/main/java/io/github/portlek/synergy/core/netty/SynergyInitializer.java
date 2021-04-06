@@ -56,5 +56,6 @@ public final class SynergyInitializer extends ChannelInitializer<NioSocketChanne
       .addLast("lengthPrepended", new ProtobufVarint32LengthFieldPrepender())
       .addLast("protobufEncoder", new ProtobufEncoder())
       .addLast(new AuthenticatedMessageHandler(this.synergy));
+    this.synergy.onInit(ch);
   }
 }

@@ -32,6 +32,7 @@ import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -89,6 +90,13 @@ public final class SynergyNetwork extends Synergy implements Network {
       this.onStart();
     } catch (final InterruptedException ignored) {
     }
+  }
+
+  @Override
+  public void onInit(@NotNull final NioSocketChannel channel) {
+    final var address = channel.remoteAddress();
+    SynergyNetwork.log.info(String.format("Incoming connection from %s:%s",
+      address.getAddress().getHostAddress(), address.getPort()));
   }
 
   @Override

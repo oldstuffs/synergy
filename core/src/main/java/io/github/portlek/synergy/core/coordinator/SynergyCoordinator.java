@@ -32,6 +32,8 @@ import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -82,13 +84,18 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   public void onClose() throws InterruptedException {
     this.running.set(false);
     this.getScheduler().shutdown();
-    SynergyCoordinator.log.info("Closed!");
+    SynergyCoordinator.log.info("Connection closed!");
     SynergyCoordinator.log.info("Restarting in 5 seconds.");
     Thread.sleep(1000L * 5L);
     try {
       this.onStart();
     } catch (final InterruptedException ignored) {
     }
+  }
+
+  @Override
+  public void onInit(@NotNull final NioSocketChannel channel) {
+    // ignored.
   }
 
   @Override
@@ -121,6 +128,8 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
       return;
     }
     this.channel = future.channel();
+    this.channel.closeFuture()
+      .addListener((ChannelFutureListener) ftr -> SynergyCoordinator.this.onClose());
     SynergyCoordinator.log.info("Connected.");
     this.running.set(true);
   }

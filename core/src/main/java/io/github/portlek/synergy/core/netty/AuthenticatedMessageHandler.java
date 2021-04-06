@@ -49,8 +49,6 @@ public final class AuthenticatedMessageHandler extends SimpleChannelInboundHandl
 
   @Override
   public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-    AuthenticatedMessageHandler.log.error("Caught an exception while listening to a channel (closing connection)",
-      cause);
     ctx.channel().close();
   }
 
