@@ -25,38 +25,27 @@
 
 package io.github.portlek.synergy.core;
 
-import java.io.Closeable;
+import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine servers.
+ * an interface to determine coordinators.
  */
-public interface Server extends Closeable {
-
-  @Override
-  void close();
+public interface Coordinator {
 
   /**
-   * obtains the coordinator.
+   * obtains the id.
    *
-   * @return coordinator.
+   * @return id.
    */
   @NotNull
-  Coordinator getCoordinator();
+  String getId();
 
   /**
-   * obtains the server id.
+   * obtains the servers.
    *
-   * @return server id.
+   * @return servers.
    */
   @NotNull
-  String getServerId();
-
-  /**
-   * obtains the server name.
-   *
-   * @return server name.
-   */
-  @NotNull
-  String getServerName();
+  Map<String, Server> getServers();
 }

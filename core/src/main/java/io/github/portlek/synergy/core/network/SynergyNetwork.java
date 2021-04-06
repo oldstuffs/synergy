@@ -23,9 +23,10 @@
  *
  */
 
-package io.github.portlek.synergy.core.coordinator;
+package io.github.portlek.synergy.core.network;
 
-import io.github.portlek.synergy.core.Server;
+import io.github.portlek.synergy.core.Coordinator;
+import io.github.portlek.synergy.core.Network;
 import io.github.portlek.synergy.core.Synergy;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.netty.Connections;
@@ -34,21 +35,32 @@ import io.netty.channel.Channel;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * a class that represents coordinators.
+ * a class that represents networks.
  */
 @Log4j2
-public final class Coordinator extends Synergy {
+@RequiredArgsConstructor
+public final class SynergyNetwork extends Synergy implements Network {
 
   /**
-   * the servers with id.
+   * the coordinators with id.
    */
   @NotNull
-  private final Map<String, Server> servers = new ConcurrentHashMap<>();
+  @Getter
+  private final Map<String, Coordinator> coordinators = new ConcurrentHashMap<>();
+
+  /**
+   * the id.
+   */
+  @NotNull
+  @Getter
+  private final String id;
 
   /**
    * the channel.
@@ -70,8 +82,8 @@ public final class Coordinator extends Synergy {
   public void onClose() throws InterruptedException {
     this.running.set(false);
     this.getScheduler().shutdown();
-    Coordinator.log.info("Closed!");
-    Coordinator.log.info("Restarting in 5 seconds.");
+    SynergyNetwork.log.info("Closed!");
+    SynergyNetwork.log.info("Restarting in 5 seconds.");
     Thread.sleep(1000L * 5L);
     try {
       this.onStart();
@@ -86,11 +98,12 @@ public final class Coordinator extends Synergy {
 
   @Override
   public void onVMShutdown() {
-    Coordinator.log.info("VM shutting down, shutting down all servers (force)");
+    SynergyNetwork.log.info("VM shutting down, shutting down all servers (force)");
     if (!this.getScheduler().isShutdown()) {
       this.getScheduler().shutdownNow();
     }
-    this.servers.values().forEach(Server::close);
+    this.coordinators.values().forEach(coordinator -> {
+    });
     if (this.channel != null && this.channel.isOpen()) {
       this.channel.close();
     }
@@ -98,14 +111,12 @@ public final class Coordinator extends Synergy {
 
   @Override
   public void onStart() throws InterruptedException {
-    Coordinator.log.info("Coordinator is starting.");
-    Coordinator.log.debug("Config is loading.");
-    CoordinatorConfig.load();
-    final var ip = CoordinatorConfig.ip;
-    final var port = CoordinatorConfig.port;
-    Coordinator.log.info(String.format("Trying to connect network at %s:%s", ip, port));
+    SynergyNetwork.log.info("Network is starting.");
+    final var ip = NetworkConfig.ip;
+    final var port = NetworkConfig.port;
+    SynergyNetwork.log.info(String.format("Trying to bind on %s:%s", ip, port));
     final var initializer = new SynergyInitializer(this);
-    final var future = Connections.createConnection(initializer, ip, port)
+    final var future = Connections.bind(initializer, ip, port)
       .await();
     if (!future.isSuccess()) {
       this.onClose();
@@ -124,6 +135,6 @@ public final class Coordinator extends Synergy {
    * syncs with the network.
    */
   private void sync() {
-    Coordinator.log.info("Sync.");
+    SynergyNetwork.log.info("Sync.");
   }
 }

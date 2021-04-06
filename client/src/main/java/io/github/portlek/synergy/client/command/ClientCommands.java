@@ -75,12 +75,35 @@ public final class ClientCommands implements Runnable {
 
   /**
    * runs the coordinator command.
+   *
+   * @param id the id to run.
+   * @param ip the ip to run.
+   * @param port the port to run.
    */
   @CommandLine.Command(
     name = "coordinator"
   )
-  void coordinator() {
+  void coordinator(@CommandLine.Option(names = "--id", defaultValue = "null") final String id,
+                   @CommandLine.Option(names = "--ip", defaultValue = "null") final String ip,
+                   @CommandLine.Option(names = "--port", defaultValue = "-1") final int port) {
     this.run();
-    Synergy.coordinator();
+    Synergy.coordinator(id, ip, port);
+  }
+
+  /**
+   * runs the network command.
+   *
+   * @param id the id to run.
+   * @param ip the ip to run.
+   * @param port the port to run.
+   */
+  @CommandLine.Command(
+    name = "network"
+  )
+  void network(@CommandLine.Option(names = "--id", defaultValue = "null") final String id,
+               @CommandLine.Option(names = "--ip", defaultValue = "null") final String ip,
+               @CommandLine.Option(names = "--port", defaultValue = "-1") final int port) {
+    this.run();
+    Synergy.network(id, ip, port);
   }
 }

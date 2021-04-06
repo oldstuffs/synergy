@@ -26,8 +26,11 @@
 package io.github.portlek.synergy.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.github.portlek.synergy.core.coordinator.Coordinator;
-import io.github.portlek.synergy.core.coordinator.VMShutdownThread;
+import io.github.portlek.synergy.core.coordinator.CoordinatorConfig;
+import io.github.portlek.synergy.core.coordinator.SynergyCoordinator;
+import io.github.portlek.synergy.core.network.NetworkConfig;
+import io.github.portlek.synergy.core.network.SynergyNetwork;
+import io.github.portlek.synergy.core.util.VMShutdownThread;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import java.util.Objects;
@@ -49,12 +52,6 @@ import org.jetbrains.annotations.Nullable;
  */
 @Log4j2
 public abstract class Synergy {
-
-  /**
-   * the shut down thread.
-   */
-  @Nullable
-  private static VMShutdownThread shutdownThread;
 
   /**
    * the synergy.
@@ -84,26 +81,22 @@ public abstract class Synergy {
   private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
   /**
-   * starts and returns a {@link Coordinator} instance.
+   * the shut down thread.
    */
-  public static void coordinator() {
-    final var runtime = Runtime.getRuntime();
-    if (Synergy.shutdownThread != null) {
-      runtime.removeShutdownHook(Synergy.shutdownThread);
-      Synergy.shutdownThread.interrupt();
-    }
-    final var synergy = Synergy.synergy = new Coordinator();
-    Synergy.shutdownThread = new VMShutdownThread(synergy);
-    runtime.addShutdownHook(Synergy.shutdownThread);
-    synergy.scheduler.scheduleAtFixedRate(() -> {
-      if (synergy.running.get()) {
-        synergy.onTick();
-      }
-    }, 0L, 50L, TimeUnit.MILLISECONDS);
-    try {
-      synergy.onStart();
-    } catch (final InterruptedException ignored) {
-    }
+  @Nullable
+  private VMShutdownThread shutdownThread;
+
+  /**
+   * starts a {@link SynergyCoordinator} instance.
+   *
+   * @param id the id to start.
+   * @param ip the ip to connect.
+   * @param port the port to connect.
+   */
+  public static void coordinator(@NotNull final String id, @NotNull final String ip, final int port) {
+    CoordinatorConfig.load(id, ip, port);
+    (Synergy.synergy = new SynergyCoordinator(CoordinatorConfig.id))
+      .start();
   }
 
   /**
@@ -114,6 +107,19 @@ public abstract class Synergy {
   @NotNull
   public static Synergy getSynergy() {
     return Objects.requireNonNull(Synergy.synergy, "not initiated");
+  }
+
+  /**
+   * starts a {@link SynergyNetwork} instance.
+   *
+   * @param id the id to start.
+   * @param ip the ip to bind.
+   * @param port the port to bind.
+   */
+  public static void network(@NotNull final String id, @NotNull final String ip, final int port) {
+    NetworkConfig.load(id, ip, port);
+    (Synergy.synergy = new SynergyNetwork(CoordinatorConfig.id))
+      .start();
   }
 
   /**
@@ -173,4 +179,25 @@ public abstract class Synergy {
    * runs only when {@link #running} is {@code true}.
    */
   protected abstract void onTick();
+
+  /**
+   * starts the synergy.
+   */
+  private void start() {
+    final var runtime = Runtime.getRuntime();
+    if (this.shutdownThread != null) {
+      runtime.removeShutdownHook(this.shutdownThread);
+      this.shutdownThread.interrupt();
+    }
+    runtime.addShutdownHook(this.shutdownThread = new VMShutdownThread(this));
+    this.scheduler.scheduleAtFixedRate(() -> {
+      if (this.running.get()) {
+        this.onTick();
+      }
+    }, 0L, 50L, TimeUnit.MILLISECONDS);
+    try {
+      this.onStart();
+    } catch (final InterruptedException ignored) {
+    }
+  }
 }

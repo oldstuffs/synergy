@@ -26,10 +26,12 @@
 package io.github.portlek.synergy.netty;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
+import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
@@ -47,17 +49,37 @@ public final class Connections {
   }
 
   /**
-   * creates connections.
+   * binds to the given ip and port.
+   *
+   * @param initializer the initializer to bind.
+   * @param ip the ip to bind.
+   * @param port the port to bind.
+   *
+   * @return channel future.
+   */
+  @NotNull
+  public static ChannelFuture bind(@NotNull final ChannelInitializer<NioSocketChannel> initializer,
+                                   @NotNull final String ip, final int port) {
+    return new ServerBootstrap()
+      .channel(NioServerSocketChannel.class)
+      .childHandler(initializer)
+      .option(ChannelOption.SO_BACKLOG, 128)
+      .childOption(ChannelOption.SO_KEEPALIVE, true)
+      .bind(ip, port);
+  }
+
+  /**
+   * connects to the given ip and port.
    *
    * @param initializer the initializer to connect.
    * @param ip the ip to connect.
    * @param port the port to connect.
    *
-   * @return a newly created connection.
+   * @return channel future.
    */
   @NotNull
-  public static ChannelFuture createConnection(@NotNull final ChannelInitializer<NioSocketChannel> initializer,
-                                               @NotNull final String ip, final int port) {
+  public static ChannelFuture connect(@NotNull final ChannelInitializer<NioSocketChannel> initializer,
+                                      @NotNull final String ip, final int port) {
     return new Bootstrap()
       .group(new NioEventLoopGroup())
       .channel(NioSocketChannel.class)

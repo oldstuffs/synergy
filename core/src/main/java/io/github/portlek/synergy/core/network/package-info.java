@@ -22,30 +22,7 @@
  * SOFTWARE.
  *
  */
-
-package io.github.portlek.synergy.core.coordinator;
-
-import io.github.portlek.synergy.core.Synergy;
-import lombok.RequiredArgsConstructor;
-import lombok.extern.log4j.Log4j2;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * a thread that shuts down the V.M. if something goes wrong.
+ * the package that contains network files.
  */
-@Log4j2
-@RequiredArgsConstructor
-public final class VMShutdownThread extends Thread {
-
-  /**
-   * the synergy.
-   */
-  @NotNull
-  private final Synergy synergy;
-
-  @Override
-  public void run() {
-    VMShutdownThread.log.info("Shutting down synergy!");
-    this.synergy.onVMShutdown();
-  }
-}
+package io.github.portlek.synergy.core.network;
