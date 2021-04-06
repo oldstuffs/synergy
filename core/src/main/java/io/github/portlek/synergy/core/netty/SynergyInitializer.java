@@ -50,10 +50,11 @@ public final class SynergyInitializer extends ChannelInitializer<NioSocketChanne
 
   @Override
   protected void initChannel(final NioSocketChannel ch) {
-    ch.pipeline().addLast("lengthDecoder", new ProtobufVarint32FrameDecoder());
-    ch.pipeline().addLast("protobufDecoder", new ProtobufDecoder(Protocol.AuthenticatedMessage.getDefaultInstance()));
-    ch.pipeline().addLast("lengthPrepended", new ProtobufVarint32LengthFieldPrepender());
-    ch.pipeline().addLast("protobufEncoder", new ProtobufEncoder());
-    ch.pipeline().addLast(new AuthenticatedMessageHandler(this.synergy));
+    ch.pipeline()
+      .addLast("lengthDecoder", new ProtobufVarint32FrameDecoder())
+      .addLast("protobufDecoder", new ProtobufDecoder(Protocol.AuthenticatedMessage.getDefaultInstance()))
+      .addLast("lengthPrepended", new ProtobufVarint32LengthFieldPrepender())
+      .addLast("protobufEncoder", new ProtobufEncoder())
+      .addLast(new AuthenticatedMessageHandler(this.synergy));
   }
 }

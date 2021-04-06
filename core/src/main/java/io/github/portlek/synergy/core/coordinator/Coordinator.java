@@ -31,8 +31,6 @@ import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
-import io.netty.channel.ChannelFuture;
-import io.netty.channel.ChannelFutureListener;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -69,6 +67,19 @@ public final class Coordinator extends Synergy {
   }
 
   @Override
+  public void onClose() throws InterruptedException {
+    this.running.set(false);
+    this.getScheduler().shutdown();
+    Coordinator.log.info("Closed!");
+    Coordinator.log.info("Restarting in 5 seconds.");
+    Thread.sleep(1000L * 5L);
+    try {
+      this.onStart();
+    } catch (final InterruptedException ignored) {
+    }
+  }
+
+  @Override
   public boolean onReceive(@NotNull final Protocol.AuthenticatedMessage packet, @NotNull final Channel channel) {
     return true;
   }
@@ -86,22 +97,33 @@ public final class Coordinator extends Synergy {
   }
 
   @Override
-  protected void onClose(@NotNull final ChannelFuture future) {
-    Coordinator.log.info("Coordinator closed!");
-  }
-
-  @Override
   public void onStart() throws InterruptedException {
+    Coordinator.log.info("Coordinator is starting.");
+    Coordinator.log.debug("Config is loading.");
     CoordinatorConfig.load();
+    final var ip = CoordinatorConfig.ip;
+    final var port = CoordinatorConfig.port;
+    Coordinator.log.info(String.format("Trying to connect network at %s:%s", ip, port));
     final var initializer = new SynergyInitializer(this);
-    this.channel = Connections.createConnection(initializer, CoordinatorConfig.ip, CoordinatorConfig.port)
-      .await()
-      .channel();
-    this.channel.closeFuture()
-      .addListener((ChannelFutureListener) this::onClose);
+    final var future = Connections.createConnection(initializer, ip, port)
+      .await();
+    if (!future.isSuccess()) {
+      this.onClose();
+      return;
+    }
+    this.channel = future.channel();
+    this.running.set(true);
   }
 
   @Override
   protected void onTick() {
+    this.sync();
+  }
+
+  /**
+   * syncs with the network.
+   */
+  private void sync() {
+    Coordinator.log.info("Sync.");
   }
 }

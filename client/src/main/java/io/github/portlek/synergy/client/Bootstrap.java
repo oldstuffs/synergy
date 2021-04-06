@@ -101,5 +101,12 @@ public final class Bootstrap {
         return new Locale(split[0], split[1].toUpperCase(Locale.ROOT));
       })
       .execute(args);
+    while (true) {
+      try {
+        Thread.sleep(5L);
+      } catch (final InterruptedException e) {
+        Bootstrap.log.fatal("Caught an exception at bootstrap level", e);
+      }
+    }
   }
 }
