@@ -31,6 +31,8 @@ import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
+import io.netty.channel.ChannelFutureListener;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -84,10 +86,19 @@ public final class Coordinator extends Synergy {
   }
 
   @Override
+  protected void onClose(@NotNull final ChannelFuture future) {
+    Coordinator.log.info("Coordinator closed!");
+  }
+
+  @Override
   public void onStart() throws InterruptedException {
     CoordinatorConfig.load();
-    this.channel = Connections.createConnection(new SynergyInitializer(this), CoordinatorConfig.ip,
-      CoordinatorConfig.port).await().channel();
+    final var initializer = new SynergyInitializer(this);
+    this.channel = Connections.createConnection(initializer, CoordinatorConfig.ip, CoordinatorConfig.port)
+      .await()
+      .channel();
+    this.channel.closeFuture()
+      .addListener((ChannelFutureListener) this::onClose);
   }
 
   @Override
