@@ -1,0 +1,17 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration name="Start the Network" default="false" type="Application" factoryName="Application">
+    <option name="MAIN_CLASS_NAME" value="io.github.portlek.synergy.client.Bootstrap"/>
+    <module name="client"/>
+    <option name="PROGRAM_PARAMETERS" value="network"/>
+    <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/client/target"/>
+    <extension name="coverage">
+      <pattern>
+        <option name="PATTERN" value="io.github.portlek.synergy.core.util.*"/>
+        <option name="ENABLED" value="true"/>
+      </pattern>
+    </extension>
+    <method v="2">
+      <option name="Make" enabled="true"/>
+    </method>
+  </configuration>
+</component>
