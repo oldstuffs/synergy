@@ -114,8 +114,7 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
     final var ip = CoordinatorConfig.ip;
     final var port = CoordinatorConfig.port;
     SynergyCoordinator.log.info(String.format("Trying to connect network at %s:%s", ip, port));
-    final var initializer = new SynergyInitializer(this);
-    final var future = Connections.connect(initializer, ip, port)
+    final var future = Connections.connect(new SynergyInitializer(this), ip, port)
       .await();
     if (!future.isSuccess()) {
       this.onClose();

@@ -115,8 +115,7 @@ public final class SynergyNetwork extends Synergy implements Network {
     final var ip = NetworkConfig.ip;
     final var port = NetworkConfig.port;
     SynergyNetwork.log.info(String.format("Trying to bind on %s:%s", ip, port));
-    final var initializer = new SynergyInitializer(this);
-    final var future = Connections.bind(initializer, ip, port)
+    final var future = Connections.bind(new SynergyInitializer(this), ip, port)
       .await();
     if (!future.isSuccess()) {
       this.onClose();
