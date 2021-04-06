@@ -90,54 +90,27 @@ public final class NetworkConfig implements ConfigHolder {
       : id;
     if (!NetworkConfig.id.equals(finalId)) {
       saveNeeded = true;
-      NetworkConfig.setId(finalId);
+      NetworkConfig.id = finalId;
+      NetworkConfig.section.set("id", finalId);
     }
     final var finalIp = ip.equals("null")
       ? NetworkConfig.ip
       : ip;
     if (!NetworkConfig.ip.equals(finalIp)) {
       saveNeeded = true;
-      NetworkConfig.setIp(finalIp);
+      NetworkConfig.ip = finalIp;
+      NetworkConfig.section.set("ip", finalIp);
     }
     final var finalPort = port == -1
       ? NetworkConfig.port
       : port;
     if (NetworkConfig.port != finalPort) {
       saveNeeded = true;
-      NetworkConfig.setPort(finalPort);
+      NetworkConfig.port = finalPort;
+      NetworkConfig.section.set("port", finalPort);
     }
     if (saveNeeded) {
       NetworkConfig.loader.save();
     }
-  }
-
-  /**
-   * sets the id.
-   *
-   * @param id the id to set.
-   */
-  public static void setId(@NotNull final String id) {
-    NetworkConfig.id = id;
-    NetworkConfig.section.set("id", id);
-  }
-
-  /**
-   * sets the ip.
-   *
-   * @param ip the ip to set.
-   */
-  public static void setIp(@NotNull final String ip) {
-    NetworkConfig.ip = ip;
-    NetworkConfig.section.set("ip", ip);
-  }
-
-  /**
-   * sets the port.
-   *
-   * @param port the port to set.
-   */
-  public static void setPort(final int port) {
-    NetworkConfig.port = port;
-    NetworkConfig.section.set("port", port);
   }
 }

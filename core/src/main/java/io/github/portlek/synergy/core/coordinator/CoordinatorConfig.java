@@ -90,54 +90,27 @@ public final class CoordinatorConfig implements ConfigHolder {
       : id;
     if (!CoordinatorConfig.id.equals(finalId)) {
       saveNeeded = true;
-      CoordinatorConfig.setId(finalId);
+      CoordinatorConfig.id = finalId;
+      CoordinatorConfig.section.set("id", finalId);
     }
     final var finalIp = ip.equals("null")
       ? CoordinatorConfig.ip
       : ip;
     if (!CoordinatorConfig.ip.equals(finalIp)) {
       saveNeeded = true;
-      CoordinatorConfig.setIp(finalIp);
+      CoordinatorConfig.ip = finalIp;
+      CoordinatorConfig.section.set("ip", finalIp);
     }
     final var finalPort = port == -1
       ? CoordinatorConfig.port
       : port;
     if (CoordinatorConfig.port != finalPort) {
       saveNeeded = true;
-      CoordinatorConfig.setPort(finalPort);
+      CoordinatorConfig.port = finalPort;
+      CoordinatorConfig.section.set("port", finalPort);
     }
     if (saveNeeded) {
       CoordinatorConfig.loader.save();
     }
-  }
-
-  /**
-   * sets the id.
-   *
-   * @param id the id to set.
-   */
-  public static void setId(@NotNull final String id) {
-    CoordinatorConfig.id = id;
-    CoordinatorConfig.section.set("id", id);
-  }
-
-  /**
-   * sets the ip.
-   *
-   * @param ip the ip to set.
-   */
-  public static void setIp(@NotNull final String ip) {
-    CoordinatorConfig.ip = ip;
-    CoordinatorConfig.section.set("ip", ip);
-  }
-
-  /**
-   * sets the port.
-   *
-   * @param port the port to set.
-   */
-  public static void setPort(final int port) {
-    CoordinatorConfig.port = port;
-    CoordinatorConfig.section.set("port", port);
   }
 }
