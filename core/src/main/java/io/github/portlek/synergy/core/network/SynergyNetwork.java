@@ -123,6 +123,7 @@ public final class SynergyNetwork extends Synergy implements Network {
       return;
     }
     this.channel = future.channel();
+    SynergyNetwork.log.info("Bound.");
     this.running.set(true);
   }
 

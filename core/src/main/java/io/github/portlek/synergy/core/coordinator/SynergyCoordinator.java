@@ -122,6 +122,7 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
       return;
     }
     this.channel = future.channel();
+    SynergyCoordinator.log.info("Connected.");
     this.running.set(true);
   }
 
@@ -134,6 +135,6 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
    * syncs with the network.
    */
   private void sync() {
-    SynergyCoordinator.log.info("Sync.");
+    SynergyCoordinator.log.debug("Synced.");
   }
 }
