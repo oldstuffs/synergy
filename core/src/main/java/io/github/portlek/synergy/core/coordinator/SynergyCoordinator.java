@@ -34,6 +34,7 @@ import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -49,6 +50,13 @@ import org.jetbrains.annotations.Nullable;
 @Log4j2
 @RequiredArgsConstructor
 public final class SynergyCoordinator extends Synergy implements Coordinator {
+
+  /**
+   * the address.
+   */
+  @NotNull
+  @Getter
+  private final InetSocketAddress address;
 
   /**
    * the id.

@@ -25,6 +25,7 @@
 
 package io.github.portlek.synergy.core;
 
+import java.net.InetSocketAddress;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
@@ -32,6 +33,14 @@ import org.jetbrains.annotations.NotNull;
  * an interface to determine coordinators.
  */
 public interface Coordinator {
+
+  /**
+   * obtains the address.
+   *
+   * @return address.
+   */
+  @NotNull
+  InetSocketAddress getAddress();
 
   /**
    * obtains the id.

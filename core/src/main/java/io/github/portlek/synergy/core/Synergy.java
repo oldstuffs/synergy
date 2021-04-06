@@ -34,6 +34,7 @@ import io.github.portlek.synergy.core.util.VMShutdownThread;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -96,8 +97,8 @@ public abstract class Synergy {
    */
   public static void coordinator(@NotNull final String id, @NotNull final String ip, final int port) {
     CoordinatorConfig.load(id, ip, port);
-    (Synergy.synergy = new SynergyCoordinator(CoordinatorConfig.id))
-      .start();
+    final var address = InetSocketAddress.createUnresolved(CoordinatorConfig.ip, CoordinatorConfig.port);
+    (Synergy.synergy = new SynergyCoordinator(address, CoordinatorConfig.id)).start();
   }
 
   /**
@@ -119,8 +120,7 @@ public abstract class Synergy {
    */
   public static void network(@NotNull final String id, @NotNull final String ip, final int port) {
     NetworkConfig.load(id, ip, port);
-    (Synergy.synergy = new SynergyNetwork(CoordinatorConfig.id))
-      .start();
+    (Synergy.synergy = new SynergyNetwork(CoordinatorConfig.id)).start();
   }
 
   /**
