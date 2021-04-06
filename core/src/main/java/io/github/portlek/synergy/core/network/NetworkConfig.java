@@ -23,7 +23,7 @@
  *
  */
 
-package io.github.portlek.synergy.core.coordinator;
+package io.github.portlek.synergy.core.network;
 
 import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
@@ -34,9 +34,9 @@ import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that represents config of the coordinators.
+ * a class that represents config of the networks.
  */
-public final class CoordinatorConfig implements ConfigHolder {
+public final class NetworkConfig implements ConfigHolder {
 
   /**
    * the coordinator id.
@@ -66,7 +66,7 @@ public final class CoordinatorConfig implements ConfigHolder {
   /**
    * ctor.
    */
-  private CoordinatorConfig() {
+  private NetworkConfig() {
   }
 
   /**
@@ -78,39 +78,39 @@ public final class CoordinatorConfig implements ConfigHolder {
    */
   public static void load(@NotNull final String id, @NotNull final String ip, final int port) {
     ConfigLoader.builder()
-      .setConfigHolder(new CoordinatorConfig())
+      .setConfigHolder(new NetworkConfig())
       .setConfigType(JsonType.get())
-      .setFileName("coordinator")
+      .setFileName("network")
       .setFolder(SystemUtils.getHomePath())
       .build()
       .load(true);
     var saveNeeded = false;
     final var finalId = id.equals("null")
-      ? CoordinatorConfig.id
+      ? NetworkConfig.id
       : id;
-    if (!CoordinatorConfig.id.equals(finalId)) {
+    if (!NetworkConfig.id.equals(finalId)) {
       saveNeeded = true;
-      CoordinatorConfig.id = finalId;
-      CoordinatorConfig.section.set("id", finalId);
+      NetworkConfig.id = finalId;
+      NetworkConfig.section.set("id", finalId);
     }
     final var finalIp = ip.equals("null")
-      ? CoordinatorConfig.ip
+      ? NetworkConfig.ip
       : ip;
-    if (!CoordinatorConfig.ip.equals(finalIp)) {
+    if (!NetworkConfig.ip.equals(finalIp)) {
       saveNeeded = true;
-      CoordinatorConfig.ip = finalIp;
-      CoordinatorConfig.section.set("ip", finalIp);
+      NetworkConfig.ip = finalIp;
+      NetworkConfig.section.set("ip", finalIp);
     }
     final var finalPort = port == -1
-      ? CoordinatorConfig.port
+      ? NetworkConfig.port
       : port;
-    if (CoordinatorConfig.port != finalPort) {
+    if (NetworkConfig.port != finalPort) {
       saveNeeded = true;
-      CoordinatorConfig.port = finalPort;
-      CoordinatorConfig.section.set("port", finalPort);
+      NetworkConfig.port = finalPort;
+      NetworkConfig.section.set("port", finalPort);
     }
     if (saveNeeded) {
-      CoordinatorConfig.loader.save();
+      NetworkConfig.loader.save();
     }
   }
 }

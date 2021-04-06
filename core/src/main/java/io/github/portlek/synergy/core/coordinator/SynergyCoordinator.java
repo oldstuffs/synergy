@@ -25,15 +25,21 @@
 
 package io.github.portlek.synergy.core.coordinator;
 
+import io.github.portlek.synergy.core.Coordinator;
 import io.github.portlek.synergy.core.Server;
 import io.github.portlek.synergy.core.Synergy;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
+import io.netty.channel.ChannelFutureListener;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -42,12 +48,28 @@ import org.jetbrains.annotations.Nullable;
  * a class that represents coordinators.
  */
 @Log4j2
-public final class Coordinator extends Synergy {
+@RequiredArgsConstructor
+public final class SynergyCoordinator extends Synergy implements Coordinator {
+
+  /**
+   * the address.
+   */
+  @NotNull
+  @Getter
+  private final InetSocketAddress address;
+
+  /**
+   * the id.
+   */
+  @NotNull
+  @Getter
+  private final String id;
 
   /**
    * the servers with id.
    */
   @NotNull
+  @Getter
   private final Map<String, Server> servers = new ConcurrentHashMap<>();
 
   /**
@@ -67,13 +89,31 @@ public final class Coordinator extends Synergy {
   }
 
   @Override
+  public void onClose() throws InterruptedException {
+    this.running.set(false);
+    this.getScheduler().shutdown();
+    SynergyCoordinator.log.info("Connection closed!");
+    SynergyCoordinator.log.info("Restarting in 5 seconds.");
+    Thread.sleep(1000L * 5L);
+    try {
+      this.onStart();
+    } catch (final InterruptedException ignored) {
+    }
+  }
+
+  @Override
+  public void onInit(@NotNull final NioSocketChannel channel) {
+    // ignored.
+  }
+
+  @Override
   public boolean onReceive(@NotNull final Protocol.AuthenticatedMessage packet, @NotNull final Channel channel) {
     return true;
   }
 
   @Override
   public void onVMShutdown() {
-    Coordinator.log.info("VM shutting down, shutting down all servers (force)");
+    SynergyCoordinator.log.info("VM shutting down, shutting down all servers (force)");
     if (!this.getScheduler().isShutdown()) {
       this.getScheduler().shutdownNow();
     }
@@ -85,13 +125,32 @@ public final class Coordinator extends Synergy {
 
   @Override
   public void onStart() throws InterruptedException {
-    CoordinatorConfig.load();
-    this.channel = Connections.createConnection(new SynergyInitializer(this), CoordinatorConfig.ip, CoordinatorConfig.port)
-      .await()
-      .channel();
+    SynergyCoordinator.log.info("Coordinator is starting.");
+    final var ip = CoordinatorConfig.ip;
+    final var port = CoordinatorConfig.port;
+    SynergyCoordinator.log.info(String.format("Trying to connect network at %s:%s", ip, port));
+    final var future = Connections.connect(new SynergyInitializer(this), ip, port)
+      .await();
+    if (!future.isSuccess()) {
+      this.onClose();
+      return;
+    }
+    this.channel = future.channel();
+    this.channel.closeFuture()
+      .addListener((ChannelFutureListener) ftr -> SynergyCoordinator.this.onClose());
+    SynergyCoordinator.log.info("Connected.");
+    this.running.set(true);
   }
 
   @Override
   protected void onTick() {
+    this.sync();
+  }
+
+  /**
+   * syncs with the network.
+   */
+  private void sync() {
+    SynergyCoordinator.log.debug("Synced.");
   }
 }

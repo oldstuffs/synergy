@@ -23,46 +23,29 @@
  *
  */
 
-package io.github.portlek.synergy.core.netty;
+package io.github.portlek.synergy.core.util;
 
 import io.github.portlek.synergy.core.Synergy;
-import io.github.portlek.synergy.proto.Protocol;
-import io.github.portlek.synergy.proto.Protocols;
-import io.netty.channel.ChannelHandlerContext;
-import io.netty.channel.SimpleChannelInboundHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that represents authenticated message handlers.
+ * a thread that shuts down the V.M. if something goes wrong.
  */
 @Log4j2
 @RequiredArgsConstructor
-public final class AuthenticatedMessageHandler extends SimpleChannelInboundHandler<Protocol.AuthenticatedMessage> {
+public final class VMShutdownThread extends Thread {
 
   /**
-   * synergy.
+   * the synergy.
    */
   @NotNull
   private final Synergy synergy;
 
   @Override
-  public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {
-    ctx.channel().close();
-  }
-
-  @Override
-  protected void channelRead0(final ChannelHandlerContext ctx, final Protocol.AuthenticatedMessage msg) {
-    if (msg.getVersion() != Protocols.PROTOCOL_VERSION) {
-      AuthenticatedMessageHandler.log.error(String.format("Protocol version mismatch! Expected %d, got %d",
-        Protocols.PROTOCOL_VERSION, msg.getVersion()));
-      AuthenticatedMessageHandler.log.error("Disconnecting due to version mismatch.");
-      ctx.channel().close();
-      return;
-    }
-    if (!this.synergy.onReceive(msg, ctx.channel())) {
-      AuthenticatedMessageHandler.log.error("Message failed");
-    }
+  public void run() {
+    VMShutdownThread.log.info("Shutting down synergy!");
+    this.synergy.onVMShutdown();
   }
 }

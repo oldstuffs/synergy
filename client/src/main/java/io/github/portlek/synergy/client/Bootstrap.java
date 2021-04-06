@@ -68,7 +68,6 @@ public final class Bootstrap {
     "      ) |   ) (   | | \\   || (      | (\\ (   | | \\_  )   ) (   \n" +
     "/\\____) |   | |   | )  \\  || (____/\\| ) \\ \\__| (___) |   | |   \n" +
     "\\_______)   \\_/   |/    )_)(_______/|/   \\__/(_______)   \\_/   \n" +
-    "                                                               \n" +
     " _______  _       _________ _______  _       _________\n" +
     "(  ____ \\( \\      \\__   __/(  ____ \\( (    /|\\__   __/\n" +
     "| (    \\/| (         ) (   | (    \\/|  \\  ( |   ) (   \n" +
@@ -76,7 +75,7 @@ public final class Bootstrap {
     "| |      | |         | |   |  __)   | (\\ \\) |   | |   \n" +
     "| |      | |         | |   | (      | | \\   |   | |   \n" +
     "| (____/\\| (____/\\___) (___| (____/\\| )  \\  |   | |   \n" +
-    "(_______/(_______/\\_______/(_______/|/    )_)   )_(   ";
+    "(_______/(_______/\\_______/(_______/|/    )_)   )_(   \n";
 
   /**
    * ctor.
@@ -101,5 +100,12 @@ public final class Bootstrap {
         return new Locale(split[0], split[1].toUpperCase(Locale.ROOT));
       })
       .execute(args);
+    while (true) {
+      try {
+        Thread.sleep(5L);
+      } catch (final InterruptedException e) {
+        Bootstrap.log.fatal("Caught an exception at bootstrap level", e);
+      }
+    }
   }
 }

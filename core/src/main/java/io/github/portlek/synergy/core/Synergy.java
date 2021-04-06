@@ -26,10 +26,15 @@
 package io.github.portlek.synergy.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.github.portlek.synergy.core.coordinator.Coordinator;
-import io.github.portlek.synergy.core.coordinator.VMShutdownThread;
+import io.github.portlek.synergy.core.coordinator.CoordinatorConfig;
+import io.github.portlek.synergy.core.coordinator.SynergyCoordinator;
+import io.github.portlek.synergy.core.network.NetworkConfig;
+import io.github.portlek.synergy.core.network.SynergyNetwork;
+import io.github.portlek.synergy.core.util.VMShutdownThread;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
+import io.netty.channel.socket.nio.NioSocketChannel;
+import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -37,6 +42,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 import java.util.function.Supplier;
 import lombok.Getter;
 import lombok.extern.log4j.Log4j2;
@@ -56,6 +62,11 @@ public abstract class Synergy {
   private static Synergy synergy;
 
   /**
+   * the running.
+   */
+  protected final AtomicBoolean running = new AtomicBoolean();
+
+  /**
    * async pool executor.
    */
   private final ThreadPoolExecutor asyncExecutor = new ThreadPoolExecutor(
@@ -72,24 +83,22 @@ public abstract class Synergy {
   private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
 
   /**
-   * starts and returns a {@link Coordinator} instance.
+   * the shut down thread.
    */
-  public static void coordinator() {
-    final var synergy = Synergy.synergy = new Coordinator();
-    Runtime.getRuntime().addShutdownHook(new VMShutdownThread(synergy));
-    try {
-      synergy.onStart();
-    } catch (final InterruptedException e) {
-      return;
-    }
-    synergy.scheduler.scheduleAtFixedRate(synergy::onTick, 0L, 50L, TimeUnit.MILLISECONDS);
-    while (true) {
-      try {
-        Thread.sleep(5L);
-      } catch (final InterruptedException e) {
-        Synergy.log.fatal("Caught an exception at bootstrap level while running local coordinator", e);
-      }
-    }
+  @Nullable
+  private VMShutdownThread shutdownThread;
+
+  /**
+   * starts a {@link SynergyCoordinator} instance.
+   *
+   * @param id the id to start.
+   * @param ip the ip to connect.
+   * @param port the port to connect.
+   */
+  public static void coordinator(@NotNull final String id, @NotNull final String ip, final int port) {
+    CoordinatorConfig.load(id, ip, port);
+    final var address = InetSocketAddress.createUnresolved(CoordinatorConfig.ip, CoordinatorConfig.port);
+    (Synergy.synergy = new SynergyCoordinator(address, CoordinatorConfig.id)).start();
   }
 
   /**
@@ -100,6 +109,18 @@ public abstract class Synergy {
   @NotNull
   public static Synergy getSynergy() {
     return Objects.requireNonNull(Synergy.synergy, "not initiated");
+  }
+
+  /**
+   * starts a {@link SynergyNetwork} instance.
+   *
+   * @param id the id to start.
+   * @param ip the ip to bind.
+   * @param port the port to bind.
+   */
+  public static void network(@NotNull final String id, @NotNull final String ip, final int port) {
+    NetworkConfig.load(id, ip, port);
+    (Synergy.synergy = new SynergyNetwork(CoordinatorConfig.id)).start();
   }
 
   /**
@@ -128,6 +149,18 @@ public abstract class Synergy {
   }
 
   /**
+   * runs when the synergy stops.
+   */
+  public abstract void onClose() throws InterruptedException;
+
+  /**
+   * runs on initialization the channel.
+   *
+   * @param channel the channel to init.
+   */
+  public abstract void onInit(@NotNull NioSocketChannel channel);
+
+  /**
    * runs when receive a packet.
    *
    * @param packet the packet to receive.
@@ -151,6 +184,28 @@ public abstract class Synergy {
 
   /**
    * runs every 50ms.
+   * runs only when {@link #running} is {@code true}.
    */
   protected abstract void onTick();
+
+  /**
+   * starts the synergy.
+   */
+  private void start() {
+    final var runtime = Runtime.getRuntime();
+    if (this.shutdownThread != null) {
+      runtime.removeShutdownHook(this.shutdownThread);
+      this.shutdownThread.interrupt();
+    }
+    runtime.addShutdownHook(this.shutdownThread = new VMShutdownThread(this));
+    this.scheduler.scheduleAtFixedRate(() -> {
+      if (this.running.get()) {
+        this.onTick();
+      }
+    }, 0L, 50L, TimeUnit.MILLISECONDS);
+    try {
+      this.onStart();
+    } catch (final InterruptedException ignored) {
+    }
+  }
 }
