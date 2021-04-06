@@ -61,6 +61,7 @@ public final class Connections {
   public static ChannelFuture bind(@NotNull final ChannelInitializer<NioSocketChannel> initializer,
                                    @NotNull final String ip, final int port) {
     return new ServerBootstrap()
+      .group(new NioEventLoopGroup())
       .channel(NioServerSocketChannel.class)
       .childHandler(initializer)
       .option(ChannelOption.SO_BACKLOG, 128)
