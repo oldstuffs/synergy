@@ -135,6 +135,6 @@ public final class SynergyNetwork extends Synergy implements Network {
    * syncs with the network.
    */
   private void sync() {
-    SynergyNetwork.log.info("Sync.");
+    SynergyNetwork.log.debug("Synced.");
   }
 }
