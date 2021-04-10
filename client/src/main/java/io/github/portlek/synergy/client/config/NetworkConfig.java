@@ -23,15 +23,18 @@
  *
  */
 
-package io.github.portlek.synergy.core.network;
+package io.github.portlek.synergy.client.config;
 
 import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
 import io.github.portlek.configs.configuration.ConfigurationSection;
 import io.github.portlek.configs.json.JsonType;
 import io.github.portlek.synergy.core.util.SystemUtils;
+import java.net.InetSocketAddress;
+import java.util.Objects;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * a class that represents config of the networks.
@@ -39,29 +42,25 @@ import org.jetbrains.annotations.NotNull;
 public final class NetworkConfig implements ConfigHolder {
 
   /**
+   * the address.
+   */
+  @NotNull
+  public static InetSocketAddress address = new InetSocketAddress("localhost", 25501);
+
+  /**
    * the coordinator id.
    */
   public static String id = UUID.randomUUID().toString();
 
   /**
-   * the ip.
-   */
-  public static String ip = "0.0.0.0";
-
-  /**
    * the loader.
    */
-  public static ConfigLoader loader;
-
-  /**
-   * the port.
-   */
-  public static int port = 25501;
+  private static ConfigLoader loader;
 
   /**
    * the section.
    */
-  public static ConfigurationSection section;
+  private static ConfigurationSection section;
 
   /**
    * ctor.
@@ -73,10 +72,9 @@ public final class NetworkConfig implements ConfigHolder {
    * loads the config.
    *
    * @param id the id to load.
-   * @param ip the ip to load.
-   * @param port the port to load.
+   * @param address the address to load.
    */
-  public static void load(@NotNull final String id, @NotNull final String ip, final int port) {
+  public static void load(@Nullable final InetSocketAddress address, @Nullable final String id) {
     ConfigLoader.builder()
       .setConfigHolder(new NetworkConfig())
       .setConfigType(JsonType.get())
@@ -84,33 +82,48 @@ public final class NetworkConfig implements ConfigHolder {
       .setFolder(SystemUtils.getHomePath())
       .build()
       .load(true);
-    var saveNeeded = false;
-    final var finalId = id.equals("null")
-      ? NetworkConfig.id
-      : id;
-    if (!NetworkConfig.id.equals(finalId)) {
-      saveNeeded = true;
-      NetworkConfig.id = finalId;
-      NetworkConfig.section.set("id", finalId);
-    }
-    final var finalIp = ip.equals("null")
-      ? NetworkConfig.ip
-      : ip;
-    if (!NetworkConfig.ip.equals(finalIp)) {
-      saveNeeded = true;
-      NetworkConfig.ip = finalIp;
-      NetworkConfig.section.set("ip", finalIp);
-    }
-    final var finalPort = port == -1
-      ? NetworkConfig.port
-      : port;
-    if (NetworkConfig.port != finalPort) {
-      saveNeeded = true;
-      NetworkConfig.port = finalPort;
-      NetworkConfig.section.set("port", finalPort);
-    }
+    var saveNeeded = NetworkConfig.loadAddress(address);
+    saveNeeded = saveNeeded || NetworkConfig.loadId(id);
     if (saveNeeded) {
       NetworkConfig.loader.save();
     }
+  }
+
+  /**
+   * loads the address.
+   *
+   * @param address the address to load.
+   *
+   * @return {@code true} if the save is needed.
+   */
+  private static boolean loadAddress(@Nullable final InetSocketAddress address) {
+    final var finalAddress = Objects.isNull(address)
+      ? NetworkConfig.address
+      : address;
+    if (!NetworkConfig.address.equals(finalAddress)) {
+      NetworkConfig.address = finalAddress;
+      NetworkConfig.section.set("address", finalAddress);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * loads the id.
+   *
+   * @param id the id to load.
+   *
+   * @return {@code true} if the save is needed.
+   */
+  private static boolean loadId(@Nullable final String id) {
+    final var finalId = Objects.isNull(id)
+      ? NetworkConfig.id
+      : id;
+    if (!NetworkConfig.id.equals(finalId)) {
+      NetworkConfig.id = finalId;
+      NetworkConfig.section.set("id", finalId);
+      return true;
+    }
+    return false;
   }
 }

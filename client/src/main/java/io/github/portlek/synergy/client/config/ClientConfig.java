@@ -70,19 +70,6 @@ public final class ClientConfig implements ConfigHolder {
   }
 
   /**
-   * obtains the client language's resource bundle.
-   *
-   * @return resource bundle.
-   */
-  @NotNull
-  public static ResourceBundle getLanguageBundle() {
-    if (ClientConfig.resource == null) {
-      ClientConfig.resource = ResourceBundle.getBundle("Synergy", ClientConfig.lang);
-    }
-    return ClientConfig.resource;
-  }
-
-  /**
    * loads the config.
    */
   public static void load() {
@@ -93,6 +80,15 @@ public final class ClientConfig implements ConfigHolder {
       .setFolder(SystemUtils.getHomePath())
       .build()
       .load(true);
+  }
+
+  /**
+   * obtains the client language's resource bundle.
+   */
+  public static void loadLanguageBundle() {
+    if (ClientConfig.resource == null) {
+      ClientConfig.resource = ResourceBundle.getBundle("Synergy", ClientConfig.lang);
+    }
   }
 
   /**

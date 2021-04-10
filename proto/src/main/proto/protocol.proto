@@ -3,10 +3,25 @@ syntax = "proto3";
 package io.github.portlek.synergy.proto;
 
 option java_outer_classname = "Protocol";
+option optimize_for = SPEED;
+
+import "commands.proto";
 
 message AuthenticatedMessage {
   string uuid = 1;
   string hash = 2;
   bytes payload = 3;
   uint32 version = 4;
+}
+
+message Transaction {
+  enum Mode {
+    CREATE = 0;
+    CONTINUE = 1;
+    COMPLETE = 2;
+    SINGLE = 3;
+  }
+  string id = 1;
+  Mode mode = 2;
+  BaseCommand payload = 3;
 }

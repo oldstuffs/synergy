@@ -22,7 +22,25 @@
  * SOFTWARE.
  *
  */
-/**
- * the package that contains parser for the Java program's arguments.
- */
+
 package io.github.portlek.synergy.client.command;
+
+import java.util.Locale;
+import org.jetbrains.annotations.Nullable;
+import picocli.CommandLine;
+
+/**
+ * a class that converts user's inputs into locale.
+ */
+public final class LocaleConverter implements CommandLine.ITypeConverter<Locale> {
+
+  @Nullable
+  @Override
+  public Locale convert(final String value) {
+    final var split = value.trim().replace("-", "_").split("_");
+    if (split.length != 2) {
+      return null;
+    }
+    return new Locale(split[0], split[1].toUpperCase(Locale.ROOT));
+  }
+}

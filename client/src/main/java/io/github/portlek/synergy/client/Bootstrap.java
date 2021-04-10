@@ -26,8 +26,11 @@
 package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.command.ClientCommands;
+import io.github.portlek.synergy.client.command.InetSocketAddressConverter;
+import io.github.portlek.synergy.client.command.LocaleConverter;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.core.util.SystemUtils;
+import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.util.Locale;
 import lombok.extern.log4j.Log4j2;
@@ -58,7 +61,7 @@ public final class Bootstrap {
   public static final String VERSION = "1.0.0-SNAPSHOT";
 
   /**
-   * the ascii art for Snergy Client text.
+   * the ascii art for Synergy Client text.
    */
   private static final String ART = "" +
     "(  ____ \\|\\     /|( (    /|(  ____ \\(  ____ )(  ____ \\|\\     /|\n" +
@@ -92,13 +95,8 @@ public final class Bootstrap {
     System.out.println(Bootstrap.ART);
     ClientConfig.load();
     new CommandLine(ClientCommands.class)
-      .registerConverter(Locale.class, s -> {
-        final var split = s.split("_");
-        if (split.length != 2) {
-          return null;
-        }
-        return new Locale(split[0], split[1].toUpperCase(Locale.ROOT));
-      })
+      .registerConverter(InetSocketAddress.class, new InetSocketAddressConverter())
+      .registerConverter(Locale.class, new LocaleConverter())
       .execute(args);
     while (true) {
       try {

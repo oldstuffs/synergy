@@ -26,16 +26,15 @@
 package io.github.portlek.synergy.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.github.portlek.synergy.core.coordinator.CoordinatorConfig;
 import io.github.portlek.synergy.core.coordinator.SynergyCoordinator;
-import io.github.portlek.synergy.core.network.NetworkConfig;
 import io.github.portlek.synergy.core.network.SynergyNetwork;
 import io.github.portlek.synergy.core.util.VMShutdownThread;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
-import java.util.Objects;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -54,12 +53,6 @@ import org.jetbrains.annotations.Nullable;
  */
 @Log4j2
 public abstract class Synergy {
-
-  /**
-   * the synergy.
-   */
-  @Nullable
-  private static Synergy synergy;
 
   /**
    * the running.
@@ -91,36 +84,24 @@ public abstract class Synergy {
   /**
    * starts a {@link SynergyCoordinator} instance.
    *
+   * @param address the address to start.
+   * @param attributes the attributes to start.
    * @param id the id to start.
-   * @param ip the ip to connect.
-   * @param port the port to connect.
+   * @param resources the resources to start.
    */
-  public static void coordinator(@NotNull final String id, @NotNull final String ip, final int port) {
-    CoordinatorConfig.load(id, ip, port);
-    final var address = InetSocketAddress.createUnresolved(CoordinatorConfig.ip, CoordinatorConfig.port);
-    (Synergy.synergy = new SynergyCoordinator(address, CoordinatorConfig.id)).start();
-  }
-
-  /**
-   * obtains the instance.
-   *
-   * @return instance.
-   */
-  @NotNull
-  public static Synergy getSynergy() {
-    return Objects.requireNonNull(Synergy.synergy, "not initiated");
+  public static void coordinator(@NotNull final InetSocketAddress address, @NotNull final List<String> attributes,
+                                 @NotNull final String id, @NotNull final Map<String, Integer> resources) {
+    new SynergyCoordinator(address, attributes, id, resources).start();
   }
 
   /**
    * starts a {@link SynergyNetwork} instance.
    *
+   * @param address the address to start.
    * @param id the id to start.
-   * @param ip the ip to bind.
-   * @param port the port to bind.
    */
-  public static void network(@NotNull final String id, @NotNull final String ip, final int port) {
-    NetworkConfig.load(id, ip, port);
-    (Synergy.synergy = new SynergyNetwork(CoordinatorConfig.id)).start();
+  public static void network(@NotNull final InetSocketAddress address, @NotNull final String id) {
+    new SynergyNetwork(address, id).start();
   }
 
   /**
@@ -176,6 +157,23 @@ public abstract class Synergy {
   public abstract void onVMShutdown();
 
   /**
+   * starts the synergy.
+   */
+  protected final void start() {
+    final var runtime = Runtime.getRuntime();
+    if (this.shutdownThread != null) {
+      runtime.removeShutdownHook(this.shutdownThread);
+      this.shutdownThread.interrupt();
+    }
+    runtime.addShutdownHook(this.shutdownThread = new VMShutdownThread(this));
+    this.scheduler.scheduleAtFixedRate(this::onTick, 0L, 50L, TimeUnit.MILLISECONDS);
+    try {
+      this.onStart();
+    } catch (final InterruptedException ignored) {
+    }
+  }
+
+  /**
    * runs when the synergy starts.
    *
    * @throws InterruptedException if the current thread was interrupted.
@@ -184,28 +182,6 @@ public abstract class Synergy {
 
   /**
    * runs every 50ms.
-   * runs only when {@link #running} is {@code true}.
    */
   protected abstract void onTick();
-
-  /**
-   * starts the synergy.
-   */
-  private void start() {
-    final var runtime = Runtime.getRuntime();
-    if (this.shutdownThread != null) {
-      runtime.removeShutdownHook(this.shutdownThread);
-      this.shutdownThread.interrupt();
-    }
-    runtime.addShutdownHook(this.shutdownThread = new VMShutdownThread(this));
-    this.scheduler.scheduleAtFixedRate(() -> {
-      if (this.running.get()) {
-        this.onTick();
-      }
-    }, 0L, 50L, TimeUnit.MILLISECONDS);
-    try {
-      this.onStart();
-    } catch (final InterruptedException ignored) {
-    }
-  }
 }

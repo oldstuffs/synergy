@@ -52,19 +52,14 @@
       <version>${project.version}</version>
     </dependency>
     <dependency>
-      <groupId>io.github.portlek</groupId>
-      <artifactId>configs-core</artifactId>
-      <version>5.12.1</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.portlek</groupId>
-      <artifactId>configs-json</artifactId>
-      <version>5.12.1</version>
-    </dependency>
-    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
       <version>30.1.1-jre</version>
+    </dependency>
+    <dependency>
+      <groupId>it.unimi.dsi</groupId>
+      <artifactId>fastutil</artifactId>
+      <version>8.5.4</version>
     </dependency>
   </dependencies>
 </project>

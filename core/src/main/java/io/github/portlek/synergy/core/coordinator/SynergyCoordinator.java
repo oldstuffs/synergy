@@ -30,11 +30,14 @@ import io.github.portlek.synergy.core.Server;
 import io.github.portlek.synergy.core.Synergy;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.netty.Connections;
+import io.github.portlek.synergy.proto.Commands;
+import io.github.portlek.synergy.proto.Core;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -59,11 +62,25 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   private final InetSocketAddress address;
 
   /**
+   * the attributes.
+   */
+  @NotNull
+  @Getter
+  private final List<String> attributes;
+
+  /**
    * the id.
    */
   @NotNull
   @Getter
   private final String id;
+
+  /**
+   * the resources.
+   */
+  @NotNull
+  @Getter
+  private final Map<String, Integer> resources;
 
   /**
    * the servers with id.
@@ -126,10 +143,8 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   @Override
   public void onStart() throws InterruptedException {
     SynergyCoordinator.log.info("Coordinator is starting.");
-    final var ip = CoordinatorConfig.ip;
-    final var port = CoordinatorConfig.port;
-    SynergyCoordinator.log.info(String.format("Trying to connect network at %s:%s", ip, port));
-    final var future = Connections.connect(new SynergyInitializer(this), ip, port)
+    SynergyCoordinator.log.info(String.format("Trying to connect network at %s", this.address));
+    final var future = Connections.connect(new SynergyInitializer(this), this.address)
       .await();
     if (!future.isSuccess()) {
       this.onClose();
@@ -151,6 +166,15 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
    * syncs with the network.
    */
   private void sync() {
-    SynergyCoordinator.log.debug("Synced.");
+    final var builder = Commands.Sync.newBuilder()
+      .setEnabled(this.running.get())
+      .setName(this.id);
+    this.resources.entrySet().stream()
+      .map(entry ->
+        Core.Resource.newBuilder()
+          .setName(entry.getKey())
+          .setValue(entry.getValue())
+          .build())
+      .forEach(builder::addResources);
   }
 }

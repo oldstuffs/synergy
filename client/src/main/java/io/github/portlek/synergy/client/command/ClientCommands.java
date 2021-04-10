@@ -26,11 +26,17 @@
 package io.github.portlek.synergy.client.command;
 
 import io.github.portlek.synergy.client.config.ClientConfig;
+import io.github.portlek.synergy.client.config.CoordinatorConfig;
+import io.github.portlek.synergy.client.config.NetworkConfig;
 import io.github.portlek.synergy.core.Synergy;
+import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.jetbrains.annotations.Nullable;
 import picocli.CommandLine;
 
 /**
@@ -49,61 +55,69 @@ public final class ClientCommands implements Runnable {
   /**
    * the debug mode.
    */
-  @CommandLine.Option(names = {"-d", "--debug"},
-    description = "Debug mode. Helpful for troubleshooting.")
-  public static boolean debug = false;
+  @CommandLine.Option(names = {"-d", "--debug"}, description = "Debug mode.")
+  private boolean debug;
 
   /**
    * the client language.
    */
-  @CommandLine.Option(names = {"-l", "--lang"},
-    description = "Client language. Change language of the client.")
-  public static Locale lang = Locale.US;
+  @CommandLine.Option(names = {"-l", "--lang"}, description = "Client language.")
+  @Nullable
+  private Locale lang;
 
   @Override
   public void run() {
-    if (ClientCommands.debug) {
+    if (this.debug) {
       final var context = (LoggerContext) LogManager.getContext(false);
       context.getConfiguration()
         .getLoggerConfig(LogManager.ROOT_LOGGER_NAME)
         .setLevel(Level.DEBUG);
       context.updateLoggers();
     }
-    ClientConfig.setLanguage(ClientCommands.lang);
-    ClientConfig.getLanguageBundle();
+    if (this.lang != null) {
+      ClientConfig.setLanguage(this.lang);
+    }
+    ClientConfig.loadLanguageBundle();
   }
 
   /**
    * runs the coordinator command.
    *
+   * @param address the address to run.
+   * @param attributes the attributes to run.
    * @param id the id to run.
-   * @param ip the ip to run.
-   * @param port the port to run.
+   * @param resources the resources to run.
    */
   @CommandLine.Command(
     name = "coordinator"
   )
-  void coordinator(@CommandLine.Option(names = "--id", defaultValue = "null") final String id,
-                   @CommandLine.Option(names = "--ip", defaultValue = "null") final String ip,
-                   @CommandLine.Option(names = "--port", defaultValue = "-1") final int port) {
+  void coordinator(
+    @CommandLine.Option(names = "--address", description = "Coordinator address to connect.") final InetSocketAddress address,
+    @CommandLine.Option(names = "--attributes", description = "Coordinator attributes.") final String[] attributes,
+    @CommandLine.Option(names = "--id", description = "Coordinator id.") final String id,
+    @CommandLine.Option(names = "--resources", description = "Coordinator resources.") final Map<String, Integer> resources
+  ) {
     this.run();
-    Synergy.coordinator(id, ip, port);
+    CoordinatorConfig.load(address, List.of(attributes), id, resources);
+    Synergy.coordinator(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
+      CoordinatorConfig.resources);
   }
 
   /**
    * runs the network command.
    *
+   * @param address the address to run.
    * @param id the id to run.
-   * @param ip the ip to run.
-   * @param port the port to run.
    */
   @CommandLine.Command(
     name = "network"
   )
-  void network(@CommandLine.Option(names = "--id", defaultValue = "null") final String id,
-               @CommandLine.Option(names = "--ip", defaultValue = "null") final String ip,
-               @CommandLine.Option(names = "--port", defaultValue = "-1") final int port) {
+  void network(
+    @CommandLine.Option(names = "--address", description = "Network address to bind.") final InetSocketAddress address,
+    @CommandLine.Option(names = "--id", description = "Network id.") final String id
+  ) {
     this.run();
-    Synergy.network(id, ip, port);
+    NetworkConfig.load(address, id);
+    Synergy.network(NetworkConfig.address, NetworkConfig.id);
   }
 }
