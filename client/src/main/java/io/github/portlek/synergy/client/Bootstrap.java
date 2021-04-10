@@ -27,6 +27,7 @@ package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.command.ClientCommands;
 import io.github.portlek.synergy.client.command.InetSocketAddressConverter;
+import io.github.portlek.synergy.client.command.LocaleConverter;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import java.net.InetSocketAddress;
@@ -95,13 +96,7 @@ public final class Bootstrap {
     ClientConfig.load();
     new CommandLine(ClientCommands.class)
       .registerConverter(InetSocketAddress.class, new InetSocketAddressConverter())
-      .registerConverter(Locale.class, s -> {
-        final var split = s.trim().replace("-", "_").split("_");
-        if (split.length != 2) {
-          return null;
-        }
-        return new Locale(split[0], split[1].toUpperCase(Locale.ROOT));
-      })
+      .registerConverter(Locale.class, new LocaleConverter())
       .execute(args);
     while (true) {
       try {
