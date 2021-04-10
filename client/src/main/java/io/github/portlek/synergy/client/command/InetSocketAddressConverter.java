@@ -35,13 +35,13 @@ public final class InetSocketAddressConverter implements CommandLine.ITypeConver
 
   @Override
   public InetSocketAddress convert(final String value) {
-    final var pos = value.lastIndexOf(':');
-    if (pos < 0) {
+    final var position = value.lastIndexOf(':');
+    if (position < 0) {
       throw new CommandLine.TypeConversionException(String.format("Invalid format: must be 'host:port' but was '%s'",
         value));
     }
-    final var adr = value.substring(0, pos);
-    final var port = Integer.parseInt(value.substring(pos + 1));
-    return new InetSocketAddress(adr, port);
+    final var address = value.substring(0, position);
+    final var port = Integer.parseInt(value.substring(position + 1));
+    return new InetSocketAddress(address, port);
   }
 }
