@@ -136,13 +136,5 @@ public final class SynergyNetwork extends Synergy implements Network {
 
   @Override
   protected void onTick() {
-    this.sync();
-  }
-
-  /**
-   * syncs with the network.
-   */
-  private void sync() {
-    SynergyNetwork.log.debug("Synced.");
   }
 }
