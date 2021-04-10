@@ -26,8 +26,10 @@
 package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.command.ClientCommands;
+import io.github.portlek.synergy.client.command.InetSocketAddressConverter;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.core.util.SystemUtils;
+import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.util.Locale;
 import lombok.extern.log4j.Log4j2;
@@ -92,8 +94,9 @@ public final class Bootstrap {
     System.out.println(Bootstrap.ART);
     ClientConfig.load();
     new CommandLine(ClientCommands.class)
+      .registerConverter(InetSocketAddress.class, new InetSocketAddressConverter())
       .registerConverter(Locale.class, s -> {
-        final var split = s.split("_");
+        final var split = s.trim().replace("-", "_").split("_");
         if (split.length != 2) {
           return null;
         }

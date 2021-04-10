@@ -33,6 +33,7 @@ import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import java.net.InetSocketAddress;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
@@ -48,6 +49,13 @@ import org.jetbrains.annotations.Nullable;
 @Log4j2
 @RequiredArgsConstructor
 public final class SynergyNetwork extends Synergy implements Network {
+
+  /**
+   * the address.
+   */
+  @NotNull
+  @Getter
+  private final InetSocketAddress address;
 
   /**
    * the coordinators with id.
@@ -120,10 +128,8 @@ public final class SynergyNetwork extends Synergy implements Network {
   @Override
   public void onStart() throws InterruptedException {
     SynergyNetwork.log.info("Network is starting.");
-    final var ip = NetworkConfig.ip;
-    final var port = NetworkConfig.port;
-    SynergyNetwork.log.info(String.format("Trying to bind on %s:%s", ip, port));
-    final var future = Connections.bind(new SynergyInitializer(this), ip, port)
+    SynergyNetwork.log.info(String.format("Trying to bind on %s", this.address));
+    final var future = Connections.bind(new SynergyInitializer(this), this.address)
       .await();
     if (!future.isSuccess()) {
       this.onClose();

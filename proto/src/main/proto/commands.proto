@@ -1,0 +1,258 @@
+syntax = "proto3";
+
+package io.github.portlek.synergy.proto;
+
+option java_outer_classname = "Commands";
+option optimize_for = SPEED;
+
+import "core.proto";
+import "p3.proto";
+
+message Sync {
+  string name = 1;
+  repeated Resource resources = 2;
+  repeated string attributes = 3;
+  repeated Server servers = 4;
+  bool enabled = 5;
+}
+
+message Provision {
+  Server server = 1;
+}
+
+message ProvisionResponse {
+  bool ok = 1;
+}
+
+message PackageRequest {
+  P3Meta p3 = 1;
+}
+
+message PackageResponse {
+  bool ok = 1;
+  PackageData data = 2;
+}
+
+message SplitPackageResponse {
+  bool ok = 1;
+  SplitPackageData data = 2;
+}
+
+message PackageChecksumRequest {
+  P3Meta p3 = 1;
+}
+
+message PackageChecksumResponse {
+  bool ok = 1;
+  string checksum = 2;
+}
+
+message DeProvision {
+  string uuid = 1;
+  bool force = 2;
+}
+
+message ServerShutdown {
+  string uuid = 1;
+}
+
+message SendInput {
+  string id = 1;
+  string input = 2;
+}
+
+message AttachConsole {
+  string serverId = 1;
+  string consoleId = 2;
+}
+
+message ConsoleMessage {
+  string consoleId = 1;
+  string value = 2;
+}
+
+message DetachConsole {
+  string consoleId = 1;
+}
+
+message FreezeServer {
+  string uuid = 1;
+}
+
+message C_CoordinatorListResponse {
+  repeated LocalCoordinator coordinators = 1;
+}
+
+message C_Provision {
+  P3Meta p3 = 1;
+  string coordinator = 2;
+  string serverName = 3;
+  repeated Property properties = 4;
+}
+
+message C_ProvisionResponse {
+  bool ok = 1;
+  string coordinatorId = 2;
+  string serverId = 3;
+}
+
+message C_DeProvision {
+  string coordinatorId = 1;
+  string serverId = 2;
+  bool force = 3;
+}
+
+message C_Shutdown {
+  string uuid = 1;
+}
+
+message C_Promote {
+  P3Meta p3 = 1;
+}
+
+message C_CreateCoordinator {
+  string keyName = 1;
+}
+
+message C_CoordinatorCreated {
+  string uuid = 1;
+  string key = 2;
+}
+
+message C_SendInput {
+  string coordinatorId = 1;
+  string serverId = 2;
+  string input = 3;
+}
+
+message C_AttachConsole {
+  string coordinatorId = 1;
+  string serverId = 2;
+}
+
+message C_ConsoleAttached {
+  string consoleId = 1;
+  bool ok = 2;
+}
+
+message C_ConsoleMessage {
+  string value = 1;
+  string consoleId = 2;
+}
+
+message C_ConsoleDetached {
+  string consoleId = 1;
+  bool useServerId = 2;
+}
+
+message C_DetachConsole {
+  string consoleId = 1;
+}
+
+message C_FreezeServer {
+  string coordinatorId = 1;
+  string serverId = 2;
+}
+
+message C_UploadPackage {
+  PackageData data = 1;
+}
+
+message C_UploadSplitPackage {
+  SplitPackageData data = 2;
+}
+
+message C_Ack {
+  oneof result_present {
+    string result = 1;
+  }
+}
+
+message C_PackageList {
+  repeated P3Meta packages = 1;
+}
+
+message C_AccessDenied {
+  string result = 1;
+  string tid = 2;
+}
+
+message BaseCommand {
+  enum CommandType {
+    NOOP = 0;
+    SYNC = 1;
+    PROVISION = 2;
+    PROVISION_RESPONSE = 3;
+    PACKAGE_REQUEST = 4;
+    PACKAGE_RESPONSE = 5;
+    DE_PROVISION = 6;
+    SERVER_SHUTDOWN = 7;
+    SHUTDOWN = 8;
+    SEND_INPUT = 9;
+    ATTACH_CONSOLE = 10;
+    CONSOLE_MESSAGE = 11;
+    DETACH_CONSOLE = 12;
+    FREEZE_SERVER = 26;
+    PACKAGE_CHECKSUM_REQUEST = 35;
+    PACKAGE_CHECKSUM_RESPONSE = 36;
+    SPLIT_PACKAGE_RESPONSE = 37;
+    C_GET_COORDINATOR_LIST = 13;
+    C_COORDINATOR_LIST_RESPONSE = 14;
+    C_PROVISION = 15;
+    C_PROVISION_RESPONSE = 16;
+    C_DE_PROVISION = 17;
+    C_SHUTDOWN = 18;
+    C_PROMOTE = 19;
+    C_CREATE_COORDINATOR = 20;
+    C_COORDINATOR_CREATED = 21;
+    C_SEND_INPUT = 22;
+    C_ATTACH_CONSOLE = 23;
+    C_CONSOLE_ATTACHED = 31;
+    C_CONSOLE_MESSAGE = 24;
+    C_CONSOLE_DETACHED = 32;
+    C_DETACH_CONSOLE = 25;
+    C_FREEZE_SERVER = 27;
+    C_UPLOAD_PACKAGE = 28;
+    C_UPLOAD_SPLIT_PACKAGE = 38;
+    C_ACK = 30;
+    C_REQUEST_PACKAGE_LIST = 33;
+    C_PACKAGE_LIST = 34;
+    C_ACCESS_DENIED = 39;
+  }
+  CommandType type = 1;
+  Sync sync = 2;
+  Provision provision = 3;
+  ProvisionResponse provisionResponse = 4;
+  PackageRequest packageRequest = 5;
+  PackageResponse packageResponse = 6;
+  DeProvision deProvision = 7;
+  ServerShutdown serverShutdown = 8;
+  SendInput sendInput = 9;
+  AttachConsole attachConsole = 10;
+  ConsoleMessage consoleMessage = 11;
+  DetachConsole detachConsole = 12;
+  FreezeServer freezeServer = 13;
+  PackageChecksumRequest checksumRequest = 14;
+  PackageChecksumResponse checksumResponse = 16;
+  SplitPackageResponse splitPackageResponse = 17;
+  C_CoordinatorListResponse c_coordinatorListResponse = 18;
+  C_Provision c_provision = 19;
+  C_ProvisionResponse c_provisionResponse = 20;
+  C_DeProvision c_deProvision = 21;
+  C_Shutdown c_shutdown = 22;
+  C_Promote c_promote = 23;
+  C_CreateCoordinator c_createCoordinator = 24;
+  C_CoordinatorCreated c_coordinatorCreated = 25;
+  C_SendInput c_sendInput = 26;
+  C_AttachConsole c_attachConsole = 27;
+  C_ConsoleAttached c_consoleAttached = 28;
+  C_ConsoleMessage c_consoleMessage = 29;
+  C_ConsoleDetached c_consoleDetached = 30;
+  C_DetachConsole c_detachConsole = 31;
+  C_FreezeServer c_freezeServer = 32;
+  C_UploadPackage c_uploadPackage = 33;
+  C_Ack c_ack = 34;
+  C_PackageList c_packageList = 35;
+  C_UploadSplitPackage c_uploadSplitPackage = 36;
+  C_AccessDenied c_accessDenied = 37;
+}

@@ -33,6 +33,7 @@ import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
 import io.netty.channel.socket.nio.NioServerSocketChannel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import java.net.InetSocketAddress;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
@@ -52,40 +53,38 @@ public final class Connections {
    * binds to the given ip and port.
    *
    * @param initializer the initializer to bind.
-   * @param ip the ip to bind.
-   * @param port the port to bind.
+   * @param address the port to bind.
    *
    * @return channel future.
    */
   @NotNull
   public static ChannelFuture bind(@NotNull final ChannelInitializer<NioSocketChannel> initializer,
-                                   @NotNull final String ip, final int port) {
+                                   @NotNull final InetSocketAddress address) {
     return new ServerBootstrap()
       .group(new NioEventLoopGroup())
       .channel(NioServerSocketChannel.class)
       .childHandler(initializer)
       .option(ChannelOption.SO_BACKLOG, 128)
       .childOption(ChannelOption.SO_KEEPALIVE, true)
-      .bind(ip, port);
+      .bind(address);
   }
 
   /**
    * connects to the given ip and port.
    *
    * @param initializer the initializer to connect.
-   * @param ip the ip to connect.
-   * @param port the port to connect.
+   * @param address the port to connect.
    *
    * @return channel future.
    */
   @NotNull
   public static ChannelFuture connect(@NotNull final ChannelInitializer<NioSocketChannel> initializer,
-                                      @NotNull final String ip, final int port) {
+                                      @NotNull final InetSocketAddress address) {
     return new Bootstrap()
       .group(new NioEventLoopGroup())
       .channel(NioSocketChannel.class)
       .option(ChannelOption.SO_KEEPALIVE, true)
       .handler(initializer)
-      .connect(ip, port);
+      .connect(address);
   }
 }

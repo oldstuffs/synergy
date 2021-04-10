@@ -1,0 +1,39 @@
+syntax = "proto3";
+
+package io.github.portlek.synergy.proto;
+
+option java_outer_classname = "Core";
+option optimize_for = SPEED;
+
+import "p3.proto";
+
+message Resource {
+  string name = 1;
+  sint32 value = 2;
+}
+
+message Property {
+  string name = 1;
+  string value = 2;
+}
+
+message Server {
+  P3Meta p3 = 1;
+  string uuid = 2;
+  oneof name_present {
+    string name = 3;
+  }
+  bool active = 5;
+  repeated Property properties = 4;
+}
+
+message LocalCoordinator {
+  string uuid = 1;
+  oneof name_present {
+    string name = 2;
+  }
+  bool enabled = 3;
+  repeated Resource resources = 4;
+  repeated string attributes = 5;
+  repeated Server servers = 6;
+}

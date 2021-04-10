@@ -1,0 +1,27 @@
+syntax = "proto3";
+
+package io.github.portlek.synergy.proto;
+
+option java_outer_classname = "P3";
+option optimize_for = SPEED;
+
+message P3Meta {
+  string id = 1;
+  string version = 2;
+  bool promoted = 3;
+}
+
+message PackageData {
+  P3Meta meta = 1;
+  string checksum = 3;
+  bytes data = 2;
+}
+
+message SplitPackageData {
+  P3Meta meta = 1;
+  string checksum = 2;
+  bool endOfFile = 3;
+  uint32 chunkCount = 4;
+  uint32 chunkId = 5;
+  bytes data = 6;
+}
