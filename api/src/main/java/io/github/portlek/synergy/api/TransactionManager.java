@@ -56,7 +56,28 @@ public interface TransactionManager {
    *
    * @return {@code true} if the transaction was cancelled.
    */
-  boolean cancel(@NotNull String id);
+  default boolean cancel(@NotNull final String id) {
+    return this.cancel(id, false);
+  }
+
+  /**
+   * cancels the transaction.
+   *
+   * @param id the id to cancel.
+   * @param silentFail the silent fail.
+   *
+   * @return {@code true} if the transaction was cancelled.
+   */
+  boolean cancel(@NotNull String id, boolean silentFail);
+
+  /**
+   * completes the transaction.
+   *
+   * @param id the id to complete.
+   *
+   * @return {@code true} if the transaction was completed successfully.
+   */
+  boolean complete(@NotNull String id);
 
   /**
    * generate a transaction info instance.
@@ -81,9 +102,9 @@ public interface TransactionManager {
    *
    * @param id the id to send.
    * @param message the message to send.
-   * @param object the object to send.
+   * @param target the target to send.
    *
-   * @return {@code true} if the transaction was sent successfully..
+   * @return {@code true} if the transaction was sent successfully.
    */
-  boolean send(@NotNull String id, @NotNull Protocol.Transaction message, @Nullable Object object);
+  boolean send(@NotNull String id, @NotNull Protocol.Transaction message, @Nullable String target);
 }

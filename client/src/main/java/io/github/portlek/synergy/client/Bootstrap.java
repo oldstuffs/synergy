@@ -27,6 +27,7 @@ package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.command.ClientCommands;
 import io.github.portlek.synergy.client.config.ClientConfig;
+import io.github.portlek.synergy.core.config.SynergyConfig;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import io.github.portlek.synergy.languages.Languages;
 import java.nio.file.Path;
@@ -95,6 +96,7 @@ public final class Bootstrap {
   public static void main(final String[] args) {
     System.out.println(Bootstrap.ART);
     ClientConfig.load();
+    SynergyConfig.load();
     System.setProperty("io.netty.tryReflectionSetAccessible", "true");
     Bootstrap.disableWarning();
     final var exitCode = new CommandLine(ClientCommands.class).execute(args);

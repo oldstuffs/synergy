@@ -84,7 +84,7 @@ public final class SynergyNetwork extends Synergy implements Network {
    * @param id the id to start.
    */
   public static void start(@NotNull final InetSocketAddress address, @NotNull final String id) {
-    new SynergyNetwork(address, id)
+    (Synergy.instance = new SynergyNetwork(address, id))
       .start();
   }
 

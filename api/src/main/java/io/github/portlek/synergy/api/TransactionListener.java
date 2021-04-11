@@ -39,7 +39,8 @@ public interface TransactionListener {
    * @param manager the manager to run.
    * @param info the info to run.
    */
-  void onCancel(@NotNull TransactionManager manager, @NotNull TransactionInfo info);
+  default void onCancel(@NotNull final TransactionManager manager, @NotNull final TransactionInfo info) {
+  }
 
   /**
    * runs when the transaction is completed.
@@ -47,7 +48,8 @@ public interface TransactionListener {
    * @param manager the manager to run.
    * @param info the info to run.
    */
-  void onComplete(@NotNull TransactionManager manager, @NotNull TransactionInfo info);
+  default void onComplete(@NotNull final TransactionManager manager, @NotNull final TransactionInfo info) {
+  }
 
   /**
    * runs when the transaction is received.
@@ -56,8 +58,9 @@ public interface TransactionListener {
    * @param info the info to run.
    * @param message the message to run.
    */
-  void onReceive(@NotNull TransactionManager manager, @NotNull TransactionInfo info,
-                 @NotNull Protocol.Transaction message);
+  default void onReceive(@NotNull final TransactionManager manager, @NotNull final TransactionInfo info,
+                         @NotNull final Protocol.Transaction message) {
+  }
 
   /**
    * runs when the transaction is sent.
@@ -65,5 +68,6 @@ public interface TransactionListener {
    * @param manager the manager to run.
    * @param info the info to run.
    */
-  void onSend(@NotNull TransactionManager manager, @NotNull TransactionInfo info);
+  default void onSend(@NotNull final TransactionManager manager, @NotNull final TransactionInfo info) {
+  }
 }

@@ -23,98 +23,87 @@
  *
  */
 
-package io.github.portlek.synergy.api;
+package io.github.portlek.synergy.core.transaction;
 
+import io.github.portlek.synergy.api.TransactionInfo;
+import io.github.portlek.synergy.api.TransactionListener;
 import io.github.portlek.synergy.proto.Protocol;
 import java.util.Optional;
 import java.util.concurrent.ScheduledFuture;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * an interface to determine transaction info.
+ * a simple implementation of {@link TransactionInfo}
  */
-public interface TransactionInfo {
+@RequiredArgsConstructor
+public final class SimpleTransactionInfo implements TransactionInfo {
 
   /**
-   * cancels the task.
-   *
-   * @return cancelled task.
+   * the id.
    */
   @NotNull
-  Optional<ScheduledFuture<Boolean>> getCancelTask();
+  @Getter
+  private final String id;
 
   /**
-   * sets the cancel task.
-   *
-   * @param future the future to set.
+   * the cancel task.
    */
-  void setCancelTask(@NotNull ScheduledFuture<Boolean> future);
+  @Nullable
+  @Setter
+  private ScheduledFuture<Boolean> cancelTask;
 
   /**
-   * obtains the id.
-   *
-   * @return id.
+   * the done.
    */
+  @Getter
+  @Setter
+  private boolean done;
+
+  /**
+   * the target.
+   */
+  @Nullable
+  @Setter
+  private String target;
+
+  /**
+   * the transaction.
+   */
+  @Nullable
+  @Setter
+  private Protocol.Transaction transaction;
+
   @NotNull
-  String getId();
+  @Override
+  public Optional<ScheduledFuture<Boolean>> getCancelTask() {
+    return Optional.ofNullable(this.cancelTask);
+  }
 
   /**
-   * obtains the transaction listener.
-   *
-   * @return transaction listener.
+   * the listener.
    */
+  @Nullable
+  @Setter
+private TransactionListener listener;
   @NotNull
-  Optional<TransactionListener> getListener();
+  @Override
+  public Optional<TransactionListener> getListener() {
+    return Optional.ofNullable(this.listener);
+  }
 
-  /**
-   * sets the listener.
-   *
-   * @param listener the listener to set.
-   */
-  void setListener(@NotNull TransactionListener listener);
-
-  /**
-   * obtains the target.
-   *
-   * @return target.
-   */
   @NotNull
-  Optional<String> getTarget();
+  @Override
+  public Optional<String> getTarget() {
+    return Optional.ofNullable(this.target);
+  }
 
-  /**
-   * sets the target.
-   *
-   * @param target the target to set.
-   */
-  void setTarget(@Nullable String target);
-
-  /**
-   * obtains the transaction.
-   *
-   * @return transaction.
-   */
   @NotNull
-  Optional<Protocol.Transaction> getTransaction();
-
-  /**
-   * sets the transaction.
-   *
-   * @param transaction transaction to set.
-   */
-  void setTransaction(@NotNull Protocol.Transaction transaction);
-
-  /**
-   * obtains the done.
-   *
-   * @return done
-   */
-  boolean isDone();
-
-  /**
-   * sets the done.
-   *
-   * @param done the done to set.
-   */
-  void setDone(boolean done);
+  @Override
+  public Optional<Protocol.Transaction> getTransaction() {
+    return Optional.ofNullable(this.transaction);
+  }
 }

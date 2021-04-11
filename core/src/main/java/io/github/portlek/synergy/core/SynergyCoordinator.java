@@ -111,7 +111,7 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
    */
   public static void start(@NotNull final InetSocketAddress address, @NotNull final List<String> attributes,
                            @NotNull final String id, @NotNull final Map<String, Integer> resources) {
-    new SynergyCoordinator(address, attributes, id, resources)
+    (Synergy.instance = new SynergyCoordinator(address, attributes, id, resources))
       .start();
   }
 

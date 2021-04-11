@@ -33,6 +33,9 @@ import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
+import java.util.Objects;
+import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -51,6 +54,12 @@ import org.jetbrains.annotations.Nullable;
  */
 @Log4j2
 public abstract class Synergy {
+
+  /**
+   * the instance.
+   */
+  @Nullable
+  static Synergy instance;
 
   /**
    * the running.
@@ -85,15 +94,23 @@ public abstract class Synergy {
   private VMShutdownThread shutdownThread;
 
   /**
-   * runs the given runnable as async.
+   * obtains the instance.
    *
-   * @param runnable the runnable to run.
-   *
-   * @return completable future.
+   * @return instance.
    */
   @NotNull
-  public final CompletableFuture<Void> runAsync(@NotNull final Runnable runnable) {
-    return CompletableFuture.runAsync(runnable, this.asyncExecutor);
+  public static Synergy getInstance() {
+    return Objects.requireNonNull(Synergy.instance, Languages.getLanguageValue("not-initiated"));
+  }
+
+  /**
+   * generates a new id.
+   *
+   * @return a newly created id.
+   */
+  @NotNull
+  public final String generateId() {
+    return this.getId() + UUID.randomUUID();
   }
 
   /**
@@ -108,6 +125,26 @@ public abstract class Synergy {
   public final <T> CompletableFuture<T> runAsync(@NotNull final Supplier<T> supplier) {
     return CompletableFuture.supplyAsync(supplier, this.asyncExecutor);
   }
+
+  /**
+   * runs the given runnable as async.
+   *
+   * @param runnable the runnable to run.
+   *
+   * @return completable future.
+   */
+  @NotNull
+  public final CompletableFuture<Void> runAsync(@NotNull final Runnable runnable) {
+    return CompletableFuture.runAsync(runnable, this.asyncExecutor);
+  }
+
+  /**
+   * obtains the id.
+   *
+   * @return id.
+   */
+  @NotNull
+  public abstract String getId();
 
   /**
    * runs when the synergy stops.
@@ -135,6 +172,16 @@ public abstract class Synergy {
    * runs when the V.M shut down.
    */
   public abstract void onVMShutdown();
+
+  /**
+   * sends the given message to the target.
+   *
+   * @param message the message to send.
+   * @param target the target to set.
+   *
+   * @return {@code true} if the message was sent successfully..
+   */
+  public abstract boolean send(@NotNull Protocol.Transaction message, @Nullable String target);
 
   /**
    * runs when the synergy starts.
