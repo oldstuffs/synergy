@@ -39,6 +39,19 @@
   <properties>
     <java.version>11</java.version>
   </properties>
+  <modules>
+    <module>proto</module>
+    <module>pulsar</module>
+    <module>client</module>
+    <module>core</module>
+    <module>minecraft</module>
+    <module>ui</module>
+    <module>log</module>
+    <module>redis</module>
+    <module>netty</module>
+    <module>api</module>
+    <module>languages</module>
+  </modules>
   <build>
     <finalName>${project.name}</finalName>
     <plugins>
@@ -94,19 +107,43 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
-  <modules>
-    <module>proto</module>
-    <module>pulsar</module>
-    <module>client</module>
-    <module>core</module>
-    <module>minecraft</module>
-    <module>ui</module>
-    <module>log</module>
-    <module>redis</module>
-    <module>netty</module>
-    <module>api</module>
-    <module>languages</module>
-  </modules>
+  <profiles>
+    <profile>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-checkstyle-plugin</artifactId>
+            <version>3.1.2</version>
+            <dependencies>
+              <dependency>
+                <groupId>com.puppycrawl.tools</groupId>
+                <artifactId>checkstyle</artifactId>
+                <version>8.41.1</version>
+              </dependency>
+            </dependencies>
+            <executions>
+              <execution>
+                <phase>verify</phase>
+                <goals>
+                  <goal>check</goal>
+                </goals>
+              </execution>
+            </executions>
+            <configuration>
+              <configLocation>checkstyle.xml</configLocation>
+              <encoding>UTF-8</encoding>
+              <consoleOutput>true</consoleOutput>
+              <failsOnError>true</failsOnError>
+              <linkXRef>false</linkXRef>
+              <excludes>io/github/portlek/synergy/proto/*</excludes>
+            </configuration>
+          </plugin>
+        </plugins>
+      </build>
+      <id>checkstyle</id>
+    </profile>
+  </profiles>
   <dependencyManagement>
     <dependencies>
       <dependency>
@@ -221,41 +258,4 @@
       </dependency>
     </dependencies>
   </dependencyManagement>
-  <profiles>
-    <profile>
-      <build>
-        <plugins>
-          <plugin>
-            <groupId>org.apache.maven.plugins</groupId>
-            <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.1.2</version>
-            <dependencies>
-              <dependency>
-                <groupId>com.puppycrawl.tools</groupId>
-                <artifactId>checkstyle</artifactId>
-                <version>8.41.1</version>
-              </dependency>
-            </dependencies>
-            <executions>
-              <execution>
-                <phase>verify</phase>
-                <goals>
-                  <goal>check</goal>
-                </goals>
-              </execution>
-            </executions>
-            <configuration>
-              <configLocation>checkstyle.xml</configLocation>
-              <encoding>UTF-8</encoding>
-              <consoleOutput>true</consoleOutput>
-              <failsOnError>true</failsOnError>
-              <linkXRef>false</linkXRef>
-              <excludes>io/github/portlek/synergy/proto/*</excludes>
-            </configuration>
-          </plugin>
-        </plugins>
-      </build>
-      <id>checkstyle</id>
-    </profile>
-  </profiles>
 </project>
