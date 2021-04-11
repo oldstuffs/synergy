@@ -23,38 +23,11 @@
  *
  */
 
-package io.github.portlek.synergy.core;
-
-import java.net.InetSocketAddress;
-import java.util.Map;
-import org.jetbrains.annotations.NotNull;
+package io.github.portlek.synergy.api;
 
 /**
- * an interface to determine coordinators.
+ * an interface to determine package managers.
  */
-public interface Coordinator {
+public interface PackageManager {
 
-  /**
-   * obtains the address.
-   *
-   * @return address.
-   */
-  @NotNull
-  InetSocketAddress getAddress();
-
-  /**
-   * obtains the id.
-   *
-   * @return id.
-   */
-  @NotNull
-  String getId();
-
-  /**
-   * obtains the servers.
-   *
-   * @return servers.
-   */
-  @NotNull
-  Map<String, Server> getServers();
 }

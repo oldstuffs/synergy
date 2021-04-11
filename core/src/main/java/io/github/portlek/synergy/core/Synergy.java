@@ -26,15 +26,10 @@
 package io.github.portlek.synergy.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.github.portlek.synergy.core.coordinator.SynergyCoordinator;
-import io.github.portlek.synergy.core.network.SynergyNetwork;
 import io.github.portlek.synergy.core.util.VMShutdownThread;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import java.net.InetSocketAddress;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -57,7 +52,7 @@ public abstract class Synergy {
   /**
    * the running.
    */
-  protected final AtomicBoolean running = new AtomicBoolean();
+  final AtomicBoolean running = new AtomicBoolean();
 
   /**
    * async pool executor.
@@ -80,29 +75,6 @@ public abstract class Synergy {
    */
   @Nullable
   private VMShutdownThread shutdownThread;
-
-  /**
-   * starts a {@link SynergyCoordinator} instance.
-   *
-   * @param address the address to start.
-   * @param attributes the attributes to start.
-   * @param id the id to start.
-   * @param resources the resources to start.
-   */
-  public static void coordinator(@NotNull final InetSocketAddress address, @NotNull final List<String> attributes,
-                                 @NotNull final String id, @NotNull final Map<String, Integer> resources) {
-    new SynergyCoordinator(address, attributes, id, resources).start();
-  }
-
-  /**
-   * starts a {@link SynergyNetwork} instance.
-   *
-   * @param address the address to start.
-   * @param id the id to start.
-   */
-  public static void network(@NotNull final InetSocketAddress address, @NotNull final String id) {
-    new SynergyNetwork(address, id).start();
-  }
 
   /**
    * runs the given runnable as async.
@@ -157,9 +129,21 @@ public abstract class Synergy {
   public abstract void onVMShutdown();
 
   /**
+   * runs when the synergy starts.
+   *
+   * @throws InterruptedException if the current thread was interrupted.
+   */
+  protected abstract void onStart() throws InterruptedException;
+
+  /**
+   * runs every 50ms.
+   */
+  protected abstract void onTick();
+
+  /**
    * starts the synergy.
    */
-  protected final void start() {
+  final void start() {
     final var runtime = Runtime.getRuntime();
     if (this.shutdownThread != null) {
       runtime.removeShutdownHook(this.shutdownThread);
@@ -179,16 +163,4 @@ public abstract class Synergy {
       }
     }
   }
-
-  /**
-   * runs when the synergy starts.
-   *
-   * @throws InterruptedException if the current thread was interrupted.
-   */
-  protected abstract void onStart() throws InterruptedException;
-
-  /**
-   * runs every 50ms.
-   */
-  protected abstract void onTick();
 }

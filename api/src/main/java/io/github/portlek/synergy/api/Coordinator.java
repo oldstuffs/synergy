@@ -22,7 +22,39 @@
  * SOFTWARE.
  *
  */
+
+package io.github.portlek.synergy.api;
+
+import java.net.InetSocketAddress;
+import java.util.Map;
+import org.jetbrains.annotations.NotNull;
+
 /**
- * the package that contains network files.
+ * an interface to determine coordinators.
  */
-package io.github.portlek.synergy.core.network;
+public interface Coordinator {
+
+  /**
+   * obtains the address.
+   *
+   * @return address.
+   */
+  @NotNull
+  InetSocketAddress getAddress();
+
+  /**
+   * obtains the id.
+   *
+   * @return id.
+   */
+  @NotNull
+  String getId();
+
+  /**
+   * obtains the servers.
+   *
+   * @return servers.
+   */
+  @NotNull
+  Map<String, CoordinatorServer> getServers();
+}

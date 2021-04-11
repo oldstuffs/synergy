@@ -23,40 +23,29 @@
  *
  */
 
-package io.github.portlek.synergy.core;
+package io.github.portlek.synergy.api;
 
-import java.io.Closeable;
+import com.fasterxml.jackson.databind.JsonNode;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine servers.
+ * an interface to determine package step configs.
  */
-public interface Server extends Closeable {
-
-  @Override
-  void close();
+public interface PackageStepConfig {
 
   /**
-   * obtains the coordinator.
+   * obtains the config.
    *
-   * @return coordinator.
+   * @return config.
    */
   @NotNull
-  Coordinator getCoordinator();
+  JsonNode getConfig();
 
   /**
-   * obtains the server id.
+   * obtains the step.
    *
-   * @return server id.
+   * @return step.
    */
   @NotNull
-  String getServerId();
-
-  /**
-   * obtains the server name.
-   *
-   * @return server name.
-   */
-  @NotNull
-  String getServerName();
+  PackageStep getStep();
 }

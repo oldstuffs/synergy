@@ -589,6 +589,13 @@
               </match>
             </rule>
           </section>
+          <section>
+            <rule>
+              <match>
+                <NAME>dependencyManager</NAME>
+              </match>
+            </rule>
+          </section>
         </rules>
       </arrangement>
     </codeStyleSettings>

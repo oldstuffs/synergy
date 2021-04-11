@@ -28,7 +28,8 @@ package io.github.portlek.synergy.client.command;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.client.config.CoordinatorConfig;
 import io.github.portlek.synergy.client.config.NetworkConfig;
-import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.core.SynergyCoordinator;
+import io.github.portlek.synergy.core.SynergyNetwork;
 import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.Map;
@@ -110,7 +111,7 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
   ) {
     this.run();
     CoordinatorConfig.load(address, attributes, id, resources);
-    Synergy.coordinator(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
+    SynergyCoordinator.start(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
       CoordinatorConfig.resources);
   }
 
@@ -129,6 +130,6 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
   ) {
     this.run();
     NetworkConfig.load(address, id);
-    Synergy.network(NetworkConfig.address, NetworkConfig.id);
+    SynergyNetwork.start(NetworkConfig.address, NetworkConfig.id);
   }
 }
