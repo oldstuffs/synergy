@@ -90,7 +90,7 @@ public final class CoordinatorConfig implements ConfigHolder {
    * @param id the id to load.
    * @param resources the resources to load.
    */
-  public static void load(@Nullable final InetSocketAddress address, @Nullable final List<String> attributes,
+  public static void load(@Nullable final InetSocketAddress address, @Nullable final String[] attributes,
                           @Nullable final String id, @Nullable final Map<String, Integer> resources) {
     ConfigLoader.builder()
       .setConfigHolder(new CoordinatorConfig())
@@ -135,10 +135,10 @@ public final class CoordinatorConfig implements ConfigHolder {
    *
    * @return {@code true} if the save is needed.
    */
-  private static boolean loadAttributes(@Nullable final List<String> attributes) {
+  private static boolean loadAttributes(@Nullable final String[] attributes) {
     final var finalAttributes = Objects.isNull(attributes)
       ? CoordinatorConfig.attributes
-      : attributes;
+      : List.of(attributes);
     if (!CoordinatorConfig.attributes.equals(finalAttributes)) {
       CoordinatorConfig.attributes = finalAttributes;
       CoordinatorConfig.section.set("attributes", finalAttributes);

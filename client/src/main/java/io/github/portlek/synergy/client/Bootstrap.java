@@ -94,10 +94,7 @@ public final class Bootstrap {
   public static void main(final String[] args) {
     System.out.println(Bootstrap.ART);
     ClientConfig.load();
-    new CommandLine(ClientCommands.class)
-      .registerConverter(InetSocketAddress.class, new InetSocketAddressConverter())
-      .registerConverter(Locale.class, new LocaleConverter())
-      .execute(args);
+    new CommandLine(ClientCommands.class).execute(args);
     while (true) {
       try {
         Thread.sleep(5L);

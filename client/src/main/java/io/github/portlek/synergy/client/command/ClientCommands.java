@@ -61,7 +61,7 @@ public final class ClientCommands implements Runnable {
   /**
    * the client language.
    */
-  @CommandLine.Option(names = {"-l", "--lang"}, description = "Client language.")
+  @CommandLine.Option(names = {"-l", "--lang"}, description = "Client language.", converter = LocaleConverter.class)
   @Nullable
   private Locale lang;
 
@@ -92,13 +92,13 @@ public final class ClientCommands implements Runnable {
     name = "coordinator"
   )
   void coordinator(
-    @CommandLine.Option(names = "--address", description = "Coordinator address to connect.") final InetSocketAddress address,
+    @CommandLine.Option(names = "--address", description = "Coordinator address to connect.", converter = InetSocketAddressConverter.class) final InetSocketAddress address,
     @CommandLine.Option(names = "--attributes", description = "Coordinator attributes.") final String[] attributes,
     @CommandLine.Option(names = "--id", description = "Coordinator id.") final String id,
     @CommandLine.Option(names = "--resources", description = "Coordinator resources.") final Map<String, Integer> resources
   ) {
     this.run();
-    CoordinatorConfig.load(address, List.of(attributes), id, resources);
+    CoordinatorConfig.load(address, attributes, id, resources);
     Synergy.coordinator(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
       CoordinatorConfig.resources);
   }
