@@ -26,16 +26,16 @@
 package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.command.ClientCommands;
-import io.github.portlek.synergy.client.command.InetSocketAddressConverter;
-import io.github.portlek.synergy.client.command.LocaleConverter;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.core.util.SystemUtils;
-import java.net.InetSocketAddress;
 import java.nio.file.Path;
+import java.util.Arrays;
 import java.util.Locale;
+import java.util.stream.Collectors;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import picocli.CommandLine;
+import sun.misc.Unsafe;
 
 /**
  * a main class of the client that Java runs first.
@@ -94,13 +94,34 @@ public final class Bootstrap {
   public static void main(final String[] args) {
     System.out.println(Bootstrap.ART);
     ClientConfig.load();
-    new CommandLine(ClientCommands.class).execute(args);
-    while (true) {
-      try {
-        Thread.sleep(5L);
-      } catch (final InterruptedException e) {
-        Bootstrap.log.fatal("Caught an exception at bootstrap level", e);
-      }
+    System.setProperty("io.netty.tryReflectionSetAccessible", "true");
+    Bootstrap.disableWarning();
+    final var exitCode = new CommandLine(ClientCommands.class).execute(args);
+    final var listOfArgs = Arrays.stream(args)
+      .map(s -> s.toLowerCase(Locale.ROOT))
+      .collect(Collectors.toList());
+    if (exitCode == -2) {
+      CommandLine.usage(ClientCommands.class, System.out);
+    } else if (!listOfArgs.contains("coordinator") && !listOfArgs.contains("network")) {
+      CommandLine.usage(ClientCommands.class, System.out);
+    }
+    Bootstrap.log.info("Closing Synergy.");
+    System.exit(exitCode);
+  }
+
+  /**
+   * disable some of warning with a tricky way.
+   */
+  private static void disableWarning() {
+    try {
+      final var theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
+      theUnsafe.setAccessible(true);
+      final var u = (Unsafe) theUnsafe.get(null);
+      final var cls = Class.forName("jdk.internal.module.IllegalAccessLogger");
+      final var logger = cls.getDeclaredField("logger");
+      u.putObjectVolatile(cls, u.staticFieldOffset(logger), null);
+    } catch (final Exception e) {
+      // ignore
     }
   }
 }

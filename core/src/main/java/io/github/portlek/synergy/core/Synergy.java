@@ -171,6 +171,13 @@ public abstract class Synergy {
       this.onStart();
     } catch (final InterruptedException ignored) {
     }
+    while (true) {
+      try {
+        Thread.sleep(5L);
+      } catch (final InterruptedException e) {
+        Synergy.log.fatal("Caught an exception at bootstrap level", e);
+      }
+    }
   }
 
   /**

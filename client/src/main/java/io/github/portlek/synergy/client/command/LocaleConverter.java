@@ -41,6 +41,6 @@ public final class LocaleConverter implements CommandLine.ITypeConverter<Locale>
     if (split.length != 2) {
       return null;
     }
-    return new Locale(split[0], split[1].toUpperCase(Locale.ROOT));
+    return new Locale(split[0].toLowerCase(Locale.ROOT), split[1].toUpperCase(Locale.ROOT));
   }
 }

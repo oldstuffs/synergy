@@ -30,9 +30,9 @@ import io.github.portlek.synergy.client.config.CoordinatorConfig;
 import io.github.portlek.synergy.client.config.NetworkConfig;
 import io.github.portlek.synergy.core.Synergy;
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -50,13 +50,15 @@ import picocli.CommandLine;
   versionProvider = ClientVersionProvider.class,
   showDefaultValues = true
 )
-public final class ClientCommands implements Runnable {
+@Log4j2
+public final class ClientCommands implements Runnable, CommandLine.IExitCodeGenerator {
 
   /**
    * the debug mode.
    */
   @CommandLine.Option(names = {"-d", "--debug"}, description = "Debug mode.")
-  private boolean debug;
+  @Nullable
+  private Boolean debug;
 
   /**
    * the client language.
@@ -66,8 +68,16 @@ public final class ClientCommands implements Runnable {
   private Locale lang;
 
   @Override
+  public int getExitCode() {
+    if (this.debug == null && this.lang == null) {
+      return -2;
+    }
+    return 0;
+  }
+
+  @Override
   public void run() {
-    if (this.debug) {
+    if (this.debug != null && this.debug) {
       final var context = (LoggerContext) LogManager.getContext(false);
       context.getConfiguration()
         .getLoggerConfig(LogManager.ROOT_LOGGER_NAME)
@@ -75,6 +85,7 @@ public final class ClientCommands implements Runnable {
       context.updateLoggers();
     }
     if (this.lang != null) {
+      ClientCommands.log.info("Language set to " + this.lang);
       ClientConfig.setLanguage(this.lang);
     }
     ClientConfig.loadLanguageBundle();
