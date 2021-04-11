@@ -44,7 +44,6 @@ public final class NetworkConfig implements ConfigHolder {
   /**
    * the address.
    */
-  @NotNull
   public static InetSocketAddress address = new InetSocketAddress("localhost", 25501);
 
   /**
