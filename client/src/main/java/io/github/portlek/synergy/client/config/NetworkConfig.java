@@ -33,7 +33,6 @@ import io.github.portlek.synergy.core.util.SystemUtils;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.UUID;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
