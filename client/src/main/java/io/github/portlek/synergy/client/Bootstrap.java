@@ -98,6 +98,9 @@ public final class Bootstrap {
     System.setProperty("io.netty.tryReflectionSetAccessible", "true");
     Bootstrap.disableWarning();
     final var exitCode = new CommandLine(ClientCommands.class).execute(args);
+    if (exitCode == -1) {
+      Languages.init(ClientConfig.getLanguageBundle());
+    }
     final var listOfArgs = Arrays.stream(args)
       .map(s -> s.toLowerCase(Locale.ROOT))
       .collect(Collectors.toList());
