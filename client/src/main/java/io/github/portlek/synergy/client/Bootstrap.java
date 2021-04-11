@@ -100,10 +100,12 @@ public final class Bootstrap {
     final var listOfArgs = Arrays.stream(args)
       .map(s -> s.toLowerCase(Locale.ROOT))
       .collect(Collectors.toList());
-    if (exitCode == -2) {
-      CommandLine.usage(ClientCommands.class, System.out);
-    } else if (!listOfArgs.contains("coordinator") && !listOfArgs.contains("network")) {
-      CommandLine.usage(ClientCommands.class, System.out);
+    if (exitCode != -1) {
+      if (exitCode == -2) {
+        CommandLine.usage(ClientCommands.class, System.out);
+      } else if (!listOfArgs.contains("coordinator") && !listOfArgs.contains("network")) {
+        CommandLine.usage(ClientCommands.class, System.out);
+      }
     }
     Bootstrap.log.info("Closing Synergy.");
     System.exit(exitCode);
