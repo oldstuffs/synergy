@@ -231,7 +231,7 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
       .setType(Commands.BaseCommand.CommandType.SYNC)
       .setSync(sync)
       .build();
-    final var info = this.transactionManager.begin();
+    final var info = this.transactionManager.generateInfo();
     final var message = this.transactionManager
       .build(info.getId(), Protocol.Transaction.Mode.SINGLE, command);
     if (message.isEmpty()) {

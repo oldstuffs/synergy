@@ -50,7 +50,7 @@ public final class SimpleTransactionManager implements TransactionManager {
 
   @NotNull
   @Override
-  public TransactionInfo begin() {
+  public TransactionInfo generateInfo() {
     return null;
   }
 

@@ -37,14 +37,6 @@ import org.jetbrains.annotations.Nullable;
 public interface TransactionManager {
 
   /**
-   * begins the transaction.
-   *
-   * @return the began transaction info.
-   */
-  @NotNull
-  TransactionInfo begin();
-
-  /**
    * builds the transaction.
    *
    * @param id the id to build.
@@ -65,6 +57,14 @@ public interface TransactionManager {
    * @return {@code true} if the transaction was cancelled.
    */
   boolean cancel(@NotNull String id);
+
+  /**
+   * generate a transaction info instance.
+   *
+   * @return a newly created transaction info.
+   */
+  @NotNull
+  TransactionInfo generateInfo();
 
   /**
    * obtains the transaction info.
