@@ -33,7 +33,6 @@ import io.github.portlek.synergy.core.util.SystemUtils;
 import java.net.InetSocketAddress;
 import java.util.Objects;
 import java.util.UUID;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -44,7 +43,6 @@ public final class NetworkConfig implements ConfigHolder {
   /**
    * the address.
    */
-  @NotNull
   public static InetSocketAddress address = new InetSocketAddress("localhost", 25501);
 
   /**
