@@ -103,7 +103,7 @@ public final class CoordinatorConfig implements ConfigHolder {
     var saveNeeded = CoordinatorConfig.loadAddress(address);
     saveNeeded = saveNeeded || CoordinatorConfig.loadAttributes(attributes);
     saveNeeded = saveNeeded || CoordinatorConfig.loadId(id);
-    saveNeeded = saveNeeded || CoordinatorConfig.loadResources(CoordinatorConfig.resources);
+    saveNeeded = saveNeeded || CoordinatorConfig.loadResources(resources);
     if (saveNeeded) {
       CoordinatorConfig.loader.save();
     }
