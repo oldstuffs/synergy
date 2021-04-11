@@ -99,6 +99,7 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
    * @param address the address to run.
    * @param attributes the attributes to run.
    * @param id the id to run.
+   * @param password the password to run.
    * @param resources the resources to run.
    */
   @CommandLine.Command(
@@ -108,12 +109,13 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
     @CommandLine.Option(names = "--address", description = "Coordinator address to connect.", converter = InetSocketAddressConverter.class) final InetSocketAddress address,
     @CommandLine.Option(names = "--attributes", description = "Coordinator attributes.") final String[] attributes,
     @CommandLine.Option(names = "--id", description = "Coordinator id.") final String id,
+    @CommandLine.Option(names = "--password", description = "Coordinator password.") final String password,
     @CommandLine.Option(names = "--resources", description = "Coordinator resources.") final Map<String, Integer> resources
   ) {
     this.run();
-    CoordinatorConfig.load(address, attributes, id, resources);
+    CoordinatorConfig.load(address, attributes, id, password, resources);
     SynergyCoordinator.start(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
-      CoordinatorConfig.resources);
+      CoordinatorConfig.password, CoordinatorConfig.resources);
   }
 
   /**

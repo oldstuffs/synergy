@@ -25,15 +25,18 @@
 
 package io.github.portlek.synergy.core;
 
+import com.google.protobuf.ByteString;
 import io.github.portlek.synergy.api.Coordinator;
 import io.github.portlek.synergy.api.CoordinatorServer;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
+import io.github.portlek.synergy.core.util.AuthUtils;
 import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Commands;
 import io.github.portlek.synergy.proto.Core;
 import io.github.portlek.synergy.proto.P3;
 import io.github.portlek.synergy.proto.Protocol;
+import io.github.portlek.synergy.proto.Protocols;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -77,6 +80,13 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   private final String id;
 
   /**
+   * the password.
+   */
+  @NotNull
+  @Getter
+  private final String password;
+
+  /**
    * the provisioning servers.
    */
   private final Map<String, Core.Server> provisioningServers = new ConcurrentHashMap<>();
@@ -107,11 +117,13 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
    * @param address the address to start.
    * @param attributes the attributes to start.
    * @param id the id to start.
+   * @param password the password to start.
    * @param resources the resources to start.
    */
   public static void start(@NotNull final InetSocketAddress address, @NotNull final List<String> attributes,
-                           @NotNull final String id, @NotNull final Map<String, Integer> resources) {
-    (Synergy.instance = new SynergyCoordinator(address, attributes, id, resources))
+                           @NotNull final String id, @NotNull final String password,
+                           @NotNull final Map<String, Integer> resources) {
+    (Synergy.instance = new SynergyCoordinator(address, attributes, id, password, resources))
       .start();
   }
 
@@ -162,7 +174,30 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
 
   @Override
   public boolean send(@NotNull final Protocol.Transaction message, @Nullable final String target) {
-    return false;
+    if (this.channel == null || !this.channel.isActive()) {
+      SynergyCoordinator.log.error(Languages.getLanguageValue("unable-to-send-transaction", message.getId()));
+      return false;
+    }
+    if (!message.isInitialized()) {
+      SynergyCoordinator.log.error(Languages.getLanguageValue("transaction-not-initiated"));
+      return false;
+    }
+    var messageBytes = message.toByteString();
+    final var encBytes = AuthUtils.encrypt(messageBytes.toByteArray(), this.password);
+    final var hash = AuthUtils.createHash(this.password, encBytes);
+    messageBytes = ByteString.copyFrom(encBytes);
+    final var auth = Protocol.AuthenticatedMessage.newBuilder()
+      .setUuid(this.id)
+      .setVersion(Protocols.PROTOCOL_VERSION)
+      .setHash(hash)
+      .setPayload(messageBytes)
+      .build();
+    if (!auth.isInitialized()) {
+      SynergyCoordinator.log.error(Languages.getLanguageValue("message-not-initialized"));
+      return false;
+    }
+    this.channel.writeAndFlush(auth);
+    return true;
   }
 
   @Override
