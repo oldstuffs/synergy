@@ -136,6 +136,11 @@ public final class SynergyNetwork extends Synergy implements Network {
   }
 
   @Override
+  public boolean send(@NotNull final Protocol.Transaction message, @Nullable final String target) {
+    return false;
+  }
+
+  @Override
   public void onStart() throws InterruptedException {
     SynergyNetwork.log.info(Languages.getLanguageValue("network-is-starting"));
     SynergyNetwork.log.info(Languages.getLanguageValue("trying-to-bind", this.address));

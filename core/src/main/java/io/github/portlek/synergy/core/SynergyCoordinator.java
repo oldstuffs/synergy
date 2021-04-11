@@ -161,6 +161,11 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   }
 
   @Override
+  public boolean send(@NotNull final Protocol.Transaction message, @Nullable final String target) {
+    return false;
+  }
+
+  @Override
   public void onStart() throws InterruptedException {
     SynergyCoordinator.log.info(Languages.getLanguageValue("coordinator-is-starting"));
     SynergyCoordinator.log.info(Languages.getLanguageValue("trying-to-connect", this.address));
