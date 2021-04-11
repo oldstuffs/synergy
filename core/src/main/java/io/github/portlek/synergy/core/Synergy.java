@@ -34,7 +34,6 @@ import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -78,14 +77,17 @@ public abstract class Synergy {
     0, 4, 60L, TimeUnit.SECONDS,
     new LinkedBlockingQueue<>(),
     new ThreadFactoryBuilder()
-      .setNameFormat("Synergy Async Task Handler Thread - %1$d")
+      .setNameFormat("Synergy Async Thread - %1$d")
       .build());
 
   /**
    * the scheduler.
    */
   @Getter
-  private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+  private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(
+    new ThreadFactoryBuilder()
+      .setNameFormat("Synergy Scheduler Thread - %1$d")
+      .build());
 
   /**
    * the shut down thread.

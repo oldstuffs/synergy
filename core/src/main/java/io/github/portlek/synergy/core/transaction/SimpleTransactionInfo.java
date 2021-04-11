@@ -37,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * a simple implementation of {@link TransactionInfo}
+ * a simple implementation of {@link TransactionInfo}.
  */
 @RequiredArgsConstructor
 public final class SimpleTransactionInfo implements TransactionInfo {
