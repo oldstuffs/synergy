@@ -30,6 +30,7 @@ import io.github.portlek.synergy.client.config.CoordinatorConfig;
 import io.github.portlek.synergy.client.config.NetworkConfig;
 import io.github.portlek.synergy.core.SynergyCoordinator;
 import io.github.portlek.synergy.core.SynergyNetwork;
+import io.github.portlek.synergy.languages.Languages;
 import java.net.InetSocketAddress;
 import java.util.Locale;
 import java.util.Map;
@@ -86,10 +87,10 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
       context.updateLoggers();
     }
     if (this.lang != null) {
-      ClientCommands.log.info("Language set to " + this.lang);
       ClientConfig.setLanguage(this.lang);
     }
-    ClientConfig.loadLanguageBundle();
+    Languages.init(ClientConfig.getLanguageBundle());
+    ClientCommands.log.info(Languages.getLanguageValue("language-set", ClientConfig.lang));
   }
 
   /**

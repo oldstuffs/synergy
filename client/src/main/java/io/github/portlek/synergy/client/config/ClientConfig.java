@@ -27,14 +27,12 @@ package io.github.portlek.synergy.client.config;
 
 import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
-import io.github.portlek.configs.annotation.Ignore;
 import io.github.portlek.configs.configuration.FileConfiguration;
 import io.github.portlek.configs.json.JsonType;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import java.util.Locale;
 import java.util.ResourceBundle;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * a class that represents client's config.
@@ -42,14 +40,14 @@ import org.jetbrains.annotations.Nullable;
 public final class ClientConfig implements ConfigHolder {
 
   /**
+   * the client's language.
+   */
+  public static Locale lang = Locale.US;
+
+  /**
    * the configuration.
    */
   private static FileConfiguration configuration;
-
-  /**
-   * the client's language.
-   */
-  private static Locale lang = Locale.US;
 
   /**
    * the loader.
@@ -57,16 +55,19 @@ public final class ClientConfig implements ConfigHolder {
   private static ConfigLoader loader;
 
   /**
-   * lazy-init resource bundle.
-   */
-  @Nullable
-  @Ignore
-  private static ResourceBundle resource;
-
-  /**
    * ctor.
    */
   private ClientConfig() {
+  }
+
+  /**
+   * obtains the language bundle.
+   *
+   * @return language bundle.
+   */
+  @NotNull
+  public static ResourceBundle getLanguageBundle() {
+    return ResourceBundle.getBundle("Synergy", ClientConfig.lang);
   }
 
   /**
@@ -80,15 +81,6 @@ public final class ClientConfig implements ConfigHolder {
       .setFolder(SystemUtils.getHomePath())
       .build()
       .load(true);
-  }
-
-  /**
-   * obtains the client language's resource bundle.
-   */
-  public static void loadLanguageBundle() {
-    if (ClientConfig.resource == null) {
-      ClientConfig.resource = ResourceBundle.getBundle("Synergy", ClientConfig.lang);
-    }
   }
 
   /**

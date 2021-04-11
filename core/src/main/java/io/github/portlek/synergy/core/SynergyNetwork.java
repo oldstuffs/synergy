@@ -28,6 +28,7 @@ package io.github.portlek.synergy.core;
 import io.github.portlek.synergy.api.Coordinator;
 import io.github.portlek.synergy.api.Network;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
+import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
@@ -94,15 +95,15 @@ public final class SynergyNetwork extends Synergy implements Network {
    */
   @NotNull
   public Channel getChannel() {
-    return Objects.requireNonNull(this.channel, "not initiated");
+    return Objects.requireNonNull(this.channel, Languages.getLanguageValue("not-initiated"));
   }
 
   @Override
   public void onClose() throws InterruptedException {
     this.running.set(false);
     this.getScheduler().shutdown();
-    SynergyNetwork.log.info("Closed!");
-    SynergyNetwork.log.info("Restarting in 5 seconds.");
+    SynergyNetwork.log.info(Languages.getLanguageValue("closed"));
+    SynergyNetwork.log.info(Languages.getLanguageValue("restarting"));
     Thread.sleep(1000L * 5L);
     try {
       this.onStart();
@@ -113,8 +114,7 @@ public final class SynergyNetwork extends Synergy implements Network {
   @Override
   public void onInit(@NotNull final NioSocketChannel channel) {
     final var address = channel.remoteAddress();
-    SynergyNetwork.log.info(String.format("Incoming connection from %s:%s",
-      address.getAddress().getHostAddress(), address.getPort()));
+    SynergyNetwork.log.info(Languages.getLanguageValue("incoming-connection", address));
   }
 
   @Override
@@ -124,7 +124,7 @@ public final class SynergyNetwork extends Synergy implements Network {
 
   @Override
   public void onVMShutdown() {
-    SynergyNetwork.log.info("VM shutting down, shutting down all servers (force)");
+    SynergyNetwork.log.info(Languages.getLanguageValue("network-vm-shutting-down"));
     if (!this.getScheduler().isShutdown()) {
       this.getScheduler().shutdownNow();
     }
@@ -137,8 +137,8 @@ public final class SynergyNetwork extends Synergy implements Network {
 
   @Override
   public void onStart() throws InterruptedException {
-    SynergyNetwork.log.info("Network is starting.");
-    SynergyNetwork.log.info(String.format("Trying to bind on %s", this.address));
+    SynergyNetwork.log.info(Languages.getLanguageValue("network-is-starting"));
+    SynergyNetwork.log.info(Languages.getLanguageValue("trying-to-bind", this.address));
     final var future = Connections.bind(new SynergyInitializer(this), this.address)
       .await();
     if (!future.isSuccess()) {
@@ -146,7 +146,7 @@ public final class SynergyNetwork extends Synergy implements Network {
       return;
     }
     this.channel = future.channel();
-    SynergyNetwork.log.info("Bound.");
+    SynergyNetwork.log.info(Languages.getLanguageValue("bound"));
     this.running.set(true);
   }
 

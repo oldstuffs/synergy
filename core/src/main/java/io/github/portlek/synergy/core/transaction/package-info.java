@@ -22,58 +22,7 @@
  * SOFTWARE.
  *
  */
-
-package io.github.portlek.synergy.api;
-
-import java.io.Closeable;
-import java.util.Map;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * an interface to determine coordinator servers.
+ * the package that contains the transaction system's implementations.
  */
-public interface CoordinatorServer extends Closeable {
-
-  @Override
-  void close();
-
-  /**
-   * obtains the coordinator.
-   *
-   * @return coordinator.
-   */
-  @NotNull
-  Coordinator getCoordinator();
-
-  /**
-   * obtains the id.
-   *
-   * @return id.
-   */
-  @NotNull
-  String getId();
-
-  /**
-   * obtains the name.
-   *
-   * @return name.
-   */
-  @NotNull
-  String getName();
-
-  /**
-   * obtains the package.
-   *
-   * @return package.
-   */
-  @NotNull
-  Package getPackage();
-
-  /**
-   * obtains the properties.
-   *
-   * @return properties.
-   */
-  @NotNull
-  Map<String, String> getProperties();
-}
+package io.github.portlek.synergy.core.transaction;

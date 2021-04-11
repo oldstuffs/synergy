@@ -25,25 +25,22 @@
 
 package io.github.portlek.synergy.api;
 
-import java.io.Closeable;
-import java.util.Map;
+import io.github.portlek.synergy.proto.Protocol;
+import java.util.concurrent.ScheduledFuture;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine coordinator servers.
+ * an interface to determine transaction info.
  */
-public interface CoordinatorServer extends Closeable {
-
-  @Override
-  void close();
+public interface TransactionInfo {
 
   /**
-   * obtains the coordinator.
+   * cancels the task.
    *
-   * @return coordinator.
+   * @return cancelled task.
    */
   @NotNull
-  Coordinator getCoordinator();
+  ScheduledFuture<?> cancelTask();
 
   /**
    * obtains the id.
@@ -54,26 +51,33 @@ public interface CoordinatorServer extends Closeable {
   String getId();
 
   /**
-   * obtains the name.
+   * obtains the transaction listener.
    *
-   * @return name.
+   * @return transaction listener.
    */
   @NotNull
-  String getName();
+  TransactionListener getListener();
 
   /**
-   * obtains the package.
+   * obtains the target.
    *
-   * @return package.
+   * @return target.
    */
   @NotNull
-  Package getPackage();
+  String getTarget();
 
   /**
-   * obtains the properties.
+   * obtains the transaction.
    *
-   * @return properties.
+   * @return transaction.
    */
   @NotNull
-  Map<String, String> getProperties();
+  Protocol.Transaction getTransaction();
+
+  /**
+   * obtains the done.
+   *
+   * @return done
+   */
+  boolean isDone();
 }

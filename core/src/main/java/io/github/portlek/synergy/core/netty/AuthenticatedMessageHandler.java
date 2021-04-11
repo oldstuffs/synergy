@@ -26,6 +26,7 @@
 package io.github.portlek.synergy.core.netty;
 
 import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.proto.Protocol;
 import io.github.portlek.synergy.proto.Protocols;
 import io.netty.channel.ChannelHandlerContext;
@@ -55,14 +56,14 @@ public final class AuthenticatedMessageHandler extends SimpleChannelInboundHandl
   @Override
   protected void channelRead0(final ChannelHandlerContext ctx, final Protocol.AuthenticatedMessage msg) {
     if (msg.getVersion() != Protocols.PROTOCOL_VERSION) {
-      AuthenticatedMessageHandler.log.error(String.format("Protocol version mismatch! Expected %d, got %d",
+      AuthenticatedMessageHandler.log.error(Languages.getLanguageValue("protocol-version-mismatch",
         Protocols.PROTOCOL_VERSION, msg.getVersion()));
-      AuthenticatedMessageHandler.log.error("Disconnecting due to version mismatch.");
+      AuthenticatedMessageHandler.log.error(Languages.getLanguageValue("disconnecting-version-mismatch"));
       ctx.channel().close();
       return;
     }
     if (!this.synergy.onReceive(msg, ctx.channel())) {
-      AuthenticatedMessageHandler.log.error("Message failed");
+      AuthenticatedMessageHandler.log.error(Languages.getLanguageValue("message-failed"));
     }
   }
 }

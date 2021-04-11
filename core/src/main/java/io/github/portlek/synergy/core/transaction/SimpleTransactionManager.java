@@ -1,0 +1,89 @@
+/*
+ * MIT License
+ *
+ * Copyright (c) 2021 Hasan Demirtaş
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ *
+ */
+
+package io.github.portlek.synergy.core.transaction;
+
+import io.github.portlek.synergy.api.TransactionInfo;
+import io.github.portlek.synergy.api.TransactionManager;
+import io.github.portlek.synergy.languages.Languages;
+import io.github.portlek.synergy.proto.Commands;
+import io.github.portlek.synergy.proto.Protocol;
+import java.util.Map;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
+/**
+ * a simple implementation of {@link TransactionManager}.
+ */
+@Log4j2
+public final class SimpleTransactionManager implements TransactionManager {
+
+  /**
+   * the transactions.
+   */
+  private final Map<String, TransactionInfo> transactions = new ConcurrentHashMap<>();
+
+  @NotNull
+  @Override
+  public TransactionInfo begin() {
+    return null;
+  }
+
+  @NotNull
+  @Override
+  public Optional<Protocol.Transaction> build(@NotNull final String id, @NotNull final Protocol.Transaction.Mode mode,
+                                              @NotNull final Commands.BaseCommand command) {
+    final var info = this.getTransactionInfo(id);
+    if (info.isEmpty()) {
+      SimpleTransactionManager.log.error(Languages.getLanguageValue("unable-to-build-transaction", id));
+      return Optional.empty();
+    }
+    return Optional.of(Protocol.Transaction.newBuilder()
+      .setId(info.get().getId())
+      .setMode(mode)
+      .setPayload(command)
+      .build());
+  }
+
+  @Override
+  public boolean cancel(@NotNull final String id) {
+    return false;
+  }
+
+  @NotNull
+  @Override
+  public Optional<TransactionInfo> getTransactionInfo(@NotNull final String id) {
+    return Optional.ofNullable(this.transactions.get(id));
+  }
+
+  @Override
+  public boolean send(@NotNull final String id, @NotNull final Protocol.Transaction message,
+                      @Nullable final Object object) {
+    return false;
+  }
+}

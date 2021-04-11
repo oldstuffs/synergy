@@ -105,6 +105,7 @@
     <module>redis</module>
     <module>netty</module>
     <module>api</module>
+    <module>languages</module>
   </modules>
   <dependencyManagement>
     <dependencies>
@@ -116,6 +117,11 @@
       <dependency>
         <groupId>io.github.portlek.synergy</groupId>
         <artifactId>api</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.portlek.synergy</groupId>
+        <artifactId>languages</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>

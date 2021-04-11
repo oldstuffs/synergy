@@ -28,6 +28,7 @@ package io.github.portlek.synergy.client;
 import io.github.portlek.synergy.client.command.ClientCommands;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.core.util.SystemUtils;
+import io.github.portlek.synergy.languages.Languages;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
@@ -107,7 +108,7 @@ public final class Bootstrap {
         CommandLine.usage(ClientCommands.class, System.out);
       }
     }
-    Bootstrap.log.info("Closing Synergy.");
+    Bootstrap.log.info(Languages.getLanguageValue("closing-synergy"));
     System.exit(exitCode);
   }
 

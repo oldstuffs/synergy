@@ -28,6 +28,7 @@ package io.github.portlek.synergy.core;
 import io.github.portlek.synergy.api.Coordinator;
 import io.github.portlek.synergy.api.CoordinatorServer;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
+import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.netty.Connections;
 import io.github.portlek.synergy.proto.Commands;
 import io.github.portlek.synergy.proto.Core;
@@ -76,6 +77,11 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   private final String id;
 
   /**
+   * the provisioning servers.
+   */
+  private final Map<String, Core.Server> provisioningServers = new ConcurrentHashMap<>();
+
+  /**
    * the resources.
    */
   @NotNull
@@ -116,15 +122,15 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
    */
   @NotNull
   public Channel getChannel() {
-    return Objects.requireNonNull(this.channel, "not initiated");
+    return Objects.requireNonNull(this.channel, Languages.getLanguageValue("not-initiated"));
   }
 
   @Override
   public void onClose() throws InterruptedException {
     this.running.set(false);
     this.getScheduler().shutdown();
-    SynergyCoordinator.log.info("Connection closed!");
-    SynergyCoordinator.log.info("Restarting in 5 seconds.");
+    SynergyCoordinator.log.info(Languages.getLanguageValue("connection-closed"));
+    SynergyCoordinator.log.info(Languages.getLanguageValue("restarting"));
     Thread.sleep(1000L * 5L);
     try {
       this.onStart();
@@ -144,7 +150,7 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
 
   @Override
   public void onVMShutdown() {
-    SynergyCoordinator.log.info("VM shutting down, shutting down all servers (force)");
+    SynergyCoordinator.log.info(Languages.getLanguageValue("coordinator-vm-shutting-down"));
     if (!this.getScheduler().isShutdown()) {
       this.getScheduler().shutdownNow();
     }
@@ -156,8 +162,8 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
 
   @Override
   public void onStart() throws InterruptedException {
-    SynergyCoordinator.log.info("Coordinator is starting.");
-    SynergyCoordinator.log.info(String.format("Trying to connect network at %s", this.address));
+    SynergyCoordinator.log.info(Languages.getLanguageValue("coordinator-is-starting"));
+    SynergyCoordinator.log.info(Languages.getLanguageValue("trying-to-connect", this.address));
     final var future = Connections.connect(new SynergyInitializer(this), this.address)
       .await();
     if (!future.isSuccess()) {
@@ -167,7 +173,7 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
     this.channel = future.channel();
     this.channel.closeFuture()
       .addListener((ChannelFutureListener) ftr -> SynergyCoordinator.this.onClose());
-    SynergyCoordinator.log.info("Connected.");
+    SynergyCoordinator.log.info(Languages.getLanguageValue("connected"));
     this.running.set(true);
   }
 
@@ -178,9 +184,11 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
 
   /**
    * syncs with the network.
+   *
+   * @return {@code true} if sync is succeed.
    */
-  private void sync() {
-    final var builder = Commands.Sync.newBuilder()
+  private boolean sync() {
+    final var syncBuilder = Commands.Sync.newBuilder()
       .setEnabled(this.running.get())
       .setName(this.id);
     this.resources.entrySet().stream()
@@ -189,13 +197,49 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
           .setName(entry.getKey())
           .setValue(entry.getValue())
           .build())
-      .forEach(builder::addResources);
-    builder.addAllAttributes(this.attributes);
-    this.servers.forEach((id, coordinatorServer) -> {
+      .forEach(syncBuilder::addResources);
+    syncBuilder.addAllAttributes(this.attributes);
+    this.servers.forEach((id, server) -> {
       final var meta = P3.P3Meta.newBuilder()
-        .setId(coordinatorServer.getPackage().getId())
-        .setVersion(coordinatorServer.getPackage().getVersion())
+        .setId(server.getPackage().getId())
+        .setVersion(server.getPackage().getVersion())
         .build();
+      final var serverBuilder = Core.Server.newBuilder()
+        .setP3(meta)
+        .setUuid(server.getId())
+        .setName(server.getName());
+      server.getProperties().forEach((key, value) -> {
+        final var prop = Core.Property.newBuilder()
+          .setName(key)
+          .setValue(value)
+          .build();
+        serverBuilder.addProperties(prop);
+      });
+      syncBuilder.addServers(serverBuilder.build());
     });
+    this.provisioningServers.values().stream()
+      .map(localServer -> Core.Server.newBuilder()
+        .setUuid(localServer.getUuid())
+        .setP3(localServer.getP3())
+        .setActive(false)
+        .addAllProperties(localServer.getPropertiesList())
+        .setName(localServer.getName())
+        .build())
+      .forEach(syncBuilder::addServers);
+    final var sync = syncBuilder.build();
+    final var command = Commands.BaseCommand.newBuilder()
+      .setType(Commands.BaseCommand.CommandType.SYNC)
+      .setSync(sync)
+      .build();
+    final var info = this.transactionManager.begin();
+    final var message = this.transactionManager
+      .build(info.getId(), Protocol.Transaction.Mode.SINGLE, command);
+    if (message.isEmpty()) {
+      SynergyCoordinator.log.error(Languages.getLanguageValue("unable-to-build-message"));
+      this.transactionManager.cancel(info.getId());
+      return false;
+    }
+    SynergyCoordinator.log.info(Languages.getLanguageValue("sending-sync"));
+    return this.transactionManager.send(info.getId(), message.get(), null);
   }
 }

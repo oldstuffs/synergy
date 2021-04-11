@@ -26,7 +26,10 @@
 package io.github.portlek.synergy.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.github.portlek.synergy.api.TransactionManager;
+import io.github.portlek.synergy.core.transaction.SimpleTransactionManager;
 import io.github.portlek.synergy.core.util.VMShutdownThread;
+import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -53,6 +56,11 @@ public abstract class Synergy {
    * the running.
    */
   final AtomicBoolean running = new AtomicBoolean();
+
+  /**
+   * the transaction manager.
+   */
+  final TransactionManager transactionManager = new SimpleTransactionManager();
 
   /**
    * async pool executor.
@@ -159,7 +167,7 @@ public abstract class Synergy {
       try {
         Thread.sleep(5L);
       } catch (final InterruptedException e) {
-        Synergy.log.fatal("Caught an exception at bootstrap level", e);
+        Synergy.log.fatal(Languages.getLanguageValue("caught-an-exception"), e);
       }
     }
   }

@@ -25,55 +25,45 @@
 
 package io.github.portlek.synergy.api;
 
-import java.io.Closeable;
-import java.util.Map;
+import io.github.portlek.synergy.proto.Protocol;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine coordinator servers.
+ * an interface to determine transaction listener.
  */
-public interface CoordinatorServer extends Closeable {
-
-  @Override
-  void close();
+public interface TransactionListener {
 
   /**
-   * obtains the coordinator.
+   * runs when the transaction is canceled.
    *
-   * @return coordinator.
+   * @param manager the manager to run.
+   * @param info the info to run.
    */
-  @NotNull
-  Coordinator getCoordinator();
+  void onCancel(@NotNull TransactionManager manager, @NotNull TransactionInfo info);
 
   /**
-   * obtains the id.
+   * runs when the transaction is completed.
    *
-   * @return id.
+   * @param manager the manager to run.
+   * @param info the info to run.
    */
-  @NotNull
-  String getId();
+  void onComplete(@NotNull TransactionManager manager, @NotNull TransactionInfo info);
 
   /**
-   * obtains the name.
+   * runs when the transaction is received.
    *
-   * @return name.
+   * @param manager the manager to run.
+   * @param info the info to run.
+   * @param message the message to run.
    */
-  @NotNull
-  String getName();
+  void onReceive(@NotNull TransactionManager manager, @NotNull TransactionInfo info,
+                 @NotNull Protocol.Transaction message);
 
   /**
-   * obtains the package.
+   * runs when the transaction is sent.
    *
-   * @return package.
+   * @param manager the manager to run.
+   * @param info the info to run.
    */
-  @NotNull
-  Package getPackage();
-
-  /**
-   * obtains the properties.
-   *
-   * @return properties.
-   */
-  @NotNull
-  Map<String, String> getProperties();
+  void onSend(@NotNull TransactionManager manager, @NotNull TransactionInfo info);
 }

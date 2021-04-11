@@ -25,55 +25,65 @@
 
 package io.github.portlek.synergy.api;
 
-import java.io.Closeable;
-import java.util.Map;
+import io.github.portlek.synergy.proto.Commands;
+import io.github.portlek.synergy.proto.Protocol;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * an interface to determine coordinator servers.
+ * an interface to determine transaction managers.
  */
-public interface CoordinatorServer extends Closeable {
-
-  @Override
-  void close();
+public interface TransactionManager {
 
   /**
-   * obtains the coordinator.
+   * begins the transaction.
    *
-   * @return coordinator.
+   * @return the began transaction info.
    */
   @NotNull
-  Coordinator getCoordinator();
+  TransactionInfo begin();
 
   /**
-   * obtains the id.
+   * builds the transaction.
    *
-   * @return id.
+   * @param id the id to build.
+   * @param mode the mode to build.
+   * @param command the command to build.
+   *
+   * @return built transaction.
    */
   @NotNull
-  String getId();
+  Optional<Protocol.Transaction> build(@NotNull String id, @NotNull Protocol.Transaction.Mode mode,
+                                       @NotNull Commands.BaseCommand command);
 
   /**
-   * obtains the name.
+   * cancels the transaction.
    *
-   * @return name.
+   * @param id the id to cancel.
+   *
+   * @return {@code true} if the transaction was cancelled.
    */
-  @NotNull
-  String getName();
+  boolean cancel(@NotNull String id);
 
   /**
-   * obtains the package.
+   * obtains the transaction info.
    *
-   * @return package.
+   * @param id the id to get.
+   *
+   * @return transaction info.
    */
   @NotNull
-  Package getPackage();
+  Optional<TransactionInfo> getTransactionInfo(@NotNull String id);
 
   /**
-   * obtains the properties.
+   * sends the transaction.
    *
-   * @return properties.
+   * @param id the id to send.
+   * @param message the message to send.
+   * @param object the object to send.
+   *
+   * @return {@code true} if the transaction was sent successfully..
    */
-  @NotNull
-  Map<String, String> getProperties();
+  boolean send(@NotNull String id, @NotNull Protocol.Transaction message, @Nullable Object object);
 }
