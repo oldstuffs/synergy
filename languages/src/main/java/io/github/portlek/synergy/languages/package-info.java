@@ -23,6 +23,6 @@
  *
  */
 /**
- * the package that contains network files.
+ * the package that contains main language files.
  */
-package io.github.portlek.synergy.core.network;
+package io.github.portlek.synergy.languages;

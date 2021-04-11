@@ -26,15 +26,15 @@
 package io.github.portlek.synergy.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import io.github.portlek.synergy.core.coordinator.SynergyCoordinator;
-import io.github.portlek.synergy.core.network.SynergyNetwork;
+import io.github.portlek.synergy.api.TransactionManager;
+import io.github.portlek.synergy.core.transaction.SimpleTransactionManager;
 import io.github.portlek.synergy.core.util.VMShutdownThread;
+import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import java.net.InetSocketAddress;
-import java.util.List;
-import java.util.Map;
+import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -55,9 +55,20 @@ import org.jetbrains.annotations.Nullable;
 public abstract class Synergy {
 
   /**
+   * the instance.
+   */
+  @Nullable
+  static Synergy instance;
+
+  /**
    * the running.
    */
-  protected final AtomicBoolean running = new AtomicBoolean();
+  final AtomicBoolean running = new AtomicBoolean();
+
+  /**
+   * the transaction manager.
+   */
+  final TransactionManager transactionManager = new SimpleTransactionManager();
 
   /**
    * async pool executor.
@@ -66,14 +77,17 @@ public abstract class Synergy {
     0, 4, 60L, TimeUnit.SECONDS,
     new LinkedBlockingQueue<>(),
     new ThreadFactoryBuilder()
-      .setNameFormat("Synergy Async Task Handler Thread - %1$d")
+      .setNameFormat("Synergy Async Thread - %1$d")
       .build());
 
   /**
    * the scheduler.
    */
   @Getter
-  private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor();
+  private final ScheduledExecutorService scheduler = Executors.newSingleThreadScheduledExecutor(
+    new ThreadFactoryBuilder()
+      .setNameFormat("Synergy Scheduler Thread - %1$d")
+      .build());
 
   /**
    * the shut down thread.
@@ -82,26 +96,36 @@ public abstract class Synergy {
   private VMShutdownThread shutdownThread;
 
   /**
-   * starts a {@link SynergyCoordinator} instance.
+   * obtains the instance.
    *
-   * @param address the address to start.
-   * @param attributes the attributes to start.
-   * @param id the id to start.
-   * @param resources the resources to start.
+   * @return instance.
    */
-  public static void coordinator(@NotNull final InetSocketAddress address, @NotNull final List<String> attributes,
-                                 @NotNull final String id, @NotNull final Map<String, Integer> resources) {
-    new SynergyCoordinator(address, attributes, id, resources).start();
+  @NotNull
+  public static Synergy getInstance() {
+    return Objects.requireNonNull(Synergy.instance, Languages.getLanguageValue("not-initiated"));
   }
 
   /**
-   * starts a {@link SynergyNetwork} instance.
+   * generates a new id.
    *
-   * @param address the address to start.
-   * @param id the id to start.
+   * @return a newly created id.
    */
-  public static void network(@NotNull final InetSocketAddress address, @NotNull final String id) {
-    new SynergyNetwork(address, id).start();
+  @NotNull
+  public final String generateId() {
+    return this.getId() + UUID.randomUUID();
+  }
+
+  /**
+   * runs the given supplier as async.
+   *
+   * @param supplier the supplier to run.
+   * @param <T> type of the value.
+   *
+   * @return completable future.
+   */
+  @NotNull
+  public final <T> CompletableFuture<T> runAsync(@NotNull final Supplier<T> supplier) {
+    return CompletableFuture.supplyAsync(supplier, this.asyncExecutor);
   }
 
   /**
@@ -117,17 +141,12 @@ public abstract class Synergy {
   }
 
   /**
-   * runs the given supplier as async.
+   * obtains the id.
    *
-   * @param supplier the supplier to run.
-   * @param <T> type of the value.
-   *
-   * @return completable future.
+   * @return id.
    */
   @NotNull
-  public final <T> CompletableFuture<T> runAsync(@NotNull final Supplier<T> supplier) {
-    return CompletableFuture.supplyAsync(supplier, this.asyncExecutor);
-  }
+  public abstract String getId();
 
   /**
    * runs when the synergy stops.
@@ -157,21 +176,14 @@ public abstract class Synergy {
   public abstract void onVMShutdown();
 
   /**
-   * starts the synergy.
+   * sends the given message to the target.
+   *
+   * @param message the message to send.
+   * @param target the target to set.
+   *
+   * @return {@code true} if the message was sent successfully..
    */
-  protected final void start() {
-    final var runtime = Runtime.getRuntime();
-    if (this.shutdownThread != null) {
-      runtime.removeShutdownHook(this.shutdownThread);
-      this.shutdownThread.interrupt();
-    }
-    runtime.addShutdownHook(this.shutdownThread = new VMShutdownThread(this));
-    this.scheduler.scheduleAtFixedRate(this::onTick, 0L, 50L, TimeUnit.MILLISECONDS);
-    try {
-      this.onStart();
-    } catch (final InterruptedException ignored) {
-    }
-  }
+  public abstract boolean send(@NotNull Protocol.Transaction message, @Nullable String target);
 
   /**
    * runs when the synergy starts.
@@ -184,4 +196,28 @@ public abstract class Synergy {
    * runs every 50ms.
    */
   protected abstract void onTick();
+
+  /**
+   * starts the synergy.
+   */
+  final void start() {
+    final var runtime = Runtime.getRuntime();
+    if (this.shutdownThread != null) {
+      runtime.removeShutdownHook(this.shutdownThread);
+      this.shutdownThread.interrupt();
+    }
+    runtime.addShutdownHook(this.shutdownThread = new VMShutdownThread(this));
+    this.scheduler.scheduleAtFixedRate(this::onTick, 0L, 50L, TimeUnit.MILLISECONDS);
+    try {
+      this.onStart();
+    } catch (final InterruptedException ignored) {
+    }
+    while (true) {
+      try {
+        Thread.sleep(5L);
+      } catch (final InterruptedException e) {
+        Synergy.log.fatal(Languages.getLanguageValue("caught-an-exception"), e);
+      }
+    }
+  }
 }

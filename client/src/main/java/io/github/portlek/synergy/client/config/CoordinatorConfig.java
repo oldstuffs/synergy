@@ -62,6 +62,11 @@ public final class CoordinatorConfig implements ConfigHolder {
   public static String id = UUID.randomUUID().toString();
 
   /**
+   * the password.
+   */
+  public static String password = UUID.randomUUID().toString();
+
+  /**
    * the resources.
    */
   public static Map<String, Integer> resources = new Object2IntOpenHashMap<>();
@@ -88,10 +93,12 @@ public final class CoordinatorConfig implements ConfigHolder {
    * @param address the address to load.
    * @param attributes the attributes to load.
    * @param id the id to load.
+   * @param password the password to load.
    * @param resources the resources to load.
    */
-  public static void load(@Nullable final InetSocketAddress address, @Nullable final List<String> attributes,
-                          @Nullable final String id, @Nullable final Map<String, Integer> resources) {
+  public static void load(@Nullable final InetSocketAddress address, @Nullable final String[] attributes,
+                          @Nullable final String id, @Nullable final String password,
+                          @Nullable final Map<String, Integer> resources) {
     ConfigLoader.builder()
       .setConfigHolder(new CoordinatorConfig())
       .setConfigType(JsonType.get())
@@ -103,7 +110,8 @@ public final class CoordinatorConfig implements ConfigHolder {
     var saveNeeded = CoordinatorConfig.loadAddress(address);
     saveNeeded = saveNeeded || CoordinatorConfig.loadAttributes(attributes);
     saveNeeded = saveNeeded || CoordinatorConfig.loadId(id);
-    saveNeeded = saveNeeded || CoordinatorConfig.loadResources(CoordinatorConfig.resources);
+    saveNeeded = saveNeeded || CoordinatorConfig.loadPassword(password);
+    saveNeeded = saveNeeded || CoordinatorConfig.loadResources(resources);
     if (saveNeeded) {
       CoordinatorConfig.loader.save();
     }
@@ -135,10 +143,10 @@ public final class CoordinatorConfig implements ConfigHolder {
    *
    * @return {@code true} if the save is needed.
    */
-  private static boolean loadAttributes(@Nullable final List<String> attributes) {
+  private static boolean loadAttributes(@Nullable final String[] attributes) {
     final var finalAttributes = Objects.isNull(attributes)
       ? CoordinatorConfig.attributes
-      : attributes;
+      : List.of(attributes);
     if (!CoordinatorConfig.attributes.equals(finalAttributes)) {
       CoordinatorConfig.attributes = finalAttributes;
       CoordinatorConfig.section.set("attributes", finalAttributes);
@@ -161,6 +169,25 @@ public final class CoordinatorConfig implements ConfigHolder {
     if (!CoordinatorConfig.id.equals(finalId)) {
       CoordinatorConfig.id = finalId;
       CoordinatorConfig.section.set("id", finalId);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * loads the password.
+   *
+   * @param password the password to load.
+   *
+   * @return {@code true} if the save is needed.
+   */
+  private static boolean loadPassword(@Nullable final String password) {
+    final var finalPassword = Objects.isNull(password)
+      ? CoordinatorConfig.password
+      : password;
+    if (!CoordinatorConfig.password.equals(finalPassword)) {
+      CoordinatorConfig.password = finalPassword;
+      CoordinatorConfig.section.set("password", finalPassword);
       return true;
     }
     return false;

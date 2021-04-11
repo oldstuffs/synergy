@@ -23,24 +23,63 @@
  *
  */
 
-package io.github.portlek.synergy.client.command;
+package io.github.portlek.synergy.api;
 
-import java.util.Locale;
-import org.jetbrains.annotations.Nullable;
-import picocli.CommandLine;
+import java.io.File;
+import java.util.List;
+import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that converts user's inputs into locale.
+ * an interface to determine package context.
  */
-public final class LocaleConverter implements CommandLine.ITypeConverter<Locale> {
+public interface PackageContext {
 
-  @Nullable
-  @Override
-  public Locale convert(final String value) {
-    final var split = value.trim().replace("-", "_").split("_");
-    if (split.length != 2) {
-      return null;
-    }
-    return new Locale(split[0].toLowerCase(Locale.ROOT), split[1].toUpperCase(Locale.ROOT));
-  }
+  /**
+   * obtains the dependency chain.
+   *
+   * @return dependency chain.
+   */
+  @NotNull
+  List<Package> getDependencyChain();
+
+  /**
+   * obtains the destination.
+   *
+   * @return destination.
+   */
+  @NotNull
+  File getDestination();
+
+  /**
+   * obtains the package manager.
+   *
+   * @return package manager.
+   */
+  @NotNull
+  PackageManager getPackageManager();
+
+  /**
+   * obtains the properties.
+   *
+   * @return properties.
+   */
+  @NotNull
+  Map<String, String> getProperties();
+
+  /**
+   * obtains the resources.
+   *
+   * @return resources.
+   */
+  @NotNull
+  Map<String, Integer> getResources();
+
+  /**
+   * obtains the user.
+   *
+   * @return user.
+   */
+  @NotNull
+  Object getUser();
 }

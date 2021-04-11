@@ -23,24 +23,57 @@
  *
  */
 
-package io.github.portlek.synergy.client.command;
+package io.github.portlek.synergy.api;
 
-import java.util.Locale;
-import org.jetbrains.annotations.Nullable;
-import picocli.CommandLine;
+import java.io.Closeable;
+import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that converts user's inputs into locale.
+ * an interface to determine coordinator servers.
  */
-public final class LocaleConverter implements CommandLine.ITypeConverter<Locale> {
+public interface CoordinatorServer extends Closeable {
 
-  @Nullable
   @Override
-  public Locale convert(final String value) {
-    final var split = value.trim().replace("-", "_").split("_");
-    if (split.length != 2) {
-      return null;
-    }
-    return new Locale(split[0].toLowerCase(Locale.ROOT), split[1].toUpperCase(Locale.ROOT));
-  }
+  void close();
+
+  /**
+   * obtains the coordinator.
+   *
+   * @return coordinator.
+   */
+  @NotNull
+  Coordinator getCoordinator();
+
+  /**
+   * obtains the id.
+   *
+   * @return id.
+   */
+  @NotNull
+  String getId();
+
+  /**
+   * obtains the name.
+   *
+   * @return name.
+   */
+  @NotNull
+  String getName();
+
+  /**
+   * obtains the package.
+   *
+   * @return package.
+   */
+  @NotNull
+  Package getPackage();
+
+  /**
+   * obtains the properties.
+   *
+   * @return properties.
+   */
+  @NotNull
+  Map<String, String> getProperties();
 }

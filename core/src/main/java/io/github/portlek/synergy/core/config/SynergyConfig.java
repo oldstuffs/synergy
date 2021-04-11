@@ -23,51 +23,29 @@
  *
  */
 
-package io.github.portlek.synergy.client.config;
+package io.github.portlek.synergy.core.config;
 
 import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
-import io.github.portlek.configs.configuration.FileConfiguration;
+import io.github.portlek.configs.annotation.Route;
 import io.github.portlek.configs.json.JsonType;
 import io.github.portlek.synergy.core.util.SystemUtils;
-import java.util.Locale;
-import java.util.ResourceBundle;
-import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that represents client's config.
+ * a class that represents Synergy's global config.
  */
-public final class ClientConfig implements ConfigHolder {
+public final class SynergyConfig implements ConfigHolder {
 
   /**
-   * the client's language.
+   * the transaction timeout.
    */
-  public static Locale lang = Locale.US;
-
-  /**
-   * the configuration.
-   */
-  private static FileConfiguration configuration;
-
-  /**
-   * the loader.
-   */
-  private static ConfigLoader loader;
+  @Route("transaction-timeout")
+  public static long transactionTimeout;
 
   /**
    * ctor.
    */
-  private ClientConfig() {
-  }
-
-  /**
-   * obtains the language bundle.
-   *
-   * @return language bundle.
-   */
-  @NotNull
-  public static ResourceBundle getLanguageBundle() {
-    return ResourceBundle.getBundle("Synergy", ClientConfig.lang);
+  private SynergyConfig() {
   }
 
   /**
@@ -75,22 +53,11 @@ public final class ClientConfig implements ConfigHolder {
    */
   public static void load() {
     ConfigLoader.builder()
-      .setConfigHolder(new ClientConfig())
+      .setConfigHolder(new SynergyConfig())
       .setConfigType(JsonType.get())
-      .setFileName("client")
+      .setFileName("synergy")
       .setFolder(SystemUtils.getHomePath())
       .build()
       .load(true);
-  }
-
-  /**
-   * sets the client's language.
-   *
-   * @param lang the lang to set.
-   */
-  public static void setLanguage(@NotNull final Locale lang) {
-    ClientConfig.lang = lang;
-    ClientConfig.configuration.set("lang", lang.getLanguage() + "_" + lang.getCountry().toUpperCase(Locale.ROOT));
-    ClientConfig.loader.save();
   }
 }

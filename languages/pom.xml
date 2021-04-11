@@ -28,17 +28,17 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
   <parent>
-    <groupId>io.github.portlek.synergy</groupId>
-    <artifactId>minecraft</artifactId>
+    <groupId>io.github.portlek</groupId>
+    <artifactId>synergy</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
-  <artifactId>velocity</artifactId>
-  <name>Velocity</name>
-  <packaging>pom</packaging>
+  <groupId>io.github.portlek.synergy</groupId>
+  <artifactId>languages</artifactId>
+  <name>Languages</name>
   <dependencies>
     <dependency>
-      <groupId>com.velocitypowered</groupId>
-      <artifactId>velocity-api</artifactId>
+      <groupId>it.unimi.dsi</groupId>
+      <artifactId>fastutil</artifactId>
       <scope>provided</scope>
     </dependency>
   </dependencies>

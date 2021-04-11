@@ -22,7 +22,30 @@
  * SOFTWARE.
  *
  */
+
+package io.github.portlek.synergy.api;
+
+import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.NotNull;
+
 /**
- * the package that contains coordinator files.
+ * an interface to determine package step configs.
  */
-package io.github.portlek.synergy.core.coordinator;
+public interface PackageStepConfig {
+
+  /**
+   * obtains the config.
+   *
+   * @return config.
+   */
+  @NotNull
+  JsonNode getConfig();
+
+  /**
+   * obtains the step.
+   *
+   * @return step.
+   */
+  @NotNull
+  PackageStep getStep();
+}

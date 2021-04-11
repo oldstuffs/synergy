@@ -28,11 +28,13 @@ package io.github.portlek.synergy.client.command;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.client.config.CoordinatorConfig;
 import io.github.portlek.synergy.client.config.NetworkConfig;
-import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.core.SynergyCoordinator;
+import io.github.portlek.synergy.core.SynergyNetwork;
+import io.github.portlek.synergy.languages.Languages;
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
@@ -50,24 +52,34 @@ import picocli.CommandLine;
   versionProvider = ClientVersionProvider.class,
   showDefaultValues = true
 )
-public final class ClientCommands implements Runnable {
+@Log4j2
+public final class ClientCommands implements Runnable, CommandLine.IExitCodeGenerator {
 
   /**
    * the debug mode.
    */
   @CommandLine.Option(names = {"-d", "--debug"}, description = "Debug mode.")
-  private boolean debug;
+  @Nullable
+  private Boolean debug;
 
   /**
    * the client language.
    */
-  @CommandLine.Option(names = {"-l", "--lang"}, description = "Client language.")
+  @CommandLine.Option(names = {"-l", "--lang"}, description = "Client language.", converter = LocaleConverter.class)
   @Nullable
   private Locale lang;
 
   @Override
+  public int getExitCode() {
+    if (this.debug == null && this.lang == null) {
+      return -2;
+    }
+    return 0;
+  }
+
+  @Override
   public void run() {
-    if (this.debug) {
+    if (this.debug != null && this.debug) {
       final var context = (LoggerContext) LogManager.getContext(false);
       context.getConfiguration()
         .getLoggerConfig(LogManager.ROOT_LOGGER_NAME)
@@ -77,7 +89,8 @@ public final class ClientCommands implements Runnable {
     if (this.lang != null) {
       ClientConfig.setLanguage(this.lang);
     }
-    ClientConfig.loadLanguageBundle();
+    Languages.init(ClientConfig.getLanguageBundle());
+    ClientCommands.log.info(Languages.getLanguageValue("language-set", ClientConfig.lang));
   }
 
   /**
@@ -86,21 +99,23 @@ public final class ClientCommands implements Runnable {
    * @param address the address to run.
    * @param attributes the attributes to run.
    * @param id the id to run.
+   * @param password the password to run.
    * @param resources the resources to run.
    */
   @CommandLine.Command(
     name = "coordinator"
   )
   void coordinator(
-    @CommandLine.Option(names = "--address", description = "Coordinator address to connect.") final InetSocketAddress address,
+    @CommandLine.Option(names = "--address", description = "Coordinator address to connect.", converter = InetSocketAddressConverter.class) final InetSocketAddress address,
     @CommandLine.Option(names = "--attributes", description = "Coordinator attributes.") final String[] attributes,
     @CommandLine.Option(names = "--id", description = "Coordinator id.") final String id,
+    @CommandLine.Option(names = "--password", description = "Coordinator password.") final String password,
     @CommandLine.Option(names = "--resources", description = "Coordinator resources.") final Map<String, Integer> resources
   ) {
     this.run();
-    CoordinatorConfig.load(address, List.of(attributes), id, resources);
-    Synergy.coordinator(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
-      CoordinatorConfig.resources);
+    CoordinatorConfig.load(address, attributes, id, password, resources);
+    SynergyCoordinator.start(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
+      CoordinatorConfig.password, CoordinatorConfig.resources);
   }
 
   /**
@@ -118,6 +133,6 @@ public final class ClientCommands implements Runnable {
   ) {
     this.run();
     NetworkConfig.load(address, id);
-    Synergy.network(NetworkConfig.address, NetworkConfig.id);
+    SynergyNetwork.start(NetworkConfig.address, NetworkConfig.id);
   }
 }

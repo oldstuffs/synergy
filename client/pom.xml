@@ -65,27 +65,14 @@
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
       <artifactId>log</artifactId>
-      <version>${project.version}</version>
     </dependency>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
       <artifactId>core</artifactId>
-      <version>${project.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.portlek</groupId>
-      <artifactId>configs-core</artifactId>
-      <version>5.11.1</version>
-    </dependency>
-    <dependency>
-      <groupId>io.github.portlek</groupId>
-      <artifactId>configs-json</artifactId>
-      <version>5.11.1</version>
     </dependency>
     <dependency>
       <groupId>info.picocli</groupId>
       <artifactId>picocli</artifactId>
-      <version>4.6.1</version>
     </dependency>
   </dependencies>
 </project>

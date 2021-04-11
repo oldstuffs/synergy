@@ -23,24 +23,32 @@
  *
  */
 
-package io.github.portlek.synergy.client.command;
+package io.github.portlek.synergy.api;
 
-import java.util.Locale;
-import org.jetbrains.annotations.Nullable;
-import picocli.CommandLine;
+import com.fasterxml.jackson.databind.JsonNode;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that converts user's inputs into locale.
+ * an interface to determine package steps.
  */
-public final class LocaleConverter implements CommandLine.ITypeConverter<Locale> {
+public interface PackageStep {
 
-  @Nullable
-  @Override
-  public Locale convert(final String value) {
-    final var split = value.trim().replace("-", "_").split("_");
-    if (split.length != 2) {
-      return null;
-    }
-    return new Locale(split[0].toLowerCase(Locale.ROOT), split[1].toUpperCase(Locale.ROOT));
-  }
+  /**
+   * obtains the step id.
+   *
+   * @return step id.
+   */
+  @NotNull
+  String getStepId();
+
+  /**
+   * runs the step.
+   *
+   * @param pack the pack to run.
+   * @param context the context to run.
+   * @param config the config to run.
+   *
+   * @return {@code true} if the step successfully ran.
+   */
+  boolean runStep(@NotNull Package pack, @NotNull PackageContext context, @NotNull JsonNode config);
 }

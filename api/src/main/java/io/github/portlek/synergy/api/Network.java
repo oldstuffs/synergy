@@ -23,24 +23,29 @@
  *
  */
 
-package io.github.portlek.synergy.client.command;
+package io.github.portlek.synergy.api;
 
-import java.util.Locale;
-import org.jetbrains.annotations.Nullable;
-import picocli.CommandLine;
+import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that converts user's inputs into locale.
+ * an interface to determine networks.
  */
-public final class LocaleConverter implements CommandLine.ITypeConverter<Locale> {
+public interface Network {
 
-  @Nullable
-  @Override
-  public Locale convert(final String value) {
-    final var split = value.trim().replace("-", "_").split("_");
-    if (split.length != 2) {
-      return null;
-    }
-    return new Locale(split[0].toLowerCase(Locale.ROOT), split[1].toUpperCase(Locale.ROOT));
-  }
+  /**
+   * obtains the coordinators.
+   *
+   * @return coordinators.
+   */
+  @NotNull
+  Map<String, Coordinator> getCoordinators();
+
+  /**
+   * obtains the id.
+   *
+   * @return id.
+   */
+  @NotNull
+  String getId();
 }

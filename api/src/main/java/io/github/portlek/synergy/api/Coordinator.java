@@ -23,7 +23,7 @@
  *
  */
 
-package io.github.portlek.synergy.core;
+package io.github.portlek.synergy.api;
 
 import java.net.InetSocketAddress;
 import java.util.Map;
@@ -56,5 +56,5 @@ public interface Coordinator {
    * @return servers.
    */
   @NotNull
-  Map<String, Server> getServers();
+  Map<String, CoordinatorServer> getServers();
 }
