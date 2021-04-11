@@ -64,6 +64,13 @@ public final class SimpleTransactionInfo implements TransactionInfo {
   private boolean done;
 
   /**
+   * the listener.
+   */
+  @Nullable
+  @Setter
+  private TransactionListener listener;
+
+  /**
    * the target.
    */
   @Nullable
@@ -83,12 +90,6 @@ public final class SimpleTransactionInfo implements TransactionInfo {
     return Optional.ofNullable(this.cancelTask);
   }
 
-  /**
-   * the listener.
-   */
-  @Nullable
-  @Setter
-private TransactionListener listener;
   @NotNull
   @Override
   public Optional<TransactionListener> getListener() {
