@@ -34,6 +34,7 @@
   </parent>
   <groupId>io.github.portlek.synergy</groupId>
   <artifactId>languages</artifactId>
+  <name>Languages</name>
   <dependencies>
     <dependency>
       <groupId>it.unimi.dsi</groupId>
