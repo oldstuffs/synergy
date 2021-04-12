@@ -101,7 +101,6 @@ public final class SynergyNetwork extends Synergy implements Network {
   @Override
   public void onClose() throws InterruptedException {
     this.running.set(false);
-    this.getScheduler().shutdown();
     SynergyNetwork.log.info(Languages.getLanguageValue("closed"));
     SynergyNetwork.log.info(Languages.getLanguageValue("restarting"));
     Thread.sleep(1000L * 5L);

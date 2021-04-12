@@ -112,6 +112,11 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   private Channel channel;
 
   /**
+   * the close listener.
+   */
+  private final ChannelFutureListener closeListener = ftr -> SynergyCoordinator.this.onClose();
+
+  /**
    * starts a coordinator instance.
    *
    * @param address the address to start.
@@ -140,7 +145,6 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   @Override
   public void onClose() throws InterruptedException {
     this.running.set(false);
-    this.getScheduler().shutdown();
     SynergyCoordinator.log.info(Languages.getLanguageValue("connection-closed"));
     SynergyCoordinator.log.info(Languages.getLanguageValue("restarting"));
     Thread.sleep(1000L * 5L);
@@ -212,7 +216,8 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
     }
     this.channel = future.channel();
     this.channel.closeFuture()
-      .addListener((ChannelFutureListener) ftr -> SynergyCoordinator.this.onClose());
+      .removeListener(this.closeListener)
+      .addListener(this.closeListener);
     SynergyCoordinator.log.info(Languages.getLanguageValue("connected"));
     this.running.set(true);
   }
@@ -281,7 +286,7 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
       this.transactionManager.cancel(info.getId());
       return false;
     }
-    SynergyCoordinator.log.info(Languages.getLanguageValue("sending-sync"));
+    SynergyCoordinator.log.debug(Languages.getLanguageValue("sending-sync"));
     return this.transactionManager.send(info.getId(), message.get(), null);
   }
 }
