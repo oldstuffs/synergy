@@ -237,8 +237,8 @@ public final class SynergyNetwork extends Synergy implements Network {
   }
 
   @Override
-  public void process(@NotNull final Commands.BaseCommand payload, @NotNull final TransactionInfo info,
-                      @NotNull final String from) {
+  public boolean process(@NotNull final Commands.BaseCommand payload, @NotNull final TransactionInfo info,
+                         @NotNull final String from) {
   }
 
   @Override

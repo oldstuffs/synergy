@@ -184,9 +184,11 @@ public abstract class Synergy {
    * @param payload the payload to process.
    * @param info the info to process.
    * @param from the from to process.
+   *
+   * @return {@code true} if the payload proceed successfully.
    */
-  public abstract void process(@NotNull Commands.BaseCommand payload, @NotNull TransactionInfo info,
-                               @NotNull String from);
+  public abstract boolean process(@NotNull Commands.BaseCommand payload, @NotNull TransactionInfo info,
+                                  @NotNull String from);
 
   /**
    * sends the given message to the target.
