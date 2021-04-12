@@ -98,6 +98,14 @@ public interface TransactionManager {
   Optional<TransactionInfo> getTransactionInfo(@NotNull String id);
 
   /**
+   * receives the given message.
+   *
+   * @param message the message to receive.
+   * @param from the from to receive.
+   */
+  void receive(@NotNull Protocol.Transaction message, @NotNull String from);
+
+  /**
    * sends the transaction.
    *
    * @param id the id to send.

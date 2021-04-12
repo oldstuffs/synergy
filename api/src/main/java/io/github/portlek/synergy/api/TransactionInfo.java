@@ -57,7 +57,14 @@ public interface TransactionInfo {
    * @return id.
    */
   @NotNull
-  String getId();
+  Optional<String> getId();
+
+  /**
+   * sets the id.
+   *
+   * @param id the id to set.
+   */
+  void setId(@NotNull String id);
 
   /**
    * obtains the transaction listener.

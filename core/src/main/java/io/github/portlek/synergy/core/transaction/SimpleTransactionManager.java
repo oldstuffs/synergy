@@ -61,7 +61,7 @@ public final class SimpleTransactionManager implements TransactionManager {
       return Optional.empty();
     }
     return Optional.of(Protocol.Transaction.newBuilder()
-      .setId(info.get().getId())
+      .setId(id)
       .setMode(mode)
       .setPayload(command)
       .build());
@@ -108,13 +108,13 @@ public final class SimpleTransactionManager implements TransactionManager {
   @NotNull
   @Override
   public TransactionInfo generateInfo() {
-    final var info = new SimpleTransactionInfo(
-      Synergy.getInstance().generateId());
-    this.transactions.put(info.getId(), info);
-    final var tid = info.getId();
+    final var info = new SimpleTransactionInfo();
+    final var generatedId = Synergy.getInstance().generateId();
+    info.setId(generatedId);
+    this.transactions.put(generatedId, info);
     info.setCancelTask(Synergy.getInstance().getScheduler().schedule(() -> {
-      SimpleTransactionManager.log.warn(Languages.getLanguageValue("transaction-cancelled", tid));
-      return this.cancel(tid, true);
+      SimpleTransactionManager.log.warn(Languages.getLanguageValue("transaction-cancelled", generatedId));
+      return this.cancel(generatedId, true);
     }, SynergyConfig.transactionTimeout, TimeUnit.SECONDS));
     return info;
   }
@@ -126,6 +126,63 @@ public final class SimpleTransactionManager implements TransactionManager {
   }
 
   @Override
+  public void receive(@NotNull final Protocol.Transaction message, @NotNull final String from) {
+    final Optional<TransactionInfo> transactionInfo;
+    switch (message.getMode()) {
+      case CREATE:
+        if (this.transactions.containsKey(message.getId())) {
+          SimpleTransactionManager.log.error(Languages.getLanguageValue("received-create-already-exists"),
+            message.getId());
+          return;
+        }
+        final var info0 = new SimpleTransactionInfo();
+        info0.setId(message.getId());
+        info0.setTarget(from);
+        this.transactions.put(message.getId(), info0);
+        transactionInfo = Optional.of(info0);
+        break;
+      case SINGLE:
+        final var info1 = new SimpleTransactionInfo();
+        info1.setDone(true);
+        transactionInfo = Optional.of(info1);
+        break;
+      case CONTINUE:
+        final var info2 = this.getTransactionInfo(message.getId());
+        if (info2.isEmpty()) {
+          SimpleTransactionManager.log.error(Languages.getLanguageValue("received-continue-does-not-exist",
+            message.getId()));
+          return;
+        }
+        final var info3 = info2.get();
+        info3.getListener().ifPresent(listener -> listener.onReceive(this, info3, message));
+        transactionInfo = Optional.of(info3);
+        break;
+      case COMPLETE:
+        final var info4 = this.getTransactionInfo(message.getId());
+        if (info4.isEmpty()) {
+          SimpleTransactionManager.log.error(Languages.getLanguageValue("received-complete-does-not-exist"),
+            message.getId());
+          return;
+        }
+        final var info5 = info4.get();
+        info5.getListener().ifPresent(listener -> listener.onReceive(this, info5, message));
+        info5.setDone(true);
+        if (info5.getId().isEmpty() || !this.complete(info5.getId().get())) {
+          SimpleTransactionManager.log.error(Languages.getLanguageValue("unable-to-complete-transaction"),
+            info5.getId().orElse(null));
+          return;
+        }
+        transactionInfo = Optional.of(info5);
+        break;
+      default:
+        transactionInfo = Optional.empty();
+        break;
+    }
+    transactionInfo.ifPresent(info ->
+      Synergy.getInstance().process(message.getPayload(), info, from));
+  }
+
+  @Override
   public boolean send(@NotNull final String id, @NotNull final Protocol.Transaction message,
                       @Nullable final String target) {
     final var optional = this.getTransactionInfo(id);
@@ -134,15 +191,17 @@ public final class SimpleTransactionManager implements TransactionManager {
       return false;
     }
     final var info = optional.get();
-    if (!info.getId().equals(message.getId())) {
+    if (!id.equals(message.getId())) {
       SimpleTransactionManager.log.error(Languages.getLanguageValue("message-id-does-not-match", id));
       return false;
     }
     info.setTransaction(message);
     info.setTarget(target);
     info.getListener().ifPresent(listener -> listener.onSend(this, info));
-    if (message.getMode() == Protocol.Transaction.Mode.COMPLETE || message.getMode() == Protocol.Transaction.Mode.SINGLE) {
-      this.complete(info.getId());
+    final var mode = message.getMode();
+    if (info.getId().isPresent() &&
+      (mode == Protocol.Transaction.Mode.COMPLETE || mode == Protocol.Transaction.Mode.SINGLE)) {
+      this.complete(info.getId().get());
     }
     return Synergy.getInstance().send(message, info.getTarget().orElse(null));
   }
