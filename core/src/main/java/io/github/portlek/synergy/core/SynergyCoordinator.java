@@ -181,7 +181,9 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   }
 
   @Override
-  public void process(final Commands.@NotNull BaseCommand payload, @NotNull final TransactionInfo info, @NotNull final String from) {
+  public boolean process(@NotNull final Commands.BaseCommand payload, @NotNull final TransactionInfo info,
+                         @NotNull final String from) {
+    return false;
   }
 
   @Override
