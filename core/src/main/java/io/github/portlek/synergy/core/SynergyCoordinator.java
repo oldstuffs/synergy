@@ -219,7 +219,9 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
 
   @Override
   protected void onTick() {
-    this.sync();
+    if (this.running.get()) {
+      this.sync();
+    }
   }
 
   /**
