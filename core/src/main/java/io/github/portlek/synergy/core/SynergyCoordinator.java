@@ -196,10 +196,9 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
       SynergyCoordinator.log.error(Languages.getLanguageValue("transaction-not-initialized"));
       return false;
     }
-    var messageBytes = message.toByteString();
-    final var encBytes = AuthUtils.encrypt(messageBytes.toByteArray(), this.password);
+    final var encBytes = AuthUtils.encrypt(message.toByteString().toByteArray(), this.password);
     final var hash = AuthUtils.createHash(this.password, encBytes);
-    messageBytes = ByteString.copyFrom(encBytes);
+    final var messageBytes = ByteString.copyFrom(encBytes);
     final var auth = Protocol.AuthenticatedMessage.newBuilder()
       .setId(this.id)
       .setVersion(Protocols.PROTOCOL_VERSION)
