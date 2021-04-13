@@ -19,16 +19,16 @@ public final class Protocol {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string uuid = 1;</code>
-     * @return The uuid.
+     * <code>string id = 1;</code>
+     * @return The id.
      */
-    java.lang.String getUuid();
+    java.lang.String getId();
     /**
-     * <code>string uuid = 1;</code>
-     * @return The bytes for uuid.
+     * <code>string id = 1;</code>
+     * @return The bytes for id.
      */
     com.google.protobuf.ByteString
-        getUuidBytes();
+        getIdBytes();
 
     /**
      * <code>string hash = 2;</code>
@@ -67,7 +67,7 @@ public final class Protocol {
       super(builder);
     }
     private AuthenticatedMessage() {
-      uuid_ = "";
+      id_ = "";
       hash_ = "";
       payload_ = com.google.protobuf.ByteString.EMPTY;
     }
@@ -105,7 +105,7 @@ public final class Protocol {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              uuid_ = s;
+              id_ = s;
               break;
             }
             case 18: {
@@ -156,38 +156,38 @@ public final class Protocol {
               io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage.class, io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage.Builder.class);
     }
 
-    public static final int UUID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object uuid_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
     /**
-     * <code>string uuid = 1;</code>
-     * @return The uuid.
+     * <code>string id = 1;</code>
+     * @return The id.
      */
     @java.lang.Override
-    public java.lang.String getUuid() {
-      java.lang.Object ref = uuid_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        uuid_ = s;
+        id_ = s;
         return s;
       }
     }
     /**
-     * <code>string uuid = 1;</code>
-     * @return The bytes for uuid.
+     * <code>string id = 1;</code>
+     * @return The bytes for id.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getUuidBytes() {
-      java.lang.Object ref = uuid_;
+        getIdBytes() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        uuid_ = b;
+        id_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -268,8 +268,8 @@ public final class Protocol {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getUuidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uuid_);
+      if (!getIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
       }
       if (!getHashBytes().isEmpty()) {
         com.google.protobuf.GeneratedMessageV3.writeString(output, 2, hash_);
@@ -289,8 +289,8 @@ public final class Protocol {
       if (size != -1) return size;
 
       size = 0;
-      if (!getUuidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uuid_);
+      if (!getIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
       }
       if (!getHashBytes().isEmpty()) {
         size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, hash_);
@@ -318,8 +318,8 @@ public final class Protocol {
       }
       io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage other = (io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage) obj;
 
-      if (!getUuid()
-          .equals(other.getUuid())) return false;
+      if (!getId()
+          .equals(other.getId())) return false;
       if (!getHash()
           .equals(other.getHash())) return false;
       if (!getPayload()
@@ -337,8 +337,8 @@ public final class Protocol {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + UUID_FIELD_NUMBER;
-      hash = (53 * hash) + getUuid().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId().hashCode();
       hash = (37 * hash) + HASH_FIELD_NUMBER;
       hash = (53 * hash) + getHash().hashCode();
       hash = (37 * hash) + PAYLOAD_FIELD_NUMBER;
@@ -478,7 +478,7 @@ public final class Protocol {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        uuid_ = "";
+        id_ = "";
 
         hash_ = "";
 
@@ -512,7 +512,7 @@ public final class Protocol {
       @java.lang.Override
       public io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage buildPartial() {
         io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage result = new io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage(this);
-        result.uuid_ = uuid_;
+        result.id_ = id_;
         result.hash_ = hash_;
         result.payload_ = payload_;
         result.version_ = version_;
@@ -564,8 +564,8 @@ public final class Protocol {
 
       public Builder mergeFrom(io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage other) {
         if (other == io.github.portlek.synergy.proto.Protocol.AuthenticatedMessage.getDefaultInstance()) return this;
-        if (!other.getUuid().isEmpty()) {
-          uuid_ = other.uuid_;
+        if (!other.getId().isEmpty()) {
+          id_ = other.id_;
           onChanged();
         }
         if (!other.getHash().isEmpty()) {
@@ -607,78 +607,78 @@ public final class Protocol {
         return this;
       }
 
-      private java.lang.Object uuid_ = "";
+      private java.lang.Object id_ = "";
       /**
-       * <code>string uuid = 1;</code>
-       * @return The uuid.
+       * <code>string id = 1;</code>
+       * @return The id.
        */
-      public java.lang.String getUuid() {
-        java.lang.Object ref = uuid_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          uuid_ = s;
+          id_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @return The bytes for uuid.
+       * <code>string id = 1;</code>
+       * @return The bytes for id.
        */
       public com.google.protobuf.ByteString
-          getUuidBytes() {
-        java.lang.Object ref = uuid_;
+          getIdBytes() {
+        java.lang.Object ref = id_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          uuid_ = b;
+          id_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @param value The uuid to set.
+       * <code>string id = 1;</code>
+       * @param value The id to set.
        * @return This builder for chaining.
        */
-      public Builder setUuid(
+      public Builder setId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        uuid_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string uuid = 1;</code>
+       * <code>string id = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearUuid() {
+      public Builder clearId() {
         
-        uuid_ = getDefaultInstance().getUuid();
+        id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @param value The bytes for uuid to set.
+       * <code>string id = 1;</code>
+       * @param value The bytes for id to set.
        * @return This builder for chaining.
        */
-      public Builder setUuidBytes(
+      public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        uuid_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
@@ -1900,15 +1900,15 @@ public final class Protocol {
   static {
     java.lang.String[] descriptorData = {
       "\n\016protocol.proto\022\037io.github.portlek.syne" +
-      "rgy.proto\032\016commands.proto\"T\n\024Authenticat" +
-      "edMessage\022\014\n\004uuid\030\001 \001(\t\022\014\n\004hash\030\002 \001(\t\022\017\n" +
-      "\007payload\030\003 \001(\014\022\017\n\007version\030\004 \001(\r\"\325\001\n\013Tran" +
-      "saction\022\n\n\002id\030\001 \001(\t\022?\n\004mode\030\002 \001(\01621.io.g" +
-      "ithub.portlek.synergy.proto.Transaction." +
-      "Mode\022=\n\007payload\030\003 \001(\0132,.io.github.portle" +
-      "k.synergy.proto.BaseCommand\":\n\004Mode\022\n\n\006C" +
-      "REATE\020\000\022\014\n\010CONTINUE\020\001\022\014\n\010COMPLETE\020\002\022\n\n\006S" +
-      "INGLE\020\003B\014B\010ProtocolH\001b\006proto3"
+      "rgy.proto\032\016commands.proto\"R\n\024Authenticat" +
+      "edMessage\022\n\n\002id\030\001 \001(\t\022\014\n\004hash\030\002 \001(\t\022\017\n\007p" +
+      "ayload\030\003 \001(\014\022\017\n\007version\030\004 \001(\r\"\325\001\n\013Transa" +
+      "ction\022\n\n\002id\030\001 \001(\t\022?\n\004mode\030\002 \001(\01621.io.git" +
+      "hub.portlek.synergy.proto.Transaction.Mo" +
+      "de\022=\n\007payload\030\003 \001(\0132,.io.github.portlek." +
+      "synergy.proto.BaseCommand\":\n\004Mode\022\n\n\006CRE" +
+      "ATE\020\000\022\014\n\010CONTINUE\020\001\022\014\n\010COMPLETE\020\002\022\n\n\006SIN" +
+      "GLE\020\003B\014B\010ProtocolH\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -1920,7 +1920,7 @@ public final class Protocol {
     internal_static_io_github_portlek_synergy_proto_AuthenticatedMessage_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_io_github_portlek_synergy_proto_AuthenticatedMessage_descriptor,
-        new java.lang.String[] { "Uuid", "Hash", "Payload", "Version", });
+        new java.lang.String[] { "Id", "Hash", "Payload", "Version", });
     internal_static_io_github_portlek_synergy_proto_Transaction_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_io_github_portlek_synergy_proto_Transaction_fieldAccessorTable = new

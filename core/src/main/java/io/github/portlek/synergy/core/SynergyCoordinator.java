@@ -28,6 +28,7 @@ package io.github.portlek.synergy.core;
 import com.google.protobuf.ByteString;
 import io.github.portlek.synergy.api.Coordinator;
 import io.github.portlek.synergy.api.CoordinatorServer;
+import io.github.portlek.synergy.api.TransactionInfo;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
 import io.github.portlek.synergy.core.util.AuthUtils;
 import io.github.portlek.synergy.languages.Languages;
@@ -43,10 +44,11 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -109,7 +111,13 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
    * the channel.
    */
   @Nullable
+  @Setter
   private Channel channel;
+
+  /**
+   * the close listener.
+   */
+  private final ChannelFutureListener closeListener = ftr -> SynergyCoordinator.this.onClose();
 
   /**
    * starts a coordinator instance.
@@ -132,15 +140,15 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
    *
    * @return channel.
    */
+  @Override
   @NotNull
-  public Channel getChannel() {
-    return Objects.requireNonNull(this.channel, Languages.getLanguageValue("not-initiated"));
+  public Optional<Channel> getChannel() {
+    return Optional.ofNullable(this.channel);
   }
 
   @Override
   public void onClose() throws InterruptedException {
     this.running.set(false);
-    this.getScheduler().shutdown();
     SynergyCoordinator.log.info(Languages.getLanguageValue("connection-closed"));
     SynergyCoordinator.log.info(Languages.getLanguageValue("restarting"));
     Thread.sleep(1000L * 5L);
@@ -173,21 +181,26 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   }
 
   @Override
+  public boolean process(@NotNull final Commands.BaseCommand payload, @NotNull final TransactionInfo info,
+                         @NotNull final String from) {
+    return false;
+  }
+
+  @Override
   public boolean send(@NotNull final Protocol.Transaction message, @Nullable final String target) {
     if (this.channel == null || !this.channel.isActive()) {
       SynergyCoordinator.log.error(Languages.getLanguageValue("unable-to-send-transaction", message.getId()));
       return false;
     }
     if (!message.isInitialized()) {
-      SynergyCoordinator.log.error(Languages.getLanguageValue("transaction-not-initiated"));
+      SynergyCoordinator.log.error(Languages.getLanguageValue("transaction-not-initialized"));
       return false;
     }
-    var messageBytes = message.toByteString();
-    final var encBytes = AuthUtils.encrypt(messageBytes.toByteArray(), this.password);
+    final var encBytes = AuthUtils.encrypt(message.toByteString().toByteArray(), this.password);
     final var hash = AuthUtils.createHash(this.password, encBytes);
-    messageBytes = ByteString.copyFrom(encBytes);
+    final var messageBytes = ByteString.copyFrom(encBytes);
     final var auth = Protocol.AuthenticatedMessage.newBuilder()
-      .setUuid(this.id)
+      .setId(this.id)
       .setVersion(Protocols.PROTOCOL_VERSION)
       .setHash(hash)
       .setPayload(messageBytes)
@@ -212,14 +225,17 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
     }
     this.channel = future.channel();
     this.channel.closeFuture()
-      .addListener((ChannelFutureListener) ftr -> SynergyCoordinator.this.onClose());
+      .removeListener(this.closeListener)
+      .addListener(this.closeListener);
     SynergyCoordinator.log.info(Languages.getLanguageValue("connected"));
     this.running.set(true);
   }
 
   @Override
   protected void onTick() {
-    this.sync();
+    if (this.running.get()) {
+      this.sync();
+    }
   }
 
   /**
@@ -266,20 +282,19 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
         .setName(localServer.getName())
         .build())
       .forEach(syncBuilder::addServers);
-    final var sync = syncBuilder.build();
     final var command = Commands.BaseCommand.newBuilder()
       .setType(Commands.BaseCommand.CommandType.SYNC)
-      .setSync(sync)
+      .setSync(syncBuilder.build())
       .build();
-    final var info = this.transactionManager.generateInfo();
-    final var message = this.transactionManager
-      .build(info.getId(), Protocol.Transaction.Mode.SINGLE, command);
-    if (message.isEmpty()) {
-      SynergyCoordinator.log.error(Languages.getLanguageValue("unable-to-build-message"));
-      this.transactionManager.cancel(info.getId());
-      return false;
-    }
-    SynergyCoordinator.log.info(Languages.getLanguageValue("sending-sync"));
-    return this.transactionManager.send(info.getId(), message.get(), null);
+    return this.createSingleTransactionMessage(command)
+      .map(transaction -> {
+        SynergyCoordinator.log.debug(Languages.getLanguageValue("sending-sync"));
+        return this.transactionManager.send(this.id, transaction, null);
+      })
+      .orElseGet(() -> {
+        SynergyCoordinator.log.error(Languages.getLanguageValue("unable-to-build-message"));
+        this.transactionManager.cancel(this.id);
+        return false;
+      });
   }
 }

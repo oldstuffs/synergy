@@ -25,61 +25,41 @@
 
 package io.github.portlek.synergy.api;
 
-import io.netty.channel.Channel;
-import java.net.InetSocketAddress;
-import java.util.Map;
 import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine coordinators.
+ * an interface to determine console infos.
  */
-public interface Coordinator {
+public interface ConsoleInfo {
 
   /**
-   * obtains the address.
+   * obtains the attached.
    *
-   * @return address.
+   * @return attached.
    */
   @NotNull
-  InetSocketAddress getAddress();
+  Optional<String> getAttached();
 
   /**
-   * obtains the channel.
+   * sets the attached.
    *
-   * @return channel.
+   * @param attached the attached to set.
+   */
+  void setAttached(@NotNull String attached);
+
+  /**
+   * obtains the coordinator.
+   *
+   * @return coordinator.
    */
   @NotNull
-  Optional<Channel> getChannel();
+  Optional<String> getCoordinator();
 
   /**
-   * sets the channel.
+   * sets the coordinator.
    *
-   * @param channel the channel to set.
+   * @param coordinator the coordinator to set.
    */
-  void setChannel(@NotNull Channel channel);
-
-  /**
-   * obtains the id.
-   *
-   * @return id.
-   */
-  @NotNull
-  String getId();
-
-  /**
-   * obtains the password.
-   *
-   * @return password.
-   */
-  @NotNull
-  String getPassword();
-
-  /**
-   * obtains the servers.
-   *
-   * @return servers.
-   */
-  @NotNull
-  Map<String, CoordinatorServer> getServers();
+  void setCoordinator(@NotNull String coordinator);
 }

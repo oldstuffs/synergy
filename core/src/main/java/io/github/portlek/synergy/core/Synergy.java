@@ -26,14 +26,17 @@
 package io.github.portlek.synergy.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import io.github.portlek.synergy.api.TransactionInfo;
 import io.github.portlek.synergy.api.TransactionManager;
 import io.github.portlek.synergy.core.transaction.SimpleTransactionManager;
 import io.github.portlek.synergy.core.util.VMShutdownThread;
 import io.github.portlek.synergy.languages.Languages;
+import io.github.portlek.synergy.proto.Commands;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -176,6 +179,18 @@ public abstract class Synergy {
   public abstract void onVMShutdown();
 
   /**
+   * processes the given command.
+   *
+   * @param payload the payload to process.
+   * @param info the info to process.
+   * @param from the from to process.
+   *
+   * @return {@code true} if the payload proceed successfully.
+   */
+  public abstract boolean process(@NotNull Commands.BaseCommand payload, @NotNull TransactionInfo info,
+                                  @NotNull String from);
+
+  /**
    * sends the given message to the target.
    *
    * @param message the message to send.
@@ -196,6 +211,19 @@ public abstract class Synergy {
    * runs every 50ms.
    */
   protected abstract void onTick();
+
+  /**
+   * creates a transaction message.
+   *
+   * @param command the command to create.
+   *
+   * @return a newly created transaction message.
+   */
+  @NotNull
+  final Optional<Protocol.Transaction> createSingleTransactionMessage(@NotNull final Commands.BaseCommand command) {
+    return this.transactionManager.generateInfo().getId()
+      .flatMap(id -> this.transactionManager.build(id, Protocol.Transaction.Mode.SINGLE, command));
+  }
 
   /**
    * starts the synergy.

@@ -43,13 +43,6 @@ import org.jetbrains.annotations.Nullable;
 public final class SimpleTransactionInfo implements TransactionInfo {
 
   /**
-   * the id.
-   */
-  @NotNull
-  @Getter
-  private final String id;
-
-  /**
    * the cancel task.
    */
   @Nullable
@@ -62,6 +55,13 @@ public final class SimpleTransactionInfo implements TransactionInfo {
   @Getter
   @Setter
   private boolean done;
+
+  /**
+   * the id.
+   */
+  @Nullable
+  @Setter
+  private String id;
 
   /**
    * the listener.
@@ -88,6 +88,12 @@ public final class SimpleTransactionInfo implements TransactionInfo {
   @Override
   public Optional<ScheduledFuture<Boolean>> getCancelTask() {
     return Optional.ofNullable(this.cancelTask);
+  }
+
+  @NotNull
+  @Override
+  public Optional<String> getId() {
+    return Optional.ofNullable(this.id);
   }
 
   @NotNull
