@@ -57,7 +57,7 @@ public final class SimpleNetwork implements Network {
   private final String id;
 
   /**
-   * the name
+   * the name.
    */
   @NotNull
   @Getter
