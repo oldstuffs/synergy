@@ -202,22 +202,22 @@ public final class SynergyNetwork extends Synergy implements Network {
       SynergyNetwork.log.error(Languages.getLanguageValue("unable-to-read-transaction"), e);
       return false;
     }
-    final var coordinatorChannel = coordinator.getChannel();
-    if (coordinatorChannel.isPresent() && coordinatorChannel.get() == channel) {
-      channel.closeFuture().addListener(future -> {
-        final var iterator = this.consoles.entrySet().iterator();
-        while (iterator.hasNext()) {
-          final var entry = iterator.next();
-          final var value = entry.getValue();
-          final var target = value.getCoordinator();
-          final var attached = value.getAttached();
-          if (target.isPresent() && attached.isPresent() && Objects.equals(attached.get(), coordinator.getId())) {
-            this.sendDetachConsole(target.get(), entry.getKey());
-            iterator.remove();
+    coordinator.getChannel()
+      .filter(ch -> ch == channel)
+      .ifPresent(ch ->
+        channel.closeFuture().addListener(future -> {
+          final var iterator = this.consoles.entrySet().iterator();
+          while (iterator.hasNext()) {
+            final var entry = iterator.next();
+            final var value = entry.getValue();
+            final var target = value.getCoordinator();
+            final var attached = value.getAttached();
+            if (target.isPresent() && attached.isPresent() && Objects.equals(attached.get(), coordinator.getId())) {
+              this.sendDetachConsole(target.get(), entry.getKey());
+              iterator.remove();
+            }
           }
-        }
-      });
-    }
+        }));
     coordinator.setChannel(channel);
     this.transactionManager.receive(transaction, coordinator.getId());
     return true;
