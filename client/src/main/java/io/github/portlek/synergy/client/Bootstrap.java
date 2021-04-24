@@ -66,7 +66,6 @@ public final class Bootstrap {
    * the ascii art for Synergy Client text.
    */
   private static final String ART = "" +
-    "                                                                \n" +
     " ▄█▀▀▀█▄█                                                       \n" +
     "▄██    ▀█                                                       \n" +
     "▀███▄   ▀██▀   ▀██▀████████▄   ▄▄█▀██▀███▄███ ▄█▀███████▀   ▀██▀\n" +
@@ -75,7 +74,7 @@ public final class Bootstrap {
     "██     ██   ███     ██    ██  ██▄    ▄ ██    ██          ███    \n" +
     "█▀█████▀    ▄█    ▄████  ████▄ ▀█████▀████▄   ███████    ▄█     \n" +
     "          ▄█                                 █▀     ██ ▄█       \n" +
-    "        ██▀                                  ██████▀ ██▀        \n";
+    "        ██▀                                  ██████▀ ██▀        ";
 
   /**
    * ctor.
