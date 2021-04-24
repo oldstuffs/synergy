@@ -213,19 +213,6 @@ public abstract class Synergy {
   protected abstract void onTick();
 
   /**
-   * creates a transaction message.
-   *
-   * @param command the command to create.
-   *
-   * @return a newly created transaction message.
-   */
-  @NotNull
-  final Optional<Protocol.Transaction> createSingleTransactionMessage(@NotNull final Commands.BaseCommand command) {
-    return this.transactionManager.generateInfo().getId()
-      .flatMap(id -> this.transactionManager.build(id, Protocol.Transaction.Mode.SINGLE, command));
-  }
-
-  /**
    * starts the synergy.
    */
   final void start() {

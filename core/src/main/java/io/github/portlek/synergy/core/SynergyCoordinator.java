@@ -286,15 +286,23 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
       .setType(Commands.BaseCommand.CommandType.SYNC)
       .setSync(syncBuilder.build())
       .build();
-    return this.createSingleTransactionMessage(command)
-      .map(transaction -> {
-        SynergyCoordinator.log.debug(Languages.getLanguageValue("sending-sync"));
-        return this.transactionManager.send(this.id, transaction, null);
-      })
-      .orElseGet(() -> {
-        SynergyCoordinator.log.error(Languages.getLanguageValue("unable-to-build-message"));
-        this.transactionManager.cancel(this.id);
-        return false;
-      });
+    final var info = this.transactionManager.generateInfo();
+    final var optionalId = info.getId();
+    if (optionalId.isEmpty()) {
+      SynergyCoordinator.log.error(Languages.getLanguageValue("something-went-wrong"));
+      return false;
+    }
+    final var transactionId = optionalId.get();
+    final var built = this.transactionManager.build(
+      transactionId,
+      Protocol.Transaction.Mode.SINGLE,
+      command);
+    if (built.isEmpty()) {
+      SynergyCoordinator.log.error(Languages.getLanguageValue("unable-to-build-message"));
+      this.transactionManager.cancel(this.id);
+      return false;
+    }
+    SynergyCoordinator.log.debug(Languages.getLanguageValue("sending-sync"));
+    return this.transactionManager.send(transactionId, built.get(), null);
   }
 }
