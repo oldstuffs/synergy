@@ -26,6 +26,7 @@
 package io.github.portlek.synergy.api;
 
 import io.github.portlek.configs.configuration.ConfigurationSection;
+import io.github.portlek.configs.loaders.DataSerializer;
 import io.github.portlek.configs.loaders.SectionFieldLoader;
 import java.util.Optional;
 import java.util.function.Supplier;
@@ -39,7 +40,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @Getter
 @RequiredArgsConstructor
-public final class SimpleKeyStore implements KeyStore {
+public final class SimpleKeyStore implements KeyStore, DataSerializer {
 
   /**
    * the id.
