@@ -25,7 +25,7 @@
 
 package io.github.portlek.synergy.client.command;
 
-import io.github.portlek.synergy.api.SimpleKeyStore;
+import io.github.portlek.synergy.api.KeyStore;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.client.config.CoordinatorConfig;
 import io.github.portlek.synergy.client.config.NetworkConfig;
@@ -36,10 +36,13 @@ import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import picocli.CommandLine;
 
@@ -126,6 +129,7 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
    * runs the network command.
    *
    * @param address the address to run.
+   * @param coordinators the coordinators to run.
    * @param id the id to run.
    * @param name the name to run.
    */
@@ -134,12 +138,44 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
   )
   void network(
     @CommandLine.Option(names = "--address", description = "Network address to bind.") final InetSocketAddress address,
+    @CommandLine.Option(names = "--coordinators", description = "Network's coordinators.")
+    @CommandLine.ArgGroup(exclusive = false, multiplicity = "1..*") final List<SimpleKeyStore> coordinators,
     @CommandLine.Option(names = "--id", description = "Network id.") final String id,
-    @CommandLine.Option(names = "--name", description = "Network name.") final String name,
-    @CommandLine.Option(names = "--coordinators", description = "Network's coordinators.") final List<SimpleKeyStore> coordinators
+    @CommandLine.Option(names = "--name", description = "Network name.") final String name
   ) {
     this.run();
     NetworkConfig.load(address, coordinators, id, name);
     SynergyNetwork.start(NetworkConfig.address, NetworkConfig.coordinators, NetworkConfig.id, NetworkConfig.name);
+  }
+
+  /**
+   * a simple implementation of {@link KeyStore}.
+   */
+  @RequiredArgsConstructor
+  private static final class SimpleKeyStore implements KeyStore {
+
+    /**
+     * the id.
+     */
+    @NotNull
+    @Getter
+    @CommandLine.Parameters(index = "0")
+    private final String id;
+
+    /**
+     * the name.
+     */
+    @NotNull
+    @Getter
+    @CommandLine.Parameters(index = "1")
+    private final String name;
+
+    /**
+     * the password.
+     */
+    @NotNull
+    @Getter
+    @CommandLine.Parameters(index = "2")
+    private final String password;
   }
 }
