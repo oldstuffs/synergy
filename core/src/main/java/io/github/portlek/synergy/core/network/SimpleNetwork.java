@@ -23,21 +23,56 @@
  *
  */
 
-package io.github.portlek.synergy.api;
+package io.github.portlek.synergy.core.network;
 
+import io.github.portlek.synergy.api.Coordinator;
+import io.github.portlek.synergy.api.Network;
+import io.netty.channel.Channel;
 import java.util.Map;
+import java.util.Optional;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * an interface to determine networks.
+ * a class that represents simple networks.
  */
-public interface Network extends Id, Named, Channeled {
+@RequiredArgsConstructor
+public final class SimpleNetwork implements Network {
 
   /**
-   * obtains the coordinators.
-   *
-   * @return coordinators.
+   * the coordinators with id.
    */
   @NotNull
-  Map<String, Coordinator> getCoordinators();
+  @Getter
+  private final Map<String, Coordinator> coordinators;
+
+  /**
+   * the id.
+   */
+  @NotNull
+  @Getter
+  private final String id;
+
+  /**
+   * the name
+   */
+  @NotNull
+  @Getter
+  private final String name;
+
+  /**
+   * the channel.
+   */
+  @Nullable
+  @Setter
+  private Channel channel;
+
+  @NotNull
+  @Override
+  public Optional<Channel> getChannel() {
+    return Optional.ofNullable(this.channel);
+  }
 }

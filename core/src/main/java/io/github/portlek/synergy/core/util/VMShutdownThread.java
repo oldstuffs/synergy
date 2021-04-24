@@ -25,7 +25,7 @@
 
 package io.github.portlek.synergy.core.util;
 
-import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.core.BaseSynergy;
 import io.github.portlek.synergy.languages.Languages;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -42,7 +42,7 @@ public final class VMShutdownThread extends Thread {
    * the synergy.
    */
   @NotNull
-  private final Synergy synergy;
+  private final BaseSynergy synergy;
 
   @Override
   public void run() {

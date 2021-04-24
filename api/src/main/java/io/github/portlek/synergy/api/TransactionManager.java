@@ -103,7 +103,7 @@ public interface TransactionManager {
    * @param message the message to receive.
    * @param from the from to receive.
    */
-  void receive(@NotNull Protocol.Transaction message, @NotNull String from);
+  void receive(@NotNull Protocol.Transaction message, @Nullable String from);
 
   /**
    * sends the transaction.

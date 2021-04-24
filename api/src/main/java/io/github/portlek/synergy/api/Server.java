@@ -25,19 +25,39 @@
 
 package io.github.portlek.synergy.api;
 
+import java.io.Closeable;
 import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine networks.
+ * an interface to determine servers.
  */
-public interface Network extends Id, Named, Channeled {
+public interface Server extends Closeable, Id, Named {
+
+  @Override
+  void close();
 
   /**
-   * obtains the coordinators.
+   * obtains the coordinator.
    *
-   * @return coordinators.
+   * @return coordinator.
    */
   @NotNull
-  Map<String, Coordinator> getCoordinators();
+  Coordinator getCoordinator();
+
+  /**
+   * obtains the package.
+   *
+   * @return package.
+   */
+  @NotNull
+  Package getPackage();
+
+  /**
+   * obtains the properties.
+   *
+   * @return properties.
+   */
+  @NotNull
+  Map<String, String> getProperties();
 }

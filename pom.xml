@@ -51,6 +51,7 @@
     <module>netty</module>
     <module>api</module>
     <module>languages</module>
+    <module>console</module>
   </modules>
   <build>
     <finalName>${project.name}</finalName>
@@ -99,6 +100,12 @@
       </plugin>
     </plugins>
   </build>
+  <repositories>
+    <repository>
+      <url>https://nexus.velocitypowered.com/repository/maven-public/</url>
+      <id>velocity-powered</id>
+    </repository>
+  </repositories>
   <dependencies>
     <dependency>
       <groupId>org.cactoos</groupId>
@@ -174,6 +181,11 @@
       <dependency>
         <groupId>io.github.portlek.synergy</groupId>
         <artifactId>core</artifactId>
+        <version>${project.version}</version>
+      </dependency>
+      <dependency>
+        <groupId>io.github.portlek.synergy</groupId>
+        <artifactId>console</artifactId>
         <version>${project.version}</version>
       </dependency>
       <dependency>
@@ -275,6 +287,36 @@
         <groupId>org.jasypt</groupId>
         <artifactId>jasypt</artifactId>
         <version>1.9.3</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline</artifactId>
+        <version>3.19.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-console</artifactId>
+        <version>3.19.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-reader</artifactId>
+        <version>3.19.0</version>
+      </dependency>
+      <dependency>
+        <groupId>org.jline</groupId>
+        <artifactId>jline-terminal-jansi</artifactId>
+        <version>3.19.0</version>
+      </dependency>
+      <dependency>
+        <groupId>com.velocitypowered</groupId>
+        <artifactId>velocity-brigadier</artifactId>
+        <version>1.0.0-SNAPSHOT</version>
+      </dependency>
+      <dependency>
+        <groupId>net.minecrell</groupId>
+        <artifactId>terminalconsoleappender</artifactId>
+        <version>1.2.0</version>
       </dependency>
     </dependencies>
   </dependencyManagement>

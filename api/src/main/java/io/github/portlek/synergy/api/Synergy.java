@@ -25,55 +25,20 @@
 
 package io.github.portlek.synergy.api;
 
-import java.io.Closeable;
-import java.util.Map;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * an interface to determine coordinator servers.
+ * an interface to determine synergies.
  */
-public interface CoordinatorServer extends Closeable {
-
-  @Override
-  void close();
+public interface Synergy extends Named, Id {
 
   /**
-   * obtains the coordinator.
+   * checks if the synergy is running.
    *
-   * @return coordinator.
+   * @return {@code true} if the synergy is running.
    */
-  @NotNull
-  Coordinator getCoordinator();
+  boolean isRunning();
 
   /**
-   * obtains the id.
-   *
-   * @return id.
+   * shuts down the synergy.
    */
-  @NotNull
-  String getId();
-
-  /**
-   * obtains the name.
-   *
-   * @return name.
-   */
-  @NotNull
-  String getName();
-
-  /**
-   * obtains the package.
-   *
-   * @return package.
-   */
-  @NotNull
-  Package getPackage();
-
-  /**
-   * obtains the properties.
-   *
-   * @return properties.
-   */
-  @NotNull
-  Map<String, String> getProperties();
+  void shutdown();
 }

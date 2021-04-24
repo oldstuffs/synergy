@@ -25,19 +25,34 @@
 
 package io.github.portlek.synergy.api;
 
-import java.util.Map;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine networks.
+ * a simple implementation of {@link KeyStore}.
  */
-public interface Network extends Id, Named, Channeled {
+@RequiredArgsConstructor
+public final class SimpleKeyStore implements KeyStore {
 
   /**
-   * obtains the coordinators.
-   *
-   * @return coordinators.
+   * the id.
    */
   @NotNull
-  Map<String, Coordinator> getCoordinators();
+  @Getter
+  private final String id;
+
+  /**
+   * the name.
+   */
+  @NotNull
+  @Getter
+  private final String name;
+
+  /**
+   * the password.
+   */
+  @NotNull
+  @Getter
+  private final String password;
 }

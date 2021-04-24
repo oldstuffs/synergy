@@ -8,7 +8,7 @@ option optimize_for = SPEED;
 import "commands.proto";
 
 message AuthenticatedMessage {
-  string id = 1;
+  string coordinatorId = 1;
   string hash = 2;
   bytes payload = 3;
   uint32 version = 4;

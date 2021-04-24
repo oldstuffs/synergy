@@ -25,6 +25,7 @@
 
 package io.github.portlek.synergy.client.command;
 
+import io.github.portlek.synergy.api.SimpleKeyStore;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.client.config.CoordinatorConfig;
 import io.github.portlek.synergy.client.config.NetworkConfig;
@@ -32,6 +33,7 @@ import io.github.portlek.synergy.core.SynergyCoordinator;
 import io.github.portlek.synergy.core.SynergyNetwork;
 import io.github.portlek.synergy.languages.Languages;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import lombok.extern.log4j.Log4j2;
@@ -99,6 +101,7 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
    * @param address the address to run.
    * @param attributes the attributes to run.
    * @param id the id to run.
+   * @param name the name to run.
    * @param password the password to run.
    * @param resources the resources to run.
    */
@@ -109,13 +112,14 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
     @CommandLine.Option(names = "--address", description = "Coordinator address to connect.", converter = InetSocketAddressConverter.class) final InetSocketAddress address,
     @CommandLine.Option(names = "--attributes", description = "Coordinator attributes.") final String[] attributes,
     @CommandLine.Option(names = "--id", description = "Coordinator id.") final String id,
+    @CommandLine.Option(names = "--name", description = "Coordinator name.") final String name,
     @CommandLine.Option(names = "--password", description = "Coordinator password.") final String password,
     @CommandLine.Option(names = "--resources", description = "Coordinator resources.") final Map<String, Integer> resources
   ) {
     this.run();
-    CoordinatorConfig.load(address, attributes, id, password, resources);
+    CoordinatorConfig.load(address, attributes, id, name, password, resources);
     SynergyCoordinator.start(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
-      CoordinatorConfig.password, CoordinatorConfig.resources);
+      CoordinatorConfig.name, CoordinatorConfig.password, CoordinatorConfig.resources);
   }
 
   /**
@@ -123,16 +127,19 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
    *
    * @param address the address to run.
    * @param id the id to run.
+   * @param name the name to run.
    */
   @CommandLine.Command(
     name = "network"
   )
   void network(
     @CommandLine.Option(names = "--address", description = "Network address to bind.") final InetSocketAddress address,
-    @CommandLine.Option(names = "--id", description = "Network id.") final String id
+    @CommandLine.Option(names = "--id", description = "Network id.") final String id,
+    @CommandLine.Option(names = "--name", description = "Network name.") final String name,
+    @CommandLine.Option(names = "--coordinators", description = "Network's coordinators.") final List<SimpleKeyStore> coordinators
   ) {
     this.run();
-    NetworkConfig.load(address, id);
-    SynergyNetwork.start(NetworkConfig.address, NetworkConfig.id);
+    NetworkConfig.load(address, coordinators, id, name);
+    SynergyNetwork.start(NetworkConfig.address, NetworkConfig.coordinators, NetworkConfig.id, NetworkConfig.name);
   }
 }

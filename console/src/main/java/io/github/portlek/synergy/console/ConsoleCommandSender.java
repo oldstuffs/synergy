@@ -23,21 +23,20 @@
  *
  */
 
-package io.github.portlek.synergy.api;
+package io.github.portlek.synergy.console;
 
-import java.util.Map;
+import io.github.portlek.synergy.api.CommandSender;
+import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine networks.
+ * a class that represents console command senders.
  */
-public interface Network extends Id, Named, Channeled {
+@Log4j2
+public final class ConsoleCommandSender implements CommandSender {
 
-  /**
-   * obtains the coordinators.
-   *
-   * @return coordinators.
-   */
-  @NotNull
-  Map<String, Coordinator> getCoordinators();
+  @Override
+  public void sendMessage(@NotNull final String message) {
+    ConsoleCommandSender.log.info(message);
+  }
 }

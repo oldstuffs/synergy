@@ -40,9 +40,19 @@ import org.jetbrains.annotations.NotNull;
 public final class ClientConfig implements ConfigHolder {
 
   /**
+   * the coordinator id.
+   */
+  public static String id = "default-client-id";
+
+  /**
    * the client's language.
    */
   public static Locale lang = Locale.US;
+
+  /**
+   * the password.
+   */
+  public static String password = "default-client-password";
 
   /**
    * the configuration.

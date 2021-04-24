@@ -25,19 +25,17 @@
 
 package io.github.portlek.synergy.api;
 
-import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine networks.
+ * an interface to determine command senders.
  */
-public interface Network extends Id, Named, Channeled {
+public interface CommandSender {
 
   /**
-   * obtains the coordinators.
+   * sends the given message with the arguments.
    *
-   * @return coordinators.
+   * @param message the message to send.
    */
-  @NotNull
-  Map<String, Coordinator> getCoordinators();
+  void sendMessage(@NotNull String message);
 }

@@ -25,19 +25,27 @@
 
 package io.github.portlek.synergy.api;
 
-import java.util.Map;
+import io.netty.channel.Channel;
+import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine networks.
+ * an interface to determine channeled.
  */
-public interface Network extends Id, Named, Channeled {
+public interface Channeled {
 
   /**
-   * obtains the coordinators.
+   * obtains the channel.
    *
-   * @return coordinators.
+   * @return channel.
    */
   @NotNull
-  Map<String, Coordinator> getCoordinators();
+  Optional<Channel> getChannel();
+
+  /**
+   * sets the channel.
+   *
+   * @param channel the channel to set.
+   */
+  void setChannel(@NotNull Channel channel);
 }

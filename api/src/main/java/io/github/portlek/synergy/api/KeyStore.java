@@ -25,19 +25,18 @@
 
 package io.github.portlek.synergy.api;
 
-import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine networks.
+ * an interface to determine key stores.
  */
-public interface Network extends Id, Named, Channeled {
+public interface KeyStore extends Id, Named {
 
   /**
-   * obtains the coordinators.
+   * obtains the password.
    *
-   * @return coordinators.
+   * @return password.
    */
   @NotNull
-  Map<String, Coordinator> getCoordinators();
+  String getPassword();
 }

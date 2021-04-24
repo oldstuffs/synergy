@@ -25,19 +25,18 @@
 
 package io.github.portlek.synergy.api;
 
-import java.util.Map;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * an interface to determine networks.
+ * an interface to determine objects that have id.
  */
-public interface Network extends Id, Named, Channeled {
+public interface Id {
 
   /**
-   * obtains the coordinators.
+   * obtains the id.
    *
-   * @return coordinators.
+   * @return id.
    */
   @NotNull
-  Map<String, Coordinator> getCoordinators();
+  String getId();
 }

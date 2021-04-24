@@ -62,6 +62,11 @@ public final class CoordinatorConfig implements ConfigHolder {
   public static String id = UUID.randomUUID().toString();
 
   /**
+   * the coordinator name.
+   */
+  public static String name = UUID.randomUUID().toString();
+
+  /**
    * the password.
    */
   public static String password = UUID.randomUUID().toString();
@@ -93,11 +98,12 @@ public final class CoordinatorConfig implements ConfigHolder {
    * @param address the address to load.
    * @param attributes the attributes to load.
    * @param id the id to load.
+   * @param name the name to load.
    * @param password the password to load.
    * @param resources the resources to load.
    */
   public static void load(@Nullable final InetSocketAddress address, @Nullable final String[] attributes,
-                          @Nullable final String id, @Nullable final String password,
+                          @Nullable final String id, @Nullable final String name, @Nullable final String password,
                           @Nullable final Map<String, Integer> resources) {
     ConfigLoader.builder()
       .setConfigHolder(new CoordinatorConfig())
@@ -110,6 +116,7 @@ public final class CoordinatorConfig implements ConfigHolder {
     var saveNeeded = CoordinatorConfig.loadAddress(address);
     saveNeeded = saveNeeded || CoordinatorConfig.loadAttributes(attributes);
     saveNeeded = saveNeeded || CoordinatorConfig.loadId(id);
+    saveNeeded = saveNeeded || CoordinatorConfig.loadName(name);
     saveNeeded = saveNeeded || CoordinatorConfig.loadPassword(password);
     saveNeeded = saveNeeded || CoordinatorConfig.loadResources(resources);
     if (saveNeeded) {
@@ -169,6 +176,25 @@ public final class CoordinatorConfig implements ConfigHolder {
     if (!CoordinatorConfig.id.equals(finalId)) {
       CoordinatorConfig.id = finalId;
       CoordinatorConfig.section.set("id", finalId);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * loads the name.
+   *
+   * @param name the id name load.
+   *
+   * @return {@code true} if the save is needed.
+   */
+  private static boolean loadName(@Nullable final String name) {
+    final var finalName = Objects.isNull(name)
+      ? CoordinatorConfig.name
+      : name;
+    if (!CoordinatorConfig.name.equals(finalName)) {
+      CoordinatorConfig.name = finalName;
+      CoordinatorConfig.section.set("name", finalName);
       return true;
     }
     return false;

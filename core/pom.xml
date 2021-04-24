@@ -53,6 +53,14 @@
       <artifactId>proto</artifactId>
     </dependency>
     <dependency>
+      <groupId>io.github.portlek.synergy</groupId>
+      <artifactId>languages</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.github.portlek.synergy</groupId>
+      <artifactId>console</artifactId>
+    </dependency>
+    <dependency>
       <groupId>com.google.guava</groupId>
       <artifactId>guava</artifactId>
     </dependency>
@@ -75,6 +83,10 @@
     <dependency>
       <groupId>org.jasypt</groupId>
       <artifactId>jasypt</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>com.velocitypowered</groupId>
+      <artifactId>velocity-brigadier</artifactId>
     </dependency>
   </dependencies>
 </project>

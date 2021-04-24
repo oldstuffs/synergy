@@ -22,22 +22,7 @@
  * SOFTWARE.
  *
  */
-
-package io.github.portlek.synergy.api;
-
-import java.util.Map;
-import org.jetbrains.annotations.NotNull;
-
 /**
- * an interface to determine networks.
+ * the package that contains network implementations.
  */
-public interface Network extends Id, Named, Channeled {
-
-  /**
-   * obtains the coordinators.
-   *
-   * @return coordinators.
-   */
-  @NotNull
-  Map<String, Coordinator> getCoordinators();
-}
+package io.github.portlek.synergy.core.network;

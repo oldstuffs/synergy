@@ -25,7 +25,7 @@
 
 package io.github.portlek.synergy.core.netty;
 
-import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.core.BaseSynergy;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.socket.nio.NioSocketChannel;
@@ -46,7 +46,7 @@ public final class SynergyInitializer extends ChannelInitializer<NioSocketChanne
    * the synergy.
    */
   @NotNull
-  private final Synergy synergy;
+  private final BaseSynergy synergy;
 
   @Override
   protected void initChannel(final NioSocketChannel ch) {

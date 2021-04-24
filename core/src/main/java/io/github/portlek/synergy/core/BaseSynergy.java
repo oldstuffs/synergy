@@ -26,8 +26,12 @@
 package io.github.portlek.synergy.core;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
+import com.mojang.brigadier.CommandDispatcher;
+import io.github.portlek.synergy.api.CommandSender;
+import io.github.portlek.synergy.api.Synergy;
 import io.github.portlek.synergy.api.TransactionInfo;
 import io.github.portlek.synergy.api.TransactionManager;
+import io.github.portlek.synergy.console.SynergyConsole;
 import io.github.portlek.synergy.core.transaction.SimpleTransactionManager;
 import io.github.portlek.synergy.core.util.VMShutdownThread;
 import io.github.portlek.synergy.languages.Languages;
@@ -35,7 +39,6 @@ import io.github.portlek.synergy.proto.Commands;
 import io.github.portlek.synergy.proto.Protocol;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executors;
@@ -54,13 +57,7 @@ import org.jetbrains.annotations.Nullable;
  * an abstract class that represents synergy types.
  */
 @Log4j2
-public abstract class Synergy {
-
-  /**
-   * the instance.
-   */
-  @Nullable
-  static Synergy instance;
+public abstract class BaseSynergy implements Synergy {
 
   /**
    * the running.
@@ -70,7 +67,7 @@ public abstract class Synergy {
   /**
    * the transaction manager.
    */
-  final TransactionManager transactionManager = new SimpleTransactionManager();
+  final TransactionManager transactionManager = new SimpleTransactionManager(this);
 
   /**
    * async pool executor.
@@ -81,6 +78,16 @@ public abstract class Synergy {
     new ThreadFactoryBuilder()
       .setNameFormat("Synergy Async Thread - %1$d")
       .build());
+
+  /**
+   * the console.
+   */
+  private final SynergyConsole console = new SynergyConsole(this);
+
+  /**
+   * the console thread.
+   */
+  private final Thread consoleThread = new Thread(this.console::start);
 
   /**
    * the scheduler.
@@ -98,16 +105,6 @@ public abstract class Synergy {
   private VMShutdownThread shutdownThread;
 
   /**
-   * obtains the instance.
-   *
-   * @return instance.
-   */
-  @NotNull
-  public static Synergy getInstance() {
-    return Objects.requireNonNull(Synergy.instance, Languages.getLanguageValue("not-initiated"));
-  }
-
-  /**
    * generates a new id.
    *
    * @return a newly created id.
@@ -115,6 +112,17 @@ public abstract class Synergy {
   @NotNull
   public final String generateId() {
     return this.getId() + UUID.randomUUID();
+  }
+
+  @Override
+  public final boolean isRunning() {
+    return this.running.get();
+  }
+
+  @Override
+  public final void shutdown() {
+    BaseSynergy.log.info(Languages.getLanguageValue("shutting-down-synergy"));
+    this.onVMShutdown();
   }
 
   /**
@@ -143,17 +151,9 @@ public abstract class Synergy {
   }
 
   /**
-   * obtains the id.
-   *
-   * @return id.
-   */
-  @NotNull
-  public abstract String getId();
-
-  /**
    * runs when the synergy stops.
    */
-  public abstract void onClose() throws InterruptedException;
+  public abstract void onClose();
 
   /**
    * runs on initialization the channel.
@@ -180,14 +180,14 @@ public abstract class Synergy {
   /**
    * processes the given command.
    *
-   * @param payload the payload to process.
+   * @param command the command to process.
    * @param info the info to process.
    * @param from the from to process.
    *
-   * @return {@code true} if the payload proceed successfully.
+   * @return {@code true} if the command proceed successfully.
    */
-  public abstract boolean process(@NotNull Commands.BaseCommand payload, @NotNull TransactionInfo info,
-                                  @NotNull String from);
+  public abstract boolean process(@NotNull Commands.BaseCommand command, @NotNull TransactionInfo info,
+                                  @Nullable String from);
 
   /**
    * sends the given message to the target.
@@ -212,6 +212,16 @@ public abstract class Synergy {
   protected abstract void onTick();
 
   /**
+   * obtains the command dispatcher.
+   *
+   * @return command dispatcher.
+   */
+  @NotNull
+  final CommandDispatcher<CommandSender> getCommandDispatcher() {
+    return this.console.getCommandDispatcher();
+  }
+
+  /**
    * starts the synergy.
    */
   final void start() {
@@ -226,11 +236,12 @@ public abstract class Synergy {
       this.onStart();
     } catch (final InterruptedException ignored) {
     }
+    this.consoleThread.start();
     while (true) {
       try {
         Thread.sleep(5L);
       } catch (final InterruptedException e) {
-        Synergy.log.fatal(Languages.getLanguageValue("caught-an-exception"), e);
+        BaseSynergy.log.fatal(Languages.getLanguageValue("caught-an-exception"), e);
       }
     }
   }

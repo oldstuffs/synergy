@@ -9,7 +9,7 @@ import "core.proto";
 import "p3.proto";
 
 message Sync {
-  string name = 1;
+  string coordinatorId = 1;
   repeated Resource resources = 2;
   repeated string attributes = 3;
   repeated Server servers = 4;
@@ -103,7 +103,7 @@ message C_DeProvision {
 }
 
 message C_Shutdown {
-  string uuid = 1;
+  string id = 1;
 }
 
 message C_Promote {
@@ -111,12 +111,12 @@ message C_Promote {
 }
 
 message C_CreateCoordinator {
-  string keyName = 1;
+  string coordinatorId = 1;
 }
 
 message C_CoordinatorCreated {
-  string uuid = 1;
-  string key = 2;
+  string coordinatorId = 1;
+  string password = 2;
 }
 
 message C_SendInput {
