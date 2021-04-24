@@ -23,41 +23,41 @@
  *
  */
 
-package io.github.portlek.synergy.core.config;
+package io.github.portlek.synergy.api;
 
-import io.github.portlek.configs.ConfigHolder;
-import io.github.portlek.configs.ConfigLoader;
-import io.github.portlek.configs.annotation.Route;
-import io.github.portlek.configs.json.JsonType;
-import io.github.portlek.synergy.core.util.SystemUtils;
+import java.io.Closeable;
+import java.util.Map;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that represents Synergy's global config.
+ * an interface to determine servers.
  */
-public final class SynergyConfig implements ConfigHolder {
+public interface Server extends Closeable, Id, Named {
+
+  @Override
+  void close();
 
   /**
-   * the transaction timeout.
+   * obtains the coordinator.
+   *
+   * @return coordinator.
    */
-  @Route("transaction-timeout")
-  public static long transactionTimeout = 340L;
+  @NotNull
+  Coordinator getCoordinator();
 
   /**
-   * ctor.
+   * obtains the package.
+   *
+   * @return package.
    */
-  private SynergyConfig() {
-  }
+  @NotNull
+  Package getPackage();
 
   /**
-   * loads the config.
+   * obtains the properties.
+   *
+   * @return properties.
    */
-  public static void load() {
-    ConfigLoader.builder()
-      .setConfigHolder(new SynergyConfig())
-      .setConfigType(JsonType.get())
-      .setFileName("synergy")
-      .setFolder(SystemUtils.getHomePath())
-      .build()
-      .load(true);
-  }
+  @NotNull
+  Map<String, String> getProperties();
 }

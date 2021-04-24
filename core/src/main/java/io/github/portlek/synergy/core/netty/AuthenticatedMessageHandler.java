@@ -25,7 +25,7 @@
 
 package io.github.portlek.synergy.core.netty;
 
-import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.core.BaseSynergy;
 import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.proto.Protocol;
 import io.github.portlek.synergy.proto.Protocols;
@@ -46,7 +46,7 @@ public final class AuthenticatedMessageHandler extends SimpleChannelInboundHandl
    * synergy.
    */
   @NotNull
-  private final Synergy synergy;
+  private final BaseSynergy synergy;
 
   @Override
   public void exceptionCaught(final ChannelHandlerContext ctx, final Throwable cause) {

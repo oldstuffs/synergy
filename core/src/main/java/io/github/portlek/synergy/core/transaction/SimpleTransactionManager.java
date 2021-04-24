@@ -27,7 +27,7 @@ package io.github.portlek.synergy.core.transaction;
 
 import io.github.portlek.synergy.api.TransactionInfo;
 import io.github.portlek.synergy.api.TransactionManager;
-import io.github.portlek.synergy.core.Synergy;
+import io.github.portlek.synergy.core.BaseSynergy;
 import io.github.portlek.synergy.core.config.SynergyConfig;
 import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.proto.Commands;
@@ -36,6 +36,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -44,7 +45,14 @@ import org.jetbrains.annotations.Nullable;
  * a simple implementation of {@link TransactionManager}.
  */
 @Log4j2
+@RequiredArgsConstructor
 public final class SimpleTransactionManager implements TransactionManager {
+
+  /**
+   * the synergy.
+   */
+  @NotNull
+  private final BaseSynergy synergy;
 
   /**
    * the transactions.
@@ -109,10 +117,10 @@ public final class SimpleTransactionManager implements TransactionManager {
   @Override
   public TransactionInfo generateInfo() {
     final var info = new SimpleTransactionInfo();
-    final var generatedId = Synergy.getInstance().generateId();
+    final var generatedId = this.synergy.generateId();
     info.setId(generatedId);
     this.transactions.put(generatedId, info);
-    info.setCancelTask(Synergy.getInstance().getScheduler().schedule(() -> {
+    info.setCancelTask(this.synergy.getScheduler().schedule(() -> {
       SimpleTransactionManager.log.warn(Languages.getLanguageValue("transaction-cancelled", generatedId));
       return this.cancel(generatedId, true);
     }, SynergyConfig.transactionTimeout, TimeUnit.SECONDS));
@@ -126,7 +134,7 @@ public final class SimpleTransactionManager implements TransactionManager {
   }
 
   @Override
-  public void receive(@NotNull final Protocol.Transaction message, @NotNull final String from) {
+  public void receive(@NotNull final Protocol.Transaction message, @Nullable final String from) {
     final Optional<TransactionInfo> transactionInfo;
     switch (message.getMode()) {
       case CREATE:
@@ -167,9 +175,9 @@ public final class SimpleTransactionManager implements TransactionManager {
         final var info5 = info4.get();
         info5.getListener().ifPresent(listener -> listener.onReceive(this, info5, message));
         info5.setDone(true);
-        if (info5.getId().isEmpty() || !this.complete(info5.getId().get())) {
+        if (info5.getIdOptional().isEmpty() || !this.complete(info5.getIdOptional().get())) {
           SimpleTransactionManager.log.error(Languages.getLanguageValue("unable-to-complete-transaction"),
-            info5.getId().orElse(null));
+            info5.getIdOptional().orElse(null));
           return;
         }
         transactionInfo = Optional.of(info5);
@@ -179,7 +187,7 @@ public final class SimpleTransactionManager implements TransactionManager {
         break;
     }
     transactionInfo.ifPresent(info ->
-      Synergy.getInstance().process(message.getPayload(), info, from));
+      this.synergy.process(message.getPayload(), info, from));
   }
 
   @Override
@@ -199,10 +207,10 @@ public final class SimpleTransactionManager implements TransactionManager {
     info.setTarget(target);
     info.getListener().ifPresent(listener -> listener.onSend(this, info));
     final var mode = message.getMode();
-    if (info.getId().isPresent() &&
+    if (info.getIdOptional().isPresent() &&
       (mode == Protocol.Transaction.Mode.COMPLETE || mode == Protocol.Transaction.Mode.SINGLE)) {
-      this.complete(info.getId().get());
+      this.complete(info.getIdOptional().get());
     }
-    return Synergy.getInstance().send(message, info.getTarget().orElse(null));
+    return this.synergy.send(message, info.getTarget().orElse(null));
   }
 }

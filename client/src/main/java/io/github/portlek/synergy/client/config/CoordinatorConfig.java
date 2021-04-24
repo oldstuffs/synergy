@@ -29,6 +29,7 @@ import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
 import io.github.portlek.configs.configuration.ConfigurationSection;
 import io.github.portlek.configs.json.JsonType;
+import io.github.portlek.synergy.api.SimpleKeyStore;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.net.InetSocketAddress;
@@ -48,7 +49,7 @@ public final class CoordinatorConfig implements ConfigHolder {
    * the address.
    */
   @NotNull
-  public static InetSocketAddress address = InetSocketAddress.createUnresolved("localhost", 25501);
+  public static InetSocketAddress address = new InetSocketAddress("localhost", 25501);
 
   /**
    * the attributes..
@@ -57,14 +58,10 @@ public final class CoordinatorConfig implements ConfigHolder {
   public static List<String> attributes = List.of();
 
   /**
-   * the coordinator id.
+   * the key.
    */
-  public static String id = UUID.randomUUID().toString();
-
-  /**
-   * the password.
-   */
-  public static String password = UUID.randomUUID().toString();
+  public static SimpleKeyStore key = new SimpleKeyStore(UUID.randomUUID().toString(), UUID.randomUUID().toString(),
+    UUID.randomUUID().toString());
 
   /**
    * the resources.
@@ -92,25 +89,22 @@ public final class CoordinatorConfig implements ConfigHolder {
    *
    * @param address the address to load.
    * @param attributes the attributes to load.
-   * @param id the id to load.
-   * @param password the password to load.
+   * @param key the key to load.
    * @param resources the resources to load.
    */
   public static void load(@Nullable final InetSocketAddress address, @Nullable final String[] attributes,
-                          @Nullable final String id, @Nullable final String password,
-                          @Nullable final Map<String, Integer> resources) {
+                          @Nullable final SimpleKeyStore key, @Nullable final Map<String, Integer> resources) {
     ConfigLoader.builder()
       .setConfigHolder(new CoordinatorConfig())
       .setConfigType(JsonType.get())
       .setFileName("coordinator")
       .setFolder(SystemUtils.getHomePath())
-      .addLoaders()
+      .addLoaders(SimpleKeyStore.Loader.INSTANCE)
       .build()
       .load(true);
     var saveNeeded = CoordinatorConfig.loadAddress(address);
     saveNeeded = saveNeeded || CoordinatorConfig.loadAttributes(attributes);
-    saveNeeded = saveNeeded || CoordinatorConfig.loadId(id);
-    saveNeeded = saveNeeded || CoordinatorConfig.loadPassword(password);
+    saveNeeded = saveNeeded || CoordinatorConfig.loadKey(key);
     saveNeeded = saveNeeded || CoordinatorConfig.loadResources(resources);
     if (saveNeeded) {
       CoordinatorConfig.loader.save();
@@ -156,38 +150,19 @@ public final class CoordinatorConfig implements ConfigHolder {
   }
 
   /**
-   * loads the id.
+   * loads the key.
    *
-   * @param id the id to load.
-   *
-   * @return {@code true} if the save is needed.
-   */
-  private static boolean loadId(@Nullable final String id) {
-    final var finalId = Objects.isNull(id)
-      ? CoordinatorConfig.id
-      : id;
-    if (!CoordinatorConfig.id.equals(finalId)) {
-      CoordinatorConfig.id = finalId;
-      CoordinatorConfig.section.set("id", finalId);
-      return true;
-    }
-    return false;
-  }
-
-  /**
-   * loads the password.
-   *
-   * @param password the password to load.
+   * @param key the key to load.
    *
    * @return {@code true} if the save is needed.
    */
-  private static boolean loadPassword(@Nullable final String password) {
-    final var finalPassword = Objects.isNull(password)
-      ? CoordinatorConfig.password
-      : password;
-    if (!CoordinatorConfig.password.equals(finalPassword)) {
-      CoordinatorConfig.password = finalPassword;
-      CoordinatorConfig.section.set("password", finalPassword);
+  private static boolean loadKey(@Nullable final SimpleKeyStore key) {
+    final var finalKey = Objects.isNull(key)
+      ? CoordinatorConfig.key
+      : key;
+    if (!CoordinatorConfig.key.equals(finalKey)) {
+      CoordinatorConfig.key = finalKey;
+      CoordinatorConfig.section.set("password", finalKey);
       return true;
     }
     return false;

@@ -31,15 +31,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * an interface to determine package steps.
  */
-public interface PackageStep {
-
-  /**
-   * obtains the step id.
-   *
-   * @return step id.
-   */
-  @NotNull
-  String getStepId();
+public interface PackageStep extends Id {
 
   /**
    * runs the step.

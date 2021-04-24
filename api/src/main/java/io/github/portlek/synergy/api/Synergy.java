@@ -23,41 +23,22 @@
  *
  */
 
-package io.github.portlek.synergy.core.config;
-
-import io.github.portlek.configs.ConfigHolder;
-import io.github.portlek.configs.ConfigLoader;
-import io.github.portlek.configs.annotation.Route;
-import io.github.portlek.configs.json.JsonType;
-import io.github.portlek.synergy.core.util.SystemUtils;
+package io.github.portlek.synergy.api;
 
 /**
- * a class that represents Synergy's global config.
+ * an interface to determine synergies.
  */
-public final class SynergyConfig implements ConfigHolder {
+public interface Synergy extends Named, Id {
 
   /**
-   * the transaction timeout.
+   * checks if the synergy is running.
+   *
+   * @return {@code true} if the synergy is running.
    */
-  @Route("transaction-timeout")
-  public static long transactionTimeout = 340L;
+  boolean isRunning();
 
   /**
-   * ctor.
+   * shuts down the synergy.
    */
-  private SynergyConfig() {
-  }
-
-  /**
-   * loads the config.
-   */
-  public static void load() {
-    ConfigLoader.builder()
-      .setConfigHolder(new SynergyConfig())
-      .setConfigType(JsonType.get())
-      .setFileName("synergy")
-      .setFolder(SystemUtils.getHomePath())
-      .build()
-      .load(true);
-  }
+  void shutdown();
 }

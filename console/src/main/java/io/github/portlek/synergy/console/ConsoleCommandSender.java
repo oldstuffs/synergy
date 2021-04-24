@@ -23,41 +23,20 @@
  *
  */
 
-package io.github.portlek.synergy.core.config;
+package io.github.portlek.synergy.console;
 
-import io.github.portlek.configs.ConfigHolder;
-import io.github.portlek.configs.ConfigLoader;
-import io.github.portlek.configs.annotation.Route;
-import io.github.portlek.configs.json.JsonType;
-import io.github.portlek.synergy.core.util.SystemUtils;
+import io.github.portlek.synergy.api.CommandSender;
+import lombok.extern.log4j.Log4j2;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that represents Synergy's global config.
+ * a class that represents console command senders.
  */
-public final class SynergyConfig implements ConfigHolder {
+@Log4j2
+public final class ConsoleCommandSender implements CommandSender {
 
-  /**
-   * the transaction timeout.
-   */
-  @Route("transaction-timeout")
-  public static long transactionTimeout = 340L;
-
-  /**
-   * ctor.
-   */
-  private SynergyConfig() {
-  }
-
-  /**
-   * loads the config.
-   */
-  public static void load() {
-    ConfigLoader.builder()
-      .setConfigHolder(new SynergyConfig())
-      .setConfigType(JsonType.get())
-      .setFileName("synergy")
-      .setFolder(SystemUtils.getHomePath())
-      .build()
-      .load(true);
+  @Override
+  public void sendMessage(@NotNull final String message) {
+    ConsoleCommandSender.log.info(message);
   }
 }

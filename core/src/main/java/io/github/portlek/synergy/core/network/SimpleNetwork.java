@@ -23,57 +23,56 @@
  *
  */
 
-package io.github.portlek.synergy.api;
+package io.github.portlek.synergy.core.network;
 
-import java.io.Closeable;
+import io.github.portlek.synergy.api.Coordinator;
+import io.github.portlek.synergy.api.Network;
+import io.netty.channel.Channel;
 import java.util.Map;
+import java.util.Optional;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * an interface to determine coordinator servers.
+ * a class that represents simple networks.
  */
-public interface CoordinatorServer extends Closeable {
+@RequiredArgsConstructor
+public final class SimpleNetwork implements Network {
 
+  /**
+   * the coordinators with id.
+   */
+  @NotNull
+  @Getter
+  private final Map<String, Coordinator> coordinators;
+
+  /**
+   * the id.
+   */
+  @NotNull
+  @Getter
+  private final String id;
+
+  /**
+   * the name.
+   */
+  @NotNull
+  @Getter
+  private final String name;
+
+  /**
+   * the channel.
+   */
+  @Nullable
+  @Setter
+  private Channel channel;
+
+  @NotNull
   @Override
-  void close();
-
-  /**
-   * obtains the coordinator.
-   *
-   * @return coordinator.
-   */
-  @NotNull
-  Coordinator getCoordinator();
-
-  /**
-   * obtains the id.
-   *
-   * @return id.
-   */
-  @NotNull
-  String getId();
-
-  /**
-   * obtains the name.
-   *
-   * @return name.
-   */
-  @NotNull
-  String getName();
-
-  /**
-   * obtains the package.
-   *
-   * @return package.
-   */
-  @NotNull
-  Package getPackage();
-
-  /**
-   * obtains the properties.
-   *
-   * @return properties.
-   */
-  @NotNull
-  Map<String, String> getProperties();
+  public Optional<Channel> getChannel() {
+    return Optional.ofNullable(this.channel);
+  }
 }

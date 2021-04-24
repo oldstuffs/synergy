@@ -33,8 +33,8 @@
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <groupId>io.github.portlek.synergy</groupId>
-  <artifactId>core</artifactId>
-  <name>Core</name>
+  <artifactId>console</artifactId>
+  <name>Console</name>
   <dependencies>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
@@ -46,47 +46,31 @@
     </dependency>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>netty</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>proto</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.portlek.synergy</groupId>
       <artifactId>languages</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>console</artifactId>
+      <groupId>org.jline</groupId>
+      <artifactId>jline</artifactId>
     </dependency>
     <dependency>
-      <groupId>com.google.guava</groupId>
-      <artifactId>guava</artifactId>
+      <groupId>org.jline</groupId>
+      <artifactId>jline-console</artifactId>
     </dependency>
     <dependency>
-      <groupId>it.unimi.dsi</groupId>
-      <artifactId>fastutil</artifactId>
+      <groupId>org.jline</groupId>
+      <artifactId>jline-reader</artifactId>
     </dependency>
     <dependency>
-      <groupId>io.github.portlek</groupId>
-      <artifactId>configs-core</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.portlek</groupId>
-      <artifactId>configs-json</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>commons-codec</groupId>
-      <artifactId>commons-codec</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>org.jasypt</groupId>
-      <artifactId>jasypt</artifactId>
+      <groupId>org.jline</groupId>
+      <artifactId>jline-terminal-jansi</artifactId>
     </dependency>
     <dependency>
       <groupId>com.velocitypowered</groupId>
       <artifactId>velocity-brigadier</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>net.minecrell</groupId>
+      <artifactId>terminalconsoleappender</artifactId>
     </dependency>
   </dependencies>
 </project>

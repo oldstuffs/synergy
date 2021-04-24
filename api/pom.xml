@@ -39,6 +39,12 @@
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
       <artifactId>languages</artifactId>
+      <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>com.velocitypowered</groupId>
+      <artifactId>velocity-brigadier</artifactId>
+      <scope>provided</scope>
     </dependency>
     <dependency>
       <groupId>com.fasterxml.jackson.core</groupId>
@@ -54,6 +60,10 @@
       <groupId>io.netty</groupId>
       <artifactId>netty-all</artifactId>
       <scope>provided</scope>
+    </dependency>
+    <dependency>
+      <groupId>io.github.portlek</groupId>
+      <artifactId>configs-core</artifactId>
     </dependency>
   </dependencies>
 </project>

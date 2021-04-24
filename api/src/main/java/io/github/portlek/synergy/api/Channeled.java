@@ -23,41 +23,29 @@
  *
  */
 
-package io.github.portlek.synergy.core.config;
+package io.github.portlek.synergy.api;
 
-import io.github.portlek.configs.ConfigHolder;
-import io.github.portlek.configs.ConfigLoader;
-import io.github.portlek.configs.annotation.Route;
-import io.github.portlek.configs.json.JsonType;
-import io.github.portlek.synergy.core.util.SystemUtils;
+import io.netty.channel.Channel;
+import java.util.Optional;
+import org.jetbrains.annotations.NotNull;
 
 /**
- * a class that represents Synergy's global config.
+ * an interface to determine channeled.
  */
-public final class SynergyConfig implements ConfigHolder {
+public interface Channeled {
 
   /**
-   * the transaction timeout.
+   * obtains the channel.
+   *
+   * @return channel.
    */
-  @Route("transaction-timeout")
-  public static long transactionTimeout = 340L;
+  @NotNull
+  Optional<Channel> getChannel();
 
   /**
-   * ctor.
+   * sets the channel.
+   *
+   * @param channel the channel to set.
    */
-  private SynergyConfig() {
-  }
-
-  /**
-   * loads the config.
-   */
-  public static void load() {
-    ConfigLoader.builder()
-      .setConfigHolder(new SynergyConfig())
-      .setConfigType(JsonType.get())
-      .setFileName("synergy")
-      .setFolder(SystemUtils.getHomePath())
-      .build()
-      .load(true);
-  }
+  void setChannel(@NotNull Channel channel);
 }

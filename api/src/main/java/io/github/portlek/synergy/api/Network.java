@@ -31,7 +31,7 @@ import org.jetbrains.annotations.NotNull;
 /**
  * an interface to determine networks.
  */
-public interface Network {
+public interface Network extends Id, Named, Channeled {
 
   /**
    * obtains the coordinators.
@@ -40,12 +40,4 @@ public interface Network {
    */
   @NotNull
   Map<String, Coordinator> getCoordinators();
-
-  /**
-   * obtains the id.
-   *
-   * @return id.
-   */
-  @NotNull
-  String getId();
 }

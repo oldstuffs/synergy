@@ -19,16 +19,16 @@ public final class Commands {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string name = 1;</code>
-     * @return The name.
+     * <code>string coordinatorId = 1;</code>
+     * @return The coordinatorId.
      */
-    java.lang.String getName();
+    java.lang.String getCoordinatorId();
     /**
-     * <code>string name = 1;</code>
-     * @return The bytes for name.
+     * <code>string coordinatorId = 1;</code>
+     * @return The bytes for coordinatorId.
      */
     com.google.protobuf.ByteString
-        getNameBytes();
+        getCoordinatorIdBytes();
 
     /**
      * <code>repeated .io.github.portlek.synergy.proto.Resource resources = 2;</code>
@@ -122,7 +122,7 @@ public final class Commands {
       super(builder);
     }
     private Sync() {
-      name_ = "";
+      coordinatorId_ = "";
       resources_ = java.util.Collections.emptyList();
       attributes_ = com.google.protobuf.LazyStringArrayList.EMPTY;
       servers_ = java.util.Collections.emptyList();
@@ -162,7 +162,7 @@ public final class Commands {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              name_ = s;
+              coordinatorId_ = s;
               break;
             }
             case 18: {
@@ -238,38 +238,38 @@ public final class Commands {
               io.github.portlek.synergy.proto.Commands.Sync.class, io.github.portlek.synergy.proto.Commands.Sync.Builder.class);
     }
 
-    public static final int NAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object name_;
+    public static final int COORDINATORID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object coordinatorId_;
     /**
-     * <code>string name = 1;</code>
-     * @return The name.
+     * <code>string coordinatorId = 1;</code>
+     * @return The coordinatorId.
      */
     @java.lang.Override
-    public java.lang.String getName() {
-      java.lang.Object ref = name_;
+    public java.lang.String getCoordinatorId() {
+      java.lang.Object ref = coordinatorId_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        name_ = s;
+        coordinatorId_ = s;
         return s;
       }
     }
     /**
-     * <code>string name = 1;</code>
-     * @return The bytes for name.
+     * <code>string coordinatorId = 1;</code>
+     * @return The bytes for coordinatorId.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getNameBytes() {
-      java.lang.Object ref = name_;
+        getCoordinatorIdBytes() {
+      java.lang.Object ref = coordinatorId_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        name_ = b;
+        coordinatorId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -416,8 +416,8 @@ public final class Commands {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getNameBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, name_);
+      if (!getCoordinatorIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, coordinatorId_);
       }
       for (int i = 0; i < resources_.size(); i++) {
         output.writeMessage(2, resources_.get(i));
@@ -440,8 +440,8 @@ public final class Commands {
       if (size != -1) return size;
 
       size = 0;
-      if (!getNameBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, name_);
+      if (!getCoordinatorIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, coordinatorId_);
       }
       for (int i = 0; i < resources_.size(); i++) {
         size += com.google.protobuf.CodedOutputStream
@@ -478,8 +478,8 @@ public final class Commands {
       }
       io.github.portlek.synergy.proto.Commands.Sync other = (io.github.portlek.synergy.proto.Commands.Sync) obj;
 
-      if (!getName()
-          .equals(other.getName())) return false;
+      if (!getCoordinatorId()
+          .equals(other.getCoordinatorId())) return false;
       if (!getResourcesList()
           .equals(other.getResourcesList())) return false;
       if (!getAttributesList()
@@ -499,8 +499,8 @@ public final class Commands {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + NAME_FIELD_NUMBER;
-      hash = (53 * hash) + getName().hashCode();
+      hash = (37 * hash) + COORDINATORID_FIELD_NUMBER;
+      hash = (53 * hash) + getCoordinatorId().hashCode();
       if (getResourcesCount() > 0) {
         hash = (37 * hash) + RESOURCES_FIELD_NUMBER;
         hash = (53 * hash) + getResourcesList().hashCode();
@@ -651,7 +651,7 @@ public final class Commands {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        name_ = "";
+        coordinatorId_ = "";
 
         if (resourcesBuilder_ == null) {
           resources_ = java.util.Collections.emptyList();
@@ -696,7 +696,7 @@ public final class Commands {
       public io.github.portlek.synergy.proto.Commands.Sync buildPartial() {
         io.github.portlek.synergy.proto.Commands.Sync result = new io.github.portlek.synergy.proto.Commands.Sync(this);
         int from_bitField0_ = bitField0_;
-        result.name_ = name_;
+        result.coordinatorId_ = coordinatorId_;
         if (resourcesBuilder_ == null) {
           if (((bitField0_ & 0x00000001) != 0)) {
             resources_ = java.util.Collections.unmodifiableList(resources_);
@@ -769,8 +769,8 @@ public final class Commands {
 
       public Builder mergeFrom(io.github.portlek.synergy.proto.Commands.Sync other) {
         if (other == io.github.portlek.synergy.proto.Commands.Sync.getDefaultInstance()) return this;
-        if (!other.getName().isEmpty()) {
-          name_ = other.name_;
+        if (!other.getCoordinatorId().isEmpty()) {
+          coordinatorId_ = other.coordinatorId_;
           onChanged();
         }
         if (resourcesBuilder_ == null) {
@@ -868,78 +868,78 @@ public final class Commands {
       }
       private int bitField0_;
 
-      private java.lang.Object name_ = "";
+      private java.lang.Object coordinatorId_ = "";
       /**
-       * <code>string name = 1;</code>
-       * @return The name.
+       * <code>string coordinatorId = 1;</code>
+       * @return The coordinatorId.
        */
-      public java.lang.String getName() {
-        java.lang.Object ref = name_;
+      public java.lang.String getCoordinatorId() {
+        java.lang.Object ref = coordinatorId_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          name_ = s;
+          coordinatorId_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string name = 1;</code>
-       * @return The bytes for name.
+       * <code>string coordinatorId = 1;</code>
+       * @return The bytes for coordinatorId.
        */
       public com.google.protobuf.ByteString
-          getNameBytes() {
-        java.lang.Object ref = name_;
+          getCoordinatorIdBytes() {
+        java.lang.Object ref = coordinatorId_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          name_ = b;
+          coordinatorId_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string name = 1;</code>
-       * @param value The name to set.
+       * <code>string coordinatorId = 1;</code>
+       * @param value The coordinatorId to set.
        * @return This builder for chaining.
        */
-      public Builder setName(
+      public Builder setCoordinatorId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        name_ = value;
+        coordinatorId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string name = 1;</code>
+       * <code>string coordinatorId = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearName() {
+      public Builder clearCoordinatorId() {
         
-        name_ = getDefaultInstance().getName();
+        coordinatorId_ = getDefaultInstance().getCoordinatorId();
         onChanged();
         return this;
       }
       /**
-       * <code>string name = 1;</code>
-       * @param value The bytes for name to set.
+       * <code>string coordinatorId = 1;</code>
+       * @param value The bytes for coordinatorId to set.
        * @return This builder for chaining.
        */
-      public Builder setNameBytes(
+      public Builder setCoordinatorIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        name_ = value;
+        coordinatorId_ = value;
         onChanged();
         return this;
       }
@@ -14161,16 +14161,16 @@ public final class Commands {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string uuid = 1;</code>
-     * @return The uuid.
+     * <code>string id = 1;</code>
+     * @return The id.
      */
-    java.lang.String getUuid();
+    java.lang.String getId();
     /**
-     * <code>string uuid = 1;</code>
-     * @return The bytes for uuid.
+     * <code>string id = 1;</code>
+     * @return The bytes for id.
      */
     com.google.protobuf.ByteString
-        getUuidBytes();
+        getIdBytes();
   }
   /**
    * Protobuf type {@code io.github.portlek.synergy.proto.C_Shutdown}
@@ -14185,7 +14185,7 @@ public final class Commands {
       super(builder);
     }
     private C_Shutdown() {
-      uuid_ = "";
+      id_ = "";
     }
 
     @java.lang.Override
@@ -14221,7 +14221,7 @@ public final class Commands {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              uuid_ = s;
+              id_ = s;
               break;
             }
             default: {
@@ -14256,38 +14256,38 @@ public final class Commands {
               io.github.portlek.synergy.proto.Commands.C_Shutdown.class, io.github.portlek.synergy.proto.Commands.C_Shutdown.Builder.class);
     }
 
-    public static final int UUID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object uuid_;
+    public static final int ID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object id_;
     /**
-     * <code>string uuid = 1;</code>
-     * @return The uuid.
+     * <code>string id = 1;</code>
+     * @return The id.
      */
     @java.lang.Override
-    public java.lang.String getUuid() {
-      java.lang.Object ref = uuid_;
+    public java.lang.String getId() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        uuid_ = s;
+        id_ = s;
         return s;
       }
     }
     /**
-     * <code>string uuid = 1;</code>
-     * @return The bytes for uuid.
+     * <code>string id = 1;</code>
+     * @return The bytes for id.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getUuidBytes() {
-      java.lang.Object ref = uuid_;
+        getIdBytes() {
+      java.lang.Object ref = id_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        uuid_ = b;
+        id_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -14308,8 +14308,8 @@ public final class Commands {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getUuidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uuid_);
+      if (!getIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, id_);
       }
       unknownFields.writeTo(output);
     }
@@ -14320,8 +14320,8 @@ public final class Commands {
       if (size != -1) return size;
 
       size = 0;
-      if (!getUuidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uuid_);
+      if (!getIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, id_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -14338,8 +14338,8 @@ public final class Commands {
       }
       io.github.portlek.synergy.proto.Commands.C_Shutdown other = (io.github.portlek.synergy.proto.Commands.C_Shutdown) obj;
 
-      if (!getUuid()
-          .equals(other.getUuid())) return false;
+      if (!getId()
+          .equals(other.getId())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -14351,8 +14351,8 @@ public final class Commands {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + UUID_FIELD_NUMBER;
-      hash = (53 * hash) + getUuid().hashCode();
+      hash = (37 * hash) + ID_FIELD_NUMBER;
+      hash = (53 * hash) + getId().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -14486,7 +14486,7 @@ public final class Commands {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        uuid_ = "";
+        id_ = "";
 
         return this;
       }
@@ -14514,7 +14514,7 @@ public final class Commands {
       @java.lang.Override
       public io.github.portlek.synergy.proto.Commands.C_Shutdown buildPartial() {
         io.github.portlek.synergy.proto.Commands.C_Shutdown result = new io.github.portlek.synergy.proto.Commands.C_Shutdown(this);
-        result.uuid_ = uuid_;
+        result.id_ = id_;
         onBuilt();
         return result;
       }
@@ -14563,8 +14563,8 @@ public final class Commands {
 
       public Builder mergeFrom(io.github.portlek.synergy.proto.Commands.C_Shutdown other) {
         if (other == io.github.portlek.synergy.proto.Commands.C_Shutdown.getDefaultInstance()) return this;
-        if (!other.getUuid().isEmpty()) {
-          uuid_ = other.uuid_;
+        if (!other.getId().isEmpty()) {
+          id_ = other.id_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -14596,78 +14596,78 @@ public final class Commands {
         return this;
       }
 
-      private java.lang.Object uuid_ = "";
+      private java.lang.Object id_ = "";
       /**
-       * <code>string uuid = 1;</code>
-       * @return The uuid.
+       * <code>string id = 1;</code>
+       * @return The id.
        */
-      public java.lang.String getUuid() {
-        java.lang.Object ref = uuid_;
+      public java.lang.String getId() {
+        java.lang.Object ref = id_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          uuid_ = s;
+          id_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @return The bytes for uuid.
+       * <code>string id = 1;</code>
+       * @return The bytes for id.
        */
       public com.google.protobuf.ByteString
-          getUuidBytes() {
-        java.lang.Object ref = uuid_;
+          getIdBytes() {
+        java.lang.Object ref = id_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          uuid_ = b;
+          id_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @param value The uuid to set.
+       * <code>string id = 1;</code>
+       * @param value The id to set.
        * @return This builder for chaining.
        */
-      public Builder setUuid(
+      public Builder setId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        uuid_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string uuid = 1;</code>
+       * <code>string id = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearUuid() {
+      public Builder clearId() {
         
-        uuid_ = getDefaultInstance().getUuid();
+        id_ = getDefaultInstance().getId();
         onChanged();
         return this;
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @param value The bytes for uuid to set.
+       * <code>string id = 1;</code>
+       * @param value The bytes for id to set.
        * @return This builder for chaining.
        */
-      public Builder setUuidBytes(
+      public Builder setIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        uuid_ = value;
+        id_ = value;
         onChanged();
         return this;
       }
@@ -15350,16 +15350,16 @@ public final class Commands {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string keyName = 1;</code>
-     * @return The keyName.
+     * <code>string coordinatorId = 1;</code>
+     * @return The coordinatorId.
      */
-    java.lang.String getKeyName();
+    java.lang.String getCoordinatorId();
     /**
-     * <code>string keyName = 1;</code>
-     * @return The bytes for keyName.
+     * <code>string coordinatorId = 1;</code>
+     * @return The bytes for coordinatorId.
      */
     com.google.protobuf.ByteString
-        getKeyNameBytes();
+        getCoordinatorIdBytes();
   }
   /**
    * Protobuf type {@code io.github.portlek.synergy.proto.C_CreateCoordinator}
@@ -15374,7 +15374,7 @@ public final class Commands {
       super(builder);
     }
     private C_CreateCoordinator() {
-      keyName_ = "";
+      coordinatorId_ = "";
     }
 
     @java.lang.Override
@@ -15410,7 +15410,7 @@ public final class Commands {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              keyName_ = s;
+              coordinatorId_ = s;
               break;
             }
             default: {
@@ -15445,38 +15445,38 @@ public final class Commands {
               io.github.portlek.synergy.proto.Commands.C_CreateCoordinator.class, io.github.portlek.synergy.proto.Commands.C_CreateCoordinator.Builder.class);
     }
 
-    public static final int KEYNAME_FIELD_NUMBER = 1;
-    private volatile java.lang.Object keyName_;
+    public static final int COORDINATORID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object coordinatorId_;
     /**
-     * <code>string keyName = 1;</code>
-     * @return The keyName.
+     * <code>string coordinatorId = 1;</code>
+     * @return The coordinatorId.
      */
     @java.lang.Override
-    public java.lang.String getKeyName() {
-      java.lang.Object ref = keyName_;
+    public java.lang.String getCoordinatorId() {
+      java.lang.Object ref = coordinatorId_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        keyName_ = s;
+        coordinatorId_ = s;
         return s;
       }
     }
     /**
-     * <code>string keyName = 1;</code>
-     * @return The bytes for keyName.
+     * <code>string coordinatorId = 1;</code>
+     * @return The bytes for coordinatorId.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getKeyNameBytes() {
-      java.lang.Object ref = keyName_;
+        getCoordinatorIdBytes() {
+      java.lang.Object ref = coordinatorId_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        keyName_ = b;
+        coordinatorId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -15497,8 +15497,8 @@ public final class Commands {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getKeyNameBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, keyName_);
+      if (!getCoordinatorIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, coordinatorId_);
       }
       unknownFields.writeTo(output);
     }
@@ -15509,8 +15509,8 @@ public final class Commands {
       if (size != -1) return size;
 
       size = 0;
-      if (!getKeyNameBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, keyName_);
+      if (!getCoordinatorIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, coordinatorId_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -15527,8 +15527,8 @@ public final class Commands {
       }
       io.github.portlek.synergy.proto.Commands.C_CreateCoordinator other = (io.github.portlek.synergy.proto.Commands.C_CreateCoordinator) obj;
 
-      if (!getKeyName()
-          .equals(other.getKeyName())) return false;
+      if (!getCoordinatorId()
+          .equals(other.getCoordinatorId())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -15540,8 +15540,8 @@ public final class Commands {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + KEYNAME_FIELD_NUMBER;
-      hash = (53 * hash) + getKeyName().hashCode();
+      hash = (37 * hash) + COORDINATORID_FIELD_NUMBER;
+      hash = (53 * hash) + getCoordinatorId().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -15675,7 +15675,7 @@ public final class Commands {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        keyName_ = "";
+        coordinatorId_ = "";
 
         return this;
       }
@@ -15703,7 +15703,7 @@ public final class Commands {
       @java.lang.Override
       public io.github.portlek.synergy.proto.Commands.C_CreateCoordinator buildPartial() {
         io.github.portlek.synergy.proto.Commands.C_CreateCoordinator result = new io.github.portlek.synergy.proto.Commands.C_CreateCoordinator(this);
-        result.keyName_ = keyName_;
+        result.coordinatorId_ = coordinatorId_;
         onBuilt();
         return result;
       }
@@ -15752,8 +15752,8 @@ public final class Commands {
 
       public Builder mergeFrom(io.github.portlek.synergy.proto.Commands.C_CreateCoordinator other) {
         if (other == io.github.portlek.synergy.proto.Commands.C_CreateCoordinator.getDefaultInstance()) return this;
-        if (!other.getKeyName().isEmpty()) {
-          keyName_ = other.keyName_;
+        if (!other.getCoordinatorId().isEmpty()) {
+          coordinatorId_ = other.coordinatorId_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -15785,78 +15785,78 @@ public final class Commands {
         return this;
       }
 
-      private java.lang.Object keyName_ = "";
+      private java.lang.Object coordinatorId_ = "";
       /**
-       * <code>string keyName = 1;</code>
-       * @return The keyName.
+       * <code>string coordinatorId = 1;</code>
+       * @return The coordinatorId.
        */
-      public java.lang.String getKeyName() {
-        java.lang.Object ref = keyName_;
+      public java.lang.String getCoordinatorId() {
+        java.lang.Object ref = coordinatorId_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          keyName_ = s;
+          coordinatorId_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string keyName = 1;</code>
-       * @return The bytes for keyName.
+       * <code>string coordinatorId = 1;</code>
+       * @return The bytes for coordinatorId.
        */
       public com.google.protobuf.ByteString
-          getKeyNameBytes() {
-        java.lang.Object ref = keyName_;
+          getCoordinatorIdBytes() {
+        java.lang.Object ref = coordinatorId_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          keyName_ = b;
+          coordinatorId_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string keyName = 1;</code>
-       * @param value The keyName to set.
+       * <code>string coordinatorId = 1;</code>
+       * @param value The coordinatorId to set.
        * @return This builder for chaining.
        */
-      public Builder setKeyName(
+      public Builder setCoordinatorId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        keyName_ = value;
+        coordinatorId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string keyName = 1;</code>
+       * <code>string coordinatorId = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearKeyName() {
+      public Builder clearCoordinatorId() {
         
-        keyName_ = getDefaultInstance().getKeyName();
+        coordinatorId_ = getDefaultInstance().getCoordinatorId();
         onChanged();
         return this;
       }
       /**
-       * <code>string keyName = 1;</code>
-       * @param value The bytes for keyName to set.
+       * <code>string coordinatorId = 1;</code>
+       * @param value The bytes for coordinatorId to set.
        * @return This builder for chaining.
        */
-      public Builder setKeyNameBytes(
+      public Builder setCoordinatorIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        keyName_ = value;
+        coordinatorId_ = value;
         onChanged();
         return this;
       }
@@ -15918,28 +15918,28 @@ public final class Commands {
       com.google.protobuf.MessageOrBuilder {
 
     /**
-     * <code>string uuid = 1;</code>
-     * @return The uuid.
+     * <code>string coordinatorId = 1;</code>
+     * @return The coordinatorId.
      */
-    java.lang.String getUuid();
+    java.lang.String getCoordinatorId();
     /**
-     * <code>string uuid = 1;</code>
-     * @return The bytes for uuid.
+     * <code>string coordinatorId = 1;</code>
+     * @return The bytes for coordinatorId.
      */
     com.google.protobuf.ByteString
-        getUuidBytes();
+        getCoordinatorIdBytes();
 
     /**
-     * <code>string key = 2;</code>
-     * @return The key.
+     * <code>string password = 2;</code>
+     * @return The password.
      */
-    java.lang.String getKey();
+    java.lang.String getPassword();
     /**
-     * <code>string key = 2;</code>
-     * @return The bytes for key.
+     * <code>string password = 2;</code>
+     * @return The bytes for password.
      */
     com.google.protobuf.ByteString
-        getKeyBytes();
+        getPasswordBytes();
   }
   /**
    * Protobuf type {@code io.github.portlek.synergy.proto.C_CoordinatorCreated}
@@ -15954,8 +15954,8 @@ public final class Commands {
       super(builder);
     }
     private C_CoordinatorCreated() {
-      uuid_ = "";
-      key_ = "";
+      coordinatorId_ = "";
+      password_ = "";
     }
 
     @java.lang.Override
@@ -15991,13 +15991,13 @@ public final class Commands {
             case 10: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              uuid_ = s;
+              coordinatorId_ = s;
               break;
             }
             case 18: {
               java.lang.String s = input.readStringRequireUtf8();
 
-              key_ = s;
+              password_ = s;
               break;
             }
             default: {
@@ -16032,76 +16032,76 @@ public final class Commands {
               io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated.class, io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated.Builder.class);
     }
 
-    public static final int UUID_FIELD_NUMBER = 1;
-    private volatile java.lang.Object uuid_;
+    public static final int COORDINATORID_FIELD_NUMBER = 1;
+    private volatile java.lang.Object coordinatorId_;
     /**
-     * <code>string uuid = 1;</code>
-     * @return The uuid.
+     * <code>string coordinatorId = 1;</code>
+     * @return The coordinatorId.
      */
     @java.lang.Override
-    public java.lang.String getUuid() {
-      java.lang.Object ref = uuid_;
+    public java.lang.String getCoordinatorId() {
+      java.lang.Object ref = coordinatorId_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        uuid_ = s;
+        coordinatorId_ = s;
         return s;
       }
     }
     /**
-     * <code>string uuid = 1;</code>
-     * @return The bytes for uuid.
+     * <code>string coordinatorId = 1;</code>
+     * @return The bytes for coordinatorId.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getUuidBytes() {
-      java.lang.Object ref = uuid_;
+        getCoordinatorIdBytes() {
+      java.lang.Object ref = coordinatorId_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        uuid_ = b;
+        coordinatorId_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
       }
     }
 
-    public static final int KEY_FIELD_NUMBER = 2;
-    private volatile java.lang.Object key_;
+    public static final int PASSWORD_FIELD_NUMBER = 2;
+    private volatile java.lang.Object password_;
     /**
-     * <code>string key = 2;</code>
-     * @return The key.
+     * <code>string password = 2;</code>
+     * @return The password.
      */
     @java.lang.Override
-    public java.lang.String getKey() {
-      java.lang.Object ref = key_;
+    public java.lang.String getPassword() {
+      java.lang.Object ref = password_;
       if (ref instanceof java.lang.String) {
         return (java.lang.String) ref;
       } else {
         com.google.protobuf.ByteString bs = 
             (com.google.protobuf.ByteString) ref;
         java.lang.String s = bs.toStringUtf8();
-        key_ = s;
+        password_ = s;
         return s;
       }
     }
     /**
-     * <code>string key = 2;</code>
-     * @return The bytes for key.
+     * <code>string password = 2;</code>
+     * @return The bytes for password.
      */
     @java.lang.Override
     public com.google.protobuf.ByteString
-        getKeyBytes() {
-      java.lang.Object ref = key_;
+        getPasswordBytes() {
+      java.lang.Object ref = password_;
       if (ref instanceof java.lang.String) {
         com.google.protobuf.ByteString b = 
             com.google.protobuf.ByteString.copyFromUtf8(
                 (java.lang.String) ref);
-        key_ = b;
+        password_ = b;
         return b;
       } else {
         return (com.google.protobuf.ByteString) ref;
@@ -16122,11 +16122,11 @@ public final class Commands {
     @java.lang.Override
     public void writeTo(com.google.protobuf.CodedOutputStream output)
                         throws java.io.IOException {
-      if (!getUuidBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, uuid_);
+      if (!getCoordinatorIdBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 1, coordinatorId_);
       }
-      if (!getKeyBytes().isEmpty()) {
-        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, key_);
+      if (!getPasswordBytes().isEmpty()) {
+        com.google.protobuf.GeneratedMessageV3.writeString(output, 2, password_);
       }
       unknownFields.writeTo(output);
     }
@@ -16137,11 +16137,11 @@ public final class Commands {
       if (size != -1) return size;
 
       size = 0;
-      if (!getUuidBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, uuid_);
+      if (!getCoordinatorIdBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(1, coordinatorId_);
       }
-      if (!getKeyBytes().isEmpty()) {
-        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, key_);
+      if (!getPasswordBytes().isEmpty()) {
+        size += com.google.protobuf.GeneratedMessageV3.computeStringSize(2, password_);
       }
       size += unknownFields.getSerializedSize();
       memoizedSize = size;
@@ -16158,10 +16158,10 @@ public final class Commands {
       }
       io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated other = (io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated) obj;
 
-      if (!getUuid()
-          .equals(other.getUuid())) return false;
-      if (!getKey()
-          .equals(other.getKey())) return false;
+      if (!getCoordinatorId()
+          .equals(other.getCoordinatorId())) return false;
+      if (!getPassword()
+          .equals(other.getPassword())) return false;
       if (!unknownFields.equals(other.unknownFields)) return false;
       return true;
     }
@@ -16173,10 +16173,10 @@ public final class Commands {
       }
       int hash = 41;
       hash = (19 * hash) + getDescriptor().hashCode();
-      hash = (37 * hash) + UUID_FIELD_NUMBER;
-      hash = (53 * hash) + getUuid().hashCode();
-      hash = (37 * hash) + KEY_FIELD_NUMBER;
-      hash = (53 * hash) + getKey().hashCode();
+      hash = (37 * hash) + COORDINATORID_FIELD_NUMBER;
+      hash = (53 * hash) + getCoordinatorId().hashCode();
+      hash = (37 * hash) + PASSWORD_FIELD_NUMBER;
+      hash = (53 * hash) + getPassword().hashCode();
       hash = (29 * hash) + unknownFields.hashCode();
       memoizedHashCode = hash;
       return hash;
@@ -16310,9 +16310,9 @@ public final class Commands {
       @java.lang.Override
       public Builder clear() {
         super.clear();
-        uuid_ = "";
+        coordinatorId_ = "";
 
-        key_ = "";
+        password_ = "";
 
         return this;
       }
@@ -16340,8 +16340,8 @@ public final class Commands {
       @java.lang.Override
       public io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated buildPartial() {
         io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated result = new io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated(this);
-        result.uuid_ = uuid_;
-        result.key_ = key_;
+        result.coordinatorId_ = coordinatorId_;
+        result.password_ = password_;
         onBuilt();
         return result;
       }
@@ -16390,12 +16390,12 @@ public final class Commands {
 
       public Builder mergeFrom(io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated other) {
         if (other == io.github.portlek.synergy.proto.Commands.C_CoordinatorCreated.getDefaultInstance()) return this;
-        if (!other.getUuid().isEmpty()) {
-          uuid_ = other.uuid_;
+        if (!other.getCoordinatorId().isEmpty()) {
+          coordinatorId_ = other.coordinatorId_;
           onChanged();
         }
-        if (!other.getKey().isEmpty()) {
-          key_ = other.key_;
+        if (!other.getPassword().isEmpty()) {
+          password_ = other.password_;
           onChanged();
         }
         this.mergeUnknownFields(other.unknownFields);
@@ -16427,154 +16427,154 @@ public final class Commands {
         return this;
       }
 
-      private java.lang.Object uuid_ = "";
+      private java.lang.Object coordinatorId_ = "";
       /**
-       * <code>string uuid = 1;</code>
-       * @return The uuid.
+       * <code>string coordinatorId = 1;</code>
+       * @return The coordinatorId.
        */
-      public java.lang.String getUuid() {
-        java.lang.Object ref = uuid_;
+      public java.lang.String getCoordinatorId() {
+        java.lang.Object ref = coordinatorId_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          uuid_ = s;
+          coordinatorId_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @return The bytes for uuid.
+       * <code>string coordinatorId = 1;</code>
+       * @return The bytes for coordinatorId.
        */
       public com.google.protobuf.ByteString
-          getUuidBytes() {
-        java.lang.Object ref = uuid_;
+          getCoordinatorIdBytes() {
+        java.lang.Object ref = coordinatorId_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          uuid_ = b;
+          coordinatorId_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @param value The uuid to set.
+       * <code>string coordinatorId = 1;</code>
+       * @param value The coordinatorId to set.
        * @return This builder for chaining.
        */
-      public Builder setUuid(
+      public Builder setCoordinatorId(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        uuid_ = value;
+        coordinatorId_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string uuid = 1;</code>
+       * <code>string coordinatorId = 1;</code>
        * @return This builder for chaining.
        */
-      public Builder clearUuid() {
+      public Builder clearCoordinatorId() {
         
-        uuid_ = getDefaultInstance().getUuid();
+        coordinatorId_ = getDefaultInstance().getCoordinatorId();
         onChanged();
         return this;
       }
       /**
-       * <code>string uuid = 1;</code>
-       * @param value The bytes for uuid to set.
+       * <code>string coordinatorId = 1;</code>
+       * @param value The bytes for coordinatorId to set.
        * @return This builder for chaining.
        */
-      public Builder setUuidBytes(
+      public Builder setCoordinatorIdBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        uuid_ = value;
+        coordinatorId_ = value;
         onChanged();
         return this;
       }
 
-      private java.lang.Object key_ = "";
+      private java.lang.Object password_ = "";
       /**
-       * <code>string key = 2;</code>
-       * @return The key.
+       * <code>string password = 2;</code>
+       * @return The password.
        */
-      public java.lang.String getKey() {
-        java.lang.Object ref = key_;
+      public java.lang.String getPassword() {
+        java.lang.Object ref = password_;
         if (!(ref instanceof java.lang.String)) {
           com.google.protobuf.ByteString bs =
               (com.google.protobuf.ByteString) ref;
           java.lang.String s = bs.toStringUtf8();
-          key_ = s;
+          password_ = s;
           return s;
         } else {
           return (java.lang.String) ref;
         }
       }
       /**
-       * <code>string key = 2;</code>
-       * @return The bytes for key.
+       * <code>string password = 2;</code>
+       * @return The bytes for password.
        */
       public com.google.protobuf.ByteString
-          getKeyBytes() {
-        java.lang.Object ref = key_;
+          getPasswordBytes() {
+        java.lang.Object ref = password_;
         if (ref instanceof String) {
           com.google.protobuf.ByteString b = 
               com.google.protobuf.ByteString.copyFromUtf8(
                   (java.lang.String) ref);
-          key_ = b;
+          password_ = b;
           return b;
         } else {
           return (com.google.protobuf.ByteString) ref;
         }
       }
       /**
-       * <code>string key = 2;</code>
-       * @param value The key to set.
+       * <code>string password = 2;</code>
+       * @param value The password to set.
        * @return This builder for chaining.
        */
-      public Builder setKey(
+      public Builder setPassword(
           java.lang.String value) {
         if (value == null) {
     throw new NullPointerException();
   }
   
-        key_ = value;
+        password_ = value;
         onChanged();
         return this;
       }
       /**
-       * <code>string key = 2;</code>
+       * <code>string password = 2;</code>
        * @return This builder for chaining.
        */
-      public Builder clearKey() {
+      public Builder clearPassword() {
         
-        key_ = getDefaultInstance().getKey();
+        password_ = getDefaultInstance().getPassword();
         onChanged();
         return this;
       }
       /**
-       * <code>string key = 2;</code>
-       * @param value The bytes for key to set.
+       * <code>string password = 2;</code>
+       * @param value The bytes for password to set.
        * @return This builder for chaining.
        */
-      public Builder setKeyBytes(
+      public Builder setPasswordBytes(
           com.google.protobuf.ByteString value) {
         if (value == null) {
     throw new NullPointerException();
   }
   checkByteStringIsUtf8(value);
         
-        key_ = value;
+        password_ = value;
         onChanged();
         return this;
       }
@@ -33199,153 +33199,154 @@ public final class Commands {
   static {
     java.lang.String[] descriptorData = {
       "\n\016commands.proto\022\037io.github.portlek.syne" +
-      "rgy.proto\032\ncore.proto\032\010p3.proto\"\261\001\n\004Sync" +
-      "\022\014\n\004name\030\001 \001(\t\022<\n\tresources\030\002 \003(\0132).io.g" +
-      "ithub.portlek.synergy.proto.Resource\022\022\n\n" +
-      "attributes\030\003 \003(\t\0228\n\007servers\030\004 \003(\0132\'.io.g" +
-      "ithub.portlek.synergy.proto.Server\022\017\n\007en" +
-      "abled\030\005 \001(\010\"D\n\tProvision\0227\n\006server\030\001 \001(\013" +
-      "2\'.io.github.portlek.synergy.proto.Serve" +
-      "r\"\037\n\021ProvisionResponse\022\n\n\002ok\030\001 \001(\010\"E\n\016Pa" +
-      "ckageRequest\0223\n\002p3\030\001 \001(\0132\'.io.github.por" +
-      "tlek.synergy.proto.P3Meta\"Y\n\017PackageResp" +
-      "onse\022\n\n\002ok\030\001 \001(\010\022:\n\004data\030\002 \001(\0132,.io.gith" +
-      "ub.portlek.synergy.proto.PackageData\"c\n\024" +
-      "SplitPackageResponse\022\n\n\002ok\030\001 \001(\010\022?\n\004data" +
-      "\030\002 \001(\01321.io.github.portlek.synergy.proto" +
-      ".SplitPackageData\"M\n\026PackageChecksumRequ" +
-      "est\0223\n\002p3\030\001 \001(\0132\'.io.github.portlek.syne" +
-      "rgy.proto.P3Meta\"7\n\027PackageChecksumRespo" +
-      "nse\022\n\n\002ok\030\001 \001(\010\022\020\n\010checksum\030\002 \001(\t\"*\n\013DeP" +
-      "rovision\022\014\n\004uuid\030\001 \001(\t\022\r\n\005force\030\002 \001(\010\"\036\n" +
-      "\016ServerShutdown\022\014\n\004uuid\030\001 \001(\t\"&\n\tSendInp" +
-      "ut\022\n\n\002id\030\001 \001(\t\022\r\n\005input\030\002 \001(\t\"4\n\rAttachC" +
-      "onsole\022\020\n\010serverId\030\001 \001(\t\022\021\n\tconsoleId\030\002 " +
-      "\001(\t\"2\n\016ConsoleMessage\022\021\n\tconsoleId\030\001 \001(\t" +
-      "\022\r\n\005value\030\002 \001(\t\"\"\n\rDetachConsole\022\021\n\tcons" +
-      "oleId\030\001 \001(\t\"\034\n\014FreezeServer\022\014\n\004uuid\030\001 \001(" +
-      "\t\"d\n\031C_CoordinatorListResponse\022G\n\014coordi" +
-      "nators\030\001 \003(\01321.io.github.portlek.synergy" +
-      ".proto.LocalCoordinator\"\252\001\n\013C_Provision\022" +
-      "3\n\002p3\030\001 \001(\0132\'.io.github.portlek.synergy." +
-      "proto.P3Meta\022\023\n\013coordinator\030\002 \001(\t\022\022\n\nser" +
-      "verName\030\003 \001(\t\022=\n\nproperties\030\004 \003(\0132).io.g" +
-      "ithub.portlek.synergy.proto.Property\"J\n\023" +
-      "C_ProvisionResponse\022\n\n\002ok\030\001 \001(\010\022\025\n\rcoord" +
-      "inatorId\030\002 \001(\t\022\020\n\010serverId\030\003 \001(\t\"G\n\rC_De" +
-      "Provision\022\025\n\rcoordinatorId\030\001 \001(\t\022\020\n\010serv" +
-      "erId\030\002 \001(\t\022\r\n\005force\030\003 \001(\010\"\032\n\nC_Shutdown\022" +
-      "\014\n\004uuid\030\001 \001(\t\"@\n\tC_Promote\0223\n\002p3\030\001 \001(\0132\'" +
-      ".io.github.portlek.synergy.proto.P3Meta\"" +
-      "&\n\023C_CreateCoordinator\022\017\n\007keyName\030\001 \001(\t\"" +
-      "1\n\024C_CoordinatorCreated\022\014\n\004uuid\030\001 \001(\t\022\013\n" +
-      "\003key\030\002 \001(\t\"E\n\013C_SendInput\022\025\n\rcoordinator" +
-      "Id\030\001 \001(\t\022\020\n\010serverId\030\002 \001(\t\022\r\n\005input\030\003 \001(" +
-      "\t\":\n\017C_AttachConsole\022\025\n\rcoordinatorId\030\001 " +
-      "\001(\t\022\020\n\010serverId\030\002 \001(\t\"2\n\021C_ConsoleAttach" +
-      "ed\022\021\n\tconsoleId\030\001 \001(\t\022\n\n\002ok\030\002 \001(\010\"4\n\020C_C" +
-      "onsoleMessage\022\r\n\005value\030\001 \001(\t\022\021\n\tconsoleI" +
-      "d\030\002 \001(\t\";\n\021C_ConsoleDetached\022\021\n\tconsoleI" +
-      "d\030\001 \001(\t\022\023\n\013useServerId\030\002 \001(\010\"$\n\017C_Detach" +
-      "Console\022\021\n\tconsoleId\030\001 \001(\t\"9\n\016C_FreezeSe" +
-      "rver\022\025\n\rcoordinatorId\030\001 \001(\t\022\020\n\010serverId\030" +
-      "\002 \001(\t\"M\n\017C_UploadPackage\022:\n\004data\030\001 \001(\0132," +
-      ".io.github.portlek.synergy.proto.Package" +
-      "Data\"W\n\024C_UploadSplitPackage\022?\n\004data\030\002 \001" +
-      "(\01321.io.github.portlek.synergy.proto.Spl" +
-      "itPackageData\"+\n\005C_Ack\022\020\n\006result\030\001 \001(\tH\000" +
-      "B\020\n\016result_present\"J\n\rC_PackageList\0229\n\010p" +
-      "ackages\030\001 \003(\0132\'.io.github.portlek.synerg" +
-      "y.proto.P3Meta\"-\n\016C_AccessDenied\022\016\n\006resu" +
-      "lt\030\001 \001(\t\022\013\n\003tid\030\002 \001(\t\"\266\033\n\013BaseCommand\022F\n" +
-      "\004type\030\001 \001(\01628.io.github.portlek.synergy." +
-      "proto.BaseCommand.CommandType\0223\n\004sync\030\002 " +
-      "\001(\0132%.io.github.portlek.synergy.proto.Sy" +
-      "nc\022=\n\tprovision\030\003 \001(\0132*.io.github.portle" +
-      "k.synergy.proto.Provision\022M\n\021provisionRe" +
-      "sponse\030\004 \001(\01322.io.github.portlek.synergy" +
-      ".proto.ProvisionResponse\022G\n\016packageReque" +
-      "st\030\005 \001(\0132/.io.github.portlek.synergy.pro" +
-      "to.PackageRequest\022I\n\017packageResponse\030\006 \001" +
-      "(\01320.io.github.portlek.synergy.proto.Pac" +
-      "kageResponse\022A\n\013deProvision\030\007 \001(\0132,.io.g" +
-      "ithub.portlek.synergy.proto.DeProvision\022" +
-      "G\n\016serverShutdown\030\010 \001(\0132/.io.github.port" +
-      "lek.synergy.proto.ServerShutdown\022=\n\tsend" +
-      "Input\030\t \001(\0132*.io.github.portlek.synergy." +
-      "proto.SendInput\022E\n\rattachConsole\030\n \001(\0132." +
-      ".io.github.portlek.synergy.proto.AttachC" +
-      "onsole\022G\n\016consoleMessage\030\013 \001(\0132/.io.gith" +
-      "ub.portlek.synergy.proto.ConsoleMessage\022" +
-      "E\n\rdetachConsole\030\014 \001(\0132..io.github.portl" +
-      "ek.synergy.proto.DetachConsole\022C\n\014freeze" +
-      "Server\030\r \001(\0132-.io.github.portlek.synergy" +
-      ".proto.FreezeServer\022P\n\017checksumRequest\030\016" +
-      " \001(\01327.io.github.portlek.synergy.proto.P" +
-      "ackageChecksumRequest\022R\n\020checksumRespons" +
-      "e\030\020 \001(\01328.io.github.portlek.synergy.prot" +
-      "o.PackageChecksumResponse\022S\n\024splitPackag" +
-      "eResponse\030\021 \001(\01325.io.github.portlek.syne" +
-      "rgy.proto.SplitPackageResponse\022]\n\031c_coor" +
-      "dinatorListResponse\030\022 \001(\0132:.io.github.po" +
-      "rtlek.synergy.proto.C_CoordinatorListRes" +
-      "ponse\022A\n\013c_provision\030\023 \001(\0132,.io.github.p" +
-      "ortlek.synergy.proto.C_Provision\022Q\n\023c_pr" +
-      "ovisionResponse\030\024 \001(\01324.io.github.portle" +
-      "k.synergy.proto.C_ProvisionResponse\022E\n\rc" +
-      "_deProvision\030\025 \001(\0132..io.github.portlek.s" +
-      "ynergy.proto.C_DeProvision\022?\n\nc_shutdown" +
-      "\030\026 \001(\0132+.io.github.portlek.synergy.proto" +
-      ".C_Shutdown\022=\n\tc_promote\030\027 \001(\0132*.io.gith" +
-      "ub.portlek.synergy.proto.C_Promote\022Q\n\023c_" +
-      "createCoordinator\030\030 \001(\01324.io.github.port" +
-      "lek.synergy.proto.C_CreateCoordinator\022S\n" +
-      "\024c_coordinatorCreated\030\031 \001(\01325.io.github." +
-      "portlek.synergy.proto.C_CoordinatorCreat" +
-      "ed\022A\n\013c_sendInput\030\032 \001(\0132,.io.github.port" +
-      "lek.synergy.proto.C_SendInput\022I\n\017c_attac" +
-      "hConsole\030\033 \001(\01320.io.github.portlek.syner" +
-      "gy.proto.C_AttachConsole\022M\n\021c_consoleAtt" +
-      "ached\030\034 \001(\01322.io.github.portlek.synergy." +
-      "proto.C_ConsoleAttached\022K\n\020c_consoleMess" +
-      "age\030\035 \001(\01321.io.github.portlek.synergy.pr" +
-      "oto.C_ConsoleMessage\022M\n\021c_consoleDetache" +
-      "d\030\036 \001(\01322.io.github.portlek.synergy.prot" +
-      "o.C_ConsoleDetached\022I\n\017c_detachConsole\030\037" +
-      " \001(\01320.io.github.portlek.synergy.proto.C" +
-      "_DetachConsole\022G\n\016c_freezeServer\030  \001(\0132/" +
-      ".io.github.portlek.synergy.proto.C_Freez" +
-      "eServer\022I\n\017c_uploadPackage\030! \001(\01320.io.gi" +
-      "thub.portlek.synergy.proto.C_UploadPacka" +
-      "ge\0225\n\005c_ack\030\" \001(\0132&.io.github.portlek.sy" +
-      "nergy.proto.C_Ack\022E\n\rc_packageList\030# \001(\013" +
-      "2..io.github.portlek.synergy.proto.C_Pac" +
-      "kageList\022S\n\024c_uploadSplitPackage\030$ \001(\01325" +
-      ".io.github.portlek.synergy.proto.C_Uploa" +
-      "dSplitPackage\022G\n\016c_accessDenied\030% \001(\0132/." +
-      "io.github.portlek.synergy.proto.C_Access" +
-      "Denied\"\315\006\n\013CommandType\022\010\n\004NOOP\020\000\022\010\n\004SYNC" +
-      "\020\001\022\r\n\tPROVISION\020\002\022\026\n\022PROVISION_RESPONSE\020" +
-      "\003\022\023\n\017PACKAGE_REQUEST\020\004\022\024\n\020PACKAGE_RESPON" +
-      "SE\020\005\022\020\n\014DE_PROVISION\020\006\022\023\n\017SERVER_SHUTDOW" +
-      "N\020\007\022\014\n\010SHUTDOWN\020\010\022\016\n\nSEND_INPUT\020\t\022\022\n\016ATT" +
-      "ACH_CONSOLE\020\n\022\023\n\017CONSOLE_MESSAGE\020\013\022\022\n\016DE" +
-      "TACH_CONSOLE\020\014\022\021\n\rFREEZE_SERVER\020\032\022\034\n\030PAC" +
-      "KAGE_CHECKSUM_REQUEST\020#\022\035\n\031PACKAGE_CHECK" +
-      "SUM_RESPONSE\020$\022\032\n\026SPLIT_PACKAGE_RESPONSE" +
-      "\020%\022\032\n\026C_GET_COORDINATOR_LIST\020\r\022\037\n\033C_COOR" +
-      "DINATOR_LIST_RESPONSE\020\016\022\017\n\013C_PROVISION\020\017" +
-      "\022\030\n\024C_PROVISION_RESPONSE\020\020\022\022\n\016C_DE_PROVI" +
-      "SION\020\021\022\016\n\nC_SHUTDOWN\020\022\022\r\n\tC_PROMOTE\020\023\022\030\n" +
-      "\024C_CREATE_COORDINATOR\020\024\022\031\n\025C_COORDINATOR" +
-      "_CREATED\020\025\022\020\n\014C_SEND_INPUT\020\026\022\024\n\020C_ATTACH" +
-      "_CONSOLE\020\027\022\026\n\022C_CONSOLE_ATTACHED\020\037\022\025\n\021C_" +
-      "CONSOLE_MESSAGE\020\030\022\026\n\022C_CONSOLE_DETACHED\020" +
-      " \022\024\n\020C_DETACH_CONSOLE\020\031\022\023\n\017C_FREEZE_SERV" +
-      "ER\020\033\022\024\n\020C_UPLOAD_PACKAGE\020\034\022\032\n\026C_UPLOAD_S" +
-      "PLIT_PACKAGE\020&\022\t\n\005C_ACK\020\036\022\032\n\026C_REQUEST_P" +
-      "ACKAGE_LIST\020!\022\022\n\016C_PACKAGE_LIST\020\"\022\023\n\017C_A" +
-      "CCESS_DENIED\020\'B\014B\010CommandsH\001b\006proto3"
+      "rgy.proto\032\ncore.proto\032\010p3.proto\"\272\001\n\004Sync" +
+      "\022\025\n\rcoordinatorId\030\001 \001(\t\022<\n\tresources\030\002 \003" +
+      "(\0132).io.github.portlek.synergy.proto.Res" +
+      "ource\022\022\n\nattributes\030\003 \003(\t\0228\n\007servers\030\004 \003" +
+      "(\0132\'.io.github.portlek.synergy.proto.Ser" +
+      "ver\022\017\n\007enabled\030\005 \001(\010\"D\n\tProvision\0227\n\006ser" +
+      "ver\030\001 \001(\0132\'.io.github.portlek.synergy.pr" +
+      "oto.Server\"\037\n\021ProvisionResponse\022\n\n\002ok\030\001 " +
+      "\001(\010\"E\n\016PackageRequest\0223\n\002p3\030\001 \001(\0132\'.io.g" +
+      "ithub.portlek.synergy.proto.P3Meta\"Y\n\017Pa" +
+      "ckageResponse\022\n\n\002ok\030\001 \001(\010\022:\n\004data\030\002 \001(\0132" +
+      ",.io.github.portlek.synergy.proto.Packag" +
+      "eData\"c\n\024SplitPackageResponse\022\n\n\002ok\030\001 \001(" +
+      "\010\022?\n\004data\030\002 \001(\01321.io.github.portlek.syne" +
+      "rgy.proto.SplitPackageData\"M\n\026PackageChe" +
+      "cksumRequest\0223\n\002p3\030\001 \001(\0132\'.io.github.por" +
+      "tlek.synergy.proto.P3Meta\"7\n\027PackageChec" +
+      "ksumResponse\022\n\n\002ok\030\001 \001(\010\022\020\n\010checksum\030\002 \001" +
+      "(\t\"*\n\013DeProvision\022\014\n\004uuid\030\001 \001(\t\022\r\n\005force" +
+      "\030\002 \001(\010\"\036\n\016ServerShutdown\022\014\n\004uuid\030\001 \001(\t\"&" +
+      "\n\tSendInput\022\n\n\002id\030\001 \001(\t\022\r\n\005input\030\002 \001(\t\"4" +
+      "\n\rAttachConsole\022\020\n\010serverId\030\001 \001(\t\022\021\n\tcon" +
+      "soleId\030\002 \001(\t\"2\n\016ConsoleMessage\022\021\n\tconsol" +
+      "eId\030\001 \001(\t\022\r\n\005value\030\002 \001(\t\"\"\n\rDetachConsol" +
+      "e\022\021\n\tconsoleId\030\001 \001(\t\"\034\n\014FreezeServer\022\014\n\004" +
+      "uuid\030\001 \001(\t\"d\n\031C_CoordinatorListResponse\022" +
+      "G\n\014coordinators\030\001 \003(\01321.io.github.portle" +
+      "k.synergy.proto.LocalCoordinator\"\252\001\n\013C_P" +
+      "rovision\0223\n\002p3\030\001 \001(\0132\'.io.github.portlek" +
+      ".synergy.proto.P3Meta\022\023\n\013coordinator\030\002 \001" +
+      "(\t\022\022\n\nserverName\030\003 \001(\t\022=\n\nproperties\030\004 \003" +
+      "(\0132).io.github.portlek.synergy.proto.Pro" +
+      "perty\"J\n\023C_ProvisionResponse\022\n\n\002ok\030\001 \001(\010" +
+      "\022\025\n\rcoordinatorId\030\002 \001(\t\022\020\n\010serverId\030\003 \001(" +
+      "\t\"G\n\rC_DeProvision\022\025\n\rcoordinatorId\030\001 \001(" +
+      "\t\022\020\n\010serverId\030\002 \001(\t\022\r\n\005force\030\003 \001(\010\"\030\n\nC_" +
+      "Shutdown\022\n\n\002id\030\001 \001(\t\"@\n\tC_Promote\0223\n\002p3\030" +
+      "\001 \001(\0132\'.io.github.portlek.synergy.proto." +
+      "P3Meta\",\n\023C_CreateCoordinator\022\025\n\rcoordin" +
+      "atorId\030\001 \001(\t\"?\n\024C_CoordinatorCreated\022\025\n\r" +
+      "coordinatorId\030\001 \001(\t\022\020\n\010password\030\002 \001(\t\"E\n" +
+      "\013C_SendInput\022\025\n\rcoordinatorId\030\001 \001(\t\022\020\n\010s" +
+      "erverId\030\002 \001(\t\022\r\n\005input\030\003 \001(\t\":\n\017C_Attach" +
+      "Console\022\025\n\rcoordinatorId\030\001 \001(\t\022\020\n\010server" +
+      "Id\030\002 \001(\t\"2\n\021C_ConsoleAttached\022\021\n\tconsole" +
+      "Id\030\001 \001(\t\022\n\n\002ok\030\002 \001(\010\"4\n\020C_ConsoleMessage" +
+      "\022\r\n\005value\030\001 \001(\t\022\021\n\tconsoleId\030\002 \001(\t\";\n\021C_" +
+      "ConsoleDetached\022\021\n\tconsoleId\030\001 \001(\t\022\023\n\013us" +
+      "eServerId\030\002 \001(\010\"$\n\017C_DetachConsole\022\021\n\tco" +
+      "nsoleId\030\001 \001(\t\"9\n\016C_FreezeServer\022\025\n\rcoord" +
+      "inatorId\030\001 \001(\t\022\020\n\010serverId\030\002 \001(\t\"M\n\017C_Up" +
+      "loadPackage\022:\n\004data\030\001 \001(\0132,.io.github.po" +
+      "rtlek.synergy.proto.PackageData\"W\n\024C_Upl" +
+      "oadSplitPackage\022?\n\004data\030\002 \001(\01321.io.githu" +
+      "b.portlek.synergy.proto.SplitPackageData" +
+      "\"+\n\005C_Ack\022\020\n\006result\030\001 \001(\tH\000B\020\n\016result_pr" +
+      "esent\"J\n\rC_PackageList\0229\n\010packages\030\001 \003(\013" +
+      "2\'.io.github.portlek.synergy.proto.P3Met" +
+      "a\"-\n\016C_AccessDenied\022\016\n\006result\030\001 \001(\t\022\013\n\003t" +
+      "id\030\002 \001(\t\"\266\033\n\013BaseCommand\022F\n\004type\030\001 \001(\01628" +
+      ".io.github.portlek.synergy.proto.BaseCom" +
+      "mand.CommandType\0223\n\004sync\030\002 \001(\0132%.io.gith" +
+      "ub.portlek.synergy.proto.Sync\022=\n\tprovisi" +
+      "on\030\003 \001(\0132*.io.github.portlek.synergy.pro" +
+      "to.Provision\022M\n\021provisionResponse\030\004 \001(\0132" +
+      "2.io.github.portlek.synergy.proto.Provis" +
+      "ionResponse\022G\n\016packageRequest\030\005 \001(\0132/.io" +
+      ".github.portlek.synergy.proto.PackageReq" +
+      "uest\022I\n\017packageResponse\030\006 \001(\01320.io.githu" +
+      "b.portlek.synergy.proto.PackageResponse\022" +
+      "A\n\013deProvision\030\007 \001(\0132,.io.github.portlek" +
+      ".synergy.proto.DeProvision\022G\n\016serverShut" +
+      "down\030\010 \001(\0132/.io.github.portlek.synergy.p" +
+      "roto.ServerShutdown\022=\n\tsendInput\030\t \001(\0132*" +
+      ".io.github.portlek.synergy.proto.SendInp" +
+      "ut\022E\n\rattachConsole\030\n \001(\0132..io.github.po" +
+      "rtlek.synergy.proto.AttachConsole\022G\n\016con" +
+      "soleMessage\030\013 \001(\0132/.io.github.portlek.sy" +
+      "nergy.proto.ConsoleMessage\022E\n\rdetachCons" +
+      "ole\030\014 \001(\0132..io.github.portlek.synergy.pr" +
+      "oto.DetachConsole\022C\n\014freezeServer\030\r \001(\0132" +
+      "-.io.github.portlek.synergy.proto.Freeze" +
+      "Server\022P\n\017checksumRequest\030\016 \001(\01327.io.git" +
+      "hub.portlek.synergy.proto.PackageChecksu" +
+      "mRequest\022R\n\020checksumResponse\030\020 \001(\01328.io." +
+      "github.portlek.synergy.proto.PackageChec" +
+      "ksumResponse\022S\n\024splitPackageResponse\030\021 \001" +
+      "(\01325.io.github.portlek.synergy.proto.Spl" +
+      "itPackageResponse\022]\n\031c_coordinatorListRe" +
+      "sponse\030\022 \001(\0132:.io.github.portlek.synergy" +
+      ".proto.C_CoordinatorListResponse\022A\n\013c_pr" +
+      "ovision\030\023 \001(\0132,.io.github.portlek.synerg" +
+      "y.proto.C_Provision\022Q\n\023c_provisionRespon" +
+      "se\030\024 \001(\01324.io.github.portlek.synergy.pro" +
+      "to.C_ProvisionResponse\022E\n\rc_deProvision\030" +
+      "\025 \001(\0132..io.github.portlek.synergy.proto." +
+      "C_DeProvision\022?\n\nc_shutdown\030\026 \001(\0132+.io.g" +
+      "ithub.portlek.synergy.proto.C_Shutdown\022=" +
+      "\n\tc_promote\030\027 \001(\0132*.io.github.portlek.sy" +
+      "nergy.proto.C_Promote\022Q\n\023c_createCoordin" +
+      "ator\030\030 \001(\01324.io.github.portlek.synergy.p" +
+      "roto.C_CreateCoordinator\022S\n\024c_coordinato" +
+      "rCreated\030\031 \001(\01325.io.github.portlek.syner" +
+      "gy.proto.C_CoordinatorCreated\022A\n\013c_sendI" +
+      "nput\030\032 \001(\0132,.io.github.portlek.synergy.p" +
+      "roto.C_SendInput\022I\n\017c_attachConsole\030\033 \001(" +
+      "\01320.io.github.portlek.synergy.proto.C_At" +
+      "tachConsole\022M\n\021c_consoleAttached\030\034 \001(\01322" +
+      ".io.github.portlek.synergy.proto.C_Conso" +
+      "leAttached\022K\n\020c_consoleMessage\030\035 \001(\01321.i" +
+      "o.github.portlek.synergy.proto.C_Console" +
+      "Message\022M\n\021c_consoleDetached\030\036 \001(\01322.io." +
+      "github.portlek.synergy.proto.C_ConsoleDe" +
+      "tached\022I\n\017c_detachConsole\030\037 \001(\01320.io.git" +
+      "hub.portlek.synergy.proto.C_DetachConsol" +
+      "e\022G\n\016c_freezeServer\030  \001(\0132/.io.github.po" +
+      "rtlek.synergy.proto.C_FreezeServer\022I\n\017c_" +
+      "uploadPackage\030! \001(\01320.io.github.portlek." +
+      "synergy.proto.C_UploadPackage\0225\n\005c_ack\030\"" +
+      " \001(\0132&.io.github.portlek.synergy.proto.C" +
+      "_Ack\022E\n\rc_packageList\030# \001(\0132..io.github." +
+      "portlek.synergy.proto.C_PackageList\022S\n\024c" +
+      "_uploadSplitPackage\030$ \001(\01325.io.github.po" +
+      "rtlek.synergy.proto.C_UploadSplitPackage" +
+      "\022G\n\016c_accessDenied\030% \001(\0132/.io.github.por" +
+      "tlek.synergy.proto.C_AccessDenied\"\315\006\n\013Co" +
+      "mmandType\022\010\n\004NOOP\020\000\022\010\n\004SYNC\020\001\022\r\n\tPROVISI" +
+      "ON\020\002\022\026\n\022PROVISION_RESPONSE\020\003\022\023\n\017PACKAGE_" +
+      "REQUEST\020\004\022\024\n\020PACKAGE_RESPONSE\020\005\022\020\n\014DE_PR" +
+      "OVISION\020\006\022\023\n\017SERVER_SHUTDOWN\020\007\022\014\n\010SHUTDO" +
+      "WN\020\010\022\016\n\nSEND_INPUT\020\t\022\022\n\016ATTACH_CONSOLE\020\n" +
+      "\022\023\n\017CONSOLE_MESSAGE\020\013\022\022\n\016DETACH_CONSOLE\020" +
+      "\014\022\021\n\rFREEZE_SERVER\020\032\022\034\n\030PACKAGE_CHECKSUM" +
+      "_REQUEST\020#\022\035\n\031PACKAGE_CHECKSUM_RESPONSE\020" +
+      "$\022\032\n\026SPLIT_PACKAGE_RESPONSE\020%\022\032\n\026C_GET_C" +
+      "OORDINATOR_LIST\020\r\022\037\n\033C_COORDINATOR_LIST_" +
+      "RESPONSE\020\016\022\017\n\013C_PROVISION\020\017\022\030\n\024C_PROVISI" +
+      "ON_RESPONSE\020\020\022\022\n\016C_DE_PROVISION\020\021\022\016\n\nC_S" +
+      "HUTDOWN\020\022\022\r\n\tC_PROMOTE\020\023\022\030\n\024C_CREATE_COO" +
+      "RDINATOR\020\024\022\031\n\025C_COORDINATOR_CREATED\020\025\022\020\n" +
+      "\014C_SEND_INPUT\020\026\022\024\n\020C_ATTACH_CONSOLE\020\027\022\026\n" +
+      "\022C_CONSOLE_ATTACHED\020\037\022\025\n\021C_CONSOLE_MESSA" +
+      "GE\020\030\022\026\n\022C_CONSOLE_DETACHED\020 \022\024\n\020C_DETACH" +
+      "_CONSOLE\020\031\022\023\n\017C_FREEZE_SERVER\020\033\022\024\n\020C_UPL" +
+      "OAD_PACKAGE\020\034\022\032\n\026C_UPLOAD_SPLIT_PACKAGE\020" +
+      "&\022\t\n\005C_ACK\020\036\022\032\n\026C_REQUEST_PACKAGE_LIST\020!" +
+      "\022\022\n\016C_PACKAGE_LIST\020\"\022\023\n\017C_ACCESS_DENIED\020" +
+      "\'B\014B\010CommandsH\001b\006proto3"
     };
     descriptor = com.google.protobuf.Descriptors.FileDescriptor
       .internalBuildGeneratedFileFrom(descriptorData,
@@ -33358,7 +33359,7 @@ public final class Commands {
     internal_static_io_github_portlek_synergy_proto_Sync_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_io_github_portlek_synergy_proto_Sync_descriptor,
-        new java.lang.String[] { "Name", "Resources", "Attributes", "Servers", "Enabled", });
+        new java.lang.String[] { "CoordinatorId", "Resources", "Attributes", "Servers", "Enabled", });
     internal_static_io_github_portlek_synergy_proto_Provision_descriptor =
       getDescriptor().getMessageTypes().get(1);
     internal_static_io_github_portlek_synergy_proto_Provision_fieldAccessorTable = new
@@ -33472,7 +33473,7 @@ public final class Commands {
     internal_static_io_github_portlek_synergy_proto_C_Shutdown_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_io_github_portlek_synergy_proto_C_Shutdown_descriptor,
-        new java.lang.String[] { "Uuid", });
+        new java.lang.String[] { "Id", });
     internal_static_io_github_portlek_synergy_proto_C_Promote_descriptor =
       getDescriptor().getMessageTypes().get(20);
     internal_static_io_github_portlek_synergy_proto_C_Promote_fieldAccessorTable = new
@@ -33484,13 +33485,13 @@ public final class Commands {
     internal_static_io_github_portlek_synergy_proto_C_CreateCoordinator_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_io_github_portlek_synergy_proto_C_CreateCoordinator_descriptor,
-        new java.lang.String[] { "KeyName", });
+        new java.lang.String[] { "CoordinatorId", });
     internal_static_io_github_portlek_synergy_proto_C_CoordinatorCreated_descriptor =
       getDescriptor().getMessageTypes().get(22);
     internal_static_io_github_portlek_synergy_proto_C_CoordinatorCreated_fieldAccessorTable = new
       com.google.protobuf.GeneratedMessageV3.FieldAccessorTable(
         internal_static_io_github_portlek_synergy_proto_C_CoordinatorCreated_descriptor,
-        new java.lang.String[] { "Uuid", "Key", });
+        new java.lang.String[] { "CoordinatorId", "Password", });
     internal_static_io_github_portlek_synergy_proto_C_SendInput_descriptor =
       getDescriptor().getMessageTypes().get(23);
     internal_static_io_github_portlek_synergy_proto_C_SendInput_fieldAccessorTable = new

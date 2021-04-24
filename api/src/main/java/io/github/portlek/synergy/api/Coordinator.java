@@ -25,55 +25,30 @@
 
 package io.github.portlek.synergy.api;
 
-import io.netty.channel.Channel;
-import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * an interface to determine coordinators.
  */
-public interface Coordinator {
+public interface Coordinator extends KeyStore, Channeled {
 
   /**
-   * obtains the address.
+   * obtains the attributes.
    *
-   * @return address.
+   * @return attributes.
    */
   @NotNull
-  InetSocketAddress getAddress();
+  List<String> getAttributes();
 
   /**
-   * obtains the channel.
+   * obtains the resources.
    *
-   * @return channel.
+   * @return resources.
    */
   @NotNull
-  Optional<Channel> getChannel();
-
-  /**
-   * sets the channel.
-   *
-   * @param channel the channel to set.
-   */
-  void setChannel(@NotNull Channel channel);
-
-  /**
-   * obtains the id.
-   *
-   * @return id.
-   */
-  @NotNull
-  String getId();
-
-  /**
-   * obtains the password.
-   *
-   * @return password.
-   */
-  @NotNull
-  String getPassword();
+  Map<String, Integer> getResources();
 
   /**
    * obtains the servers.
@@ -81,5 +56,5 @@ public interface Coordinator {
    * @return servers.
    */
   @NotNull
-  Map<String, CoordinatorServer> getServers();
+  Map<String, Server> getServers();
 }

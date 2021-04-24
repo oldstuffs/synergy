@@ -29,8 +29,11 @@ import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
 import io.github.portlek.configs.configuration.ConfigurationSection;
 import io.github.portlek.configs.json.JsonType;
+import io.github.portlek.synergy.api.SimpleKeyStore;
 import io.github.portlek.synergy.core.util.SystemUtils;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import org.jetbrains.annotations.Nullable;
@@ -46,9 +49,21 @@ public final class NetworkConfig implements ConfigHolder {
   public static InetSocketAddress address = new InetSocketAddress("localhost", 25501);
 
   /**
+   * the coordinators.
+   */
+  public static List<SimpleKeyStore> coordinators = new ObjectArrayList<>() {{
+    this.add(new SimpleKeyStore("default-client-id", "client", "default-client-password"));
+  }};
+
+  /**
    * the coordinator id.
    */
   public static String id = UUID.randomUUID().toString();
+
+  /**
+   * the name.
+   */
+  public static String name = UUID.randomUUID().toString();
 
   /**
    * the loader.
@@ -69,19 +84,25 @@ public final class NetworkConfig implements ConfigHolder {
   /**
    * loads the config.
    *
-   * @param id the id to load.
    * @param address the address to load.
+   * @param coordinators the coordinator to load.
+   * @param id the id to load.
+   * @param name the name to load.
    */
-  public static void load(@Nullable final InetSocketAddress address, @Nullable final String id) {
+  public static void load(@Nullable final InetSocketAddress address, @Nullable final List<SimpleKeyStore> coordinators,
+                          @Nullable final String id, @Nullable final String name) {
     ConfigLoader.builder()
       .setConfigHolder(new NetworkConfig())
       .setConfigType(JsonType.get())
       .setFileName("network")
       .setFolder(SystemUtils.getHomePath())
+      .addLoaders(SimpleKeyStore.Loader.INSTANCE)
       .build()
       .load(true);
     var saveNeeded = NetworkConfig.loadAddress(address);
+    saveNeeded = saveNeeded || NetworkConfig.loadCoordinators(coordinators);
     saveNeeded = saveNeeded || NetworkConfig.loadId(id);
+    saveNeeded = saveNeeded || NetworkConfig.loadName(name);
     if (saveNeeded) {
       NetworkConfig.loader.save();
     }
@@ -107,6 +128,25 @@ public final class NetworkConfig implements ConfigHolder {
   }
 
   /**
+   * loads the coordinators.
+   *
+   * @param coordinators the coordinators to load.
+   *
+   * @return {@code true} if the save is needed.
+   */
+  private static boolean loadCoordinators(@Nullable final List<SimpleKeyStore> coordinators) {
+    final var finalCoordinators = Objects.isNull(coordinators)
+      ? NetworkConfig.coordinators
+      : coordinators;
+    if (!NetworkConfig.coordinators.equals(finalCoordinators)) {
+      NetworkConfig.coordinators = finalCoordinators;
+      NetworkConfig.section.set("coordinators", finalCoordinators);
+      return true;
+    }
+    return false;
+  }
+
+  /**
    * loads the id.
    *
    * @param id the id to load.
@@ -120,6 +160,25 @@ public final class NetworkConfig implements ConfigHolder {
     if (!NetworkConfig.id.equals(finalId)) {
       NetworkConfig.id = finalId;
       NetworkConfig.section.set("id", finalId);
+      return true;
+    }
+    return false;
+  }
+
+  /**
+   * loads the name.
+   *
+   * @param name the name to load.
+   *
+   * @return {@code true} if the save is needed.
+   */
+  private static boolean loadName(@Nullable final String name) {
+    final var finalName = Objects.isNull(name)
+      ? NetworkConfig.name
+      : name;
+    if (!NetworkConfig.name.equals(finalName)) {
+      NetworkConfig.name = finalName;
+      NetworkConfig.section.set("name", finalName);
       return true;
     }
     return false;

@@ -27,11 +27,17 @@ package io.github.portlek.synergy.core;
 
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
+import com.mojang.brigadier.Command;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import io.github.portlek.synergy.api.CommandSender;
 import io.github.portlek.synergy.api.ConsoleInfo;
 import io.github.portlek.synergy.api.Coordinator;
+import io.github.portlek.synergy.api.KeyStore;
 import io.github.portlek.synergy.api.Network;
 import io.github.portlek.synergy.api.TransactionInfo;
+import io.github.portlek.synergy.core.coordinator.SimpleCoordinator;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
+import io.github.portlek.synergy.core.network.SimpleNetwork;
 import io.github.portlek.synergy.core.util.AuthUtils;
 import io.github.portlek.synergy.languages.Languages;
 import io.github.portlek.synergy.netty.Connections;
@@ -41,6 +47,7 @@ import io.github.portlek.synergy.proto.Protocols;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -48,6 +55,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicBoolean;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.experimental.Delegate;
 import lombok.extern.log4j.Log4j2;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -57,7 +65,7 @@ import org.jetbrains.annotations.Nullable;
  */
 @Log4j2
 @RequiredArgsConstructor
-public final class SynergyNetwork extends Synergy implements Network {
+public final class SynergyNetwork extends BaseSynergy implements Network {
 
   /**
    * the address.
@@ -72,34 +80,30 @@ public final class SynergyNetwork extends Synergy implements Network {
   private final Map<String, ConsoleInfo> consoles = new ConcurrentHashMap<>();
 
   /**
-   * the coordinators with id.
+   * the network.
    */
   @NotNull
-  @Getter
-  private final Map<String, Coordinator> coordinators = new ConcurrentHashMap<>();
-
-  /**
-   * the id.
-   */
-  @NotNull
-  @Getter
-  private final String id;
-
-  /**
-   * the channel.
-   */
-  @Nullable
-  private Channel channel;
+  @Delegate
+  private final Network network;
 
   /**
    * starts a network instance.
    *
    * @param address the address to start.
+   * @param coordinators the coordinators to start.
    * @param id the id to start.
+   * @param name the name to start.
    */
-  public static void start(@NotNull final InetSocketAddress address, @NotNull final String id) {
-    (Synergy.instance = new SynergyNetwork(address, id))
-      .start();
+  public static void start(@NotNull final InetSocketAddress address,
+                           @NotNull final List<? extends KeyStore> coordinators, @NotNull final String id,
+                           @NotNull final String name) {
+    final var coordinatorMap = new ConcurrentHashMap<String, Coordinator>();
+    coordinators.stream()
+      .map(SimpleCoordinator::new)
+      .forEach(coordinator -> coordinatorMap.put(coordinator.getId(), coordinator));
+    final var network = new SynergyNetwork(address, new SimpleNetwork(coordinatorMap, id, name));
+    network.registerCommands();
+    network.start();
   }
 
   /**
@@ -123,7 +127,7 @@ public final class SynergyNetwork extends Synergy implements Network {
     final var hash = AuthUtils.createHash(key, encBytes);
     messageBytes = ByteString.copyFrom(encBytes);
     final var auth = Protocol.AuthenticatedMessage.newBuilder()
-      .setId(id)
+      .setCoordinatorId(id)
       .setVersion(Protocols.PROTOCOL_VERSION)
       .setHash(hash)
       .setPayload(messageBytes)
@@ -136,23 +140,13 @@ public final class SynergyNetwork extends Synergy implements Network {
     return true;
   }
 
-  /**
-   * obtains the channel.
-   *
-   * @return channel.
-   */
-  @NotNull
-  public Channel getChannel() {
-    return Objects.requireNonNull(this.channel, Languages.getLanguageValue("not-initiated"));
-  }
-
   @Override
-  public void onClose() throws InterruptedException {
+  public void onClose() {
     this.running.set(false);
     SynergyNetwork.log.info(Languages.getLanguageValue("closed"));
-    SynergyNetwork.log.info(Languages.getLanguageValue("restarting"));
-    Thread.sleep(1000L * 5L);
+    SynergyNetwork.log.debug(Languages.getLanguageValue("restarting"));
     try {
+      Thread.sleep(1000L * 5L);
       this.onStart();
     } catch (final InterruptedException ignored) {
     }
@@ -166,15 +160,16 @@ public final class SynergyNetwork extends Synergy implements Network {
 
   @Override
   public boolean onReceive(@NotNull final Protocol.AuthenticatedMessage packet, @NotNull final Channel channel) {
-    final var id = packet.getId();
+    final var id = packet.getCoordinatorId();
     final var sendInvalidMessage = new AtomicBoolean();
-    final var coordinatorOptional = Optional.ofNullable(this.coordinators.get(id));
+    final var coordinatorOptional = Optional.ofNullable(this.getCoordinators().get(id));
+    final var packetPayload = packet.getPayload();
     if (coordinatorOptional.isEmpty()) {
-      SynergyNetwork.log.error(Languages.getLanguageValue("unknown-coordinator-on-receive", packet.getId()));
+      SynergyNetwork.log.error(Languages.getLanguageValue("unknown-coordinator-on-receive", id));
       sendInvalidMessage.set(true);
     } else if (!AuthUtils.validateHash(packet, coordinatorOptional.get().getPassword())) {
-      SynergyNetwork.log.error(Languages.getLanguageValue("invalid-hash-on-message", packet.getId(), packet.getHash(),
-        AuthUtils.createHash(coordinatorOptional.get().getPassword(), packet.getPayload().toByteArray())));
+      SynergyNetwork.log.error(Languages.getLanguageValue("invalid-hash-on-message", id, packet.getHash(),
+        AuthUtils.createHash(coordinatorOptional.get().getPassword(), packetPayload.toByteArray())));
       SynergyNetwork.log.error(Languages.getLanguageValue("closing-connection-bad-hash", channel));
       sendInvalidMessage.set(true);
     }
@@ -188,13 +183,13 @@ public final class SynergyNetwork extends Synergy implements Network {
         .setMode(Protocol.Transaction.Mode.SINGLE)
         .setPayload(command)
         .build();
-      SynergyNetwork.sendToChannel(message, channel, packet.getId(), "0");
+      SynergyNetwork.sendToChannel(message, channel, id, "0");
       channel.close();
       return false;
     }
     final var coordinator = coordinatorOptional.get();
     final var payload = ByteString.copyFrom(
-      AuthUtils.decrypt(packet.getPayload().toByteArray(), coordinator.getPassword()));
+      AuthUtils.decrypt(packetPayload.toByteArray(), coordinator.getPassword()));
     final Protocol.Transaction transaction;
     try {
       transaction = Protocol.Transaction.parseFrom(payload);
@@ -202,22 +197,22 @@ public final class SynergyNetwork extends Synergy implements Network {
       SynergyNetwork.log.error(Languages.getLanguageValue("unable-to-read-transaction"), e);
       return false;
     }
-    final var coordinatorChannel = coordinator.getChannel();
-    if (coordinatorChannel.isPresent() && coordinatorChannel.get() == channel) {
-      channel.closeFuture().addListener(future -> {
-        final var iterator = this.consoles.entrySet().iterator();
-        while (iterator.hasNext()) {
-          final var entry = iterator.next();
-          final var value = entry.getValue();
-          final var target = value.getCoordinator();
-          final var attached = value.getAttached();
-          if (target.isPresent() && attached.isPresent() && Objects.equals(attached.get(), coordinator.getId())) {
-            this.sendDetachConsole(target.get(), entry.getKey());
-            iterator.remove();
+    coordinator.getChannel()
+      .filter(ch -> ch == channel)
+      .ifPresent(ch ->
+        channel.closeFuture().addListener(future -> {
+          final var iterator = this.consoles.entrySet().iterator();
+          while (iterator.hasNext()) {
+            final var entry = iterator.next();
+            final var value = entry.getValue();
+            final var target = value.getCoordinator();
+            final var attached = value.getAttached();
+            if (target.isPresent() && attached.isPresent() && Objects.equals(attached.get(), coordinator.getId())) {
+              this.sendDetachConsole(target.get(), entry.getKey());
+              iterator.remove();
+            }
           }
-        }
-      });
-    }
+        }));
     coordinator.setChannel(channel);
     this.transactionManager.receive(transaction, coordinator.getId());
     return true;
@@ -229,16 +224,20 @@ public final class SynergyNetwork extends Synergy implements Network {
     if (!this.getScheduler().isShutdown()) {
       this.getScheduler().shutdownNow();
     }
-    this.coordinators.values().forEach(coordinator -> {
+    this.getCoordinators().values().forEach(coordinator -> {
     });
-    if (this.channel != null && this.channel.isOpen()) {
-      this.channel.close();
+    final var channelOptional = this.getChannel();
+    if (channelOptional.isPresent()) {
+      final var channel = channelOptional.get();
+      if (channel.isOpen()) {
+        channel.close();
+      }
     }
   }
 
   @Override
-  public boolean process(@NotNull final Commands.BaseCommand payload, @NotNull final TransactionInfo info,
-                         @NotNull final String from) {
+  public boolean process(@NotNull final Commands.BaseCommand command, @NotNull final TransactionInfo info,
+                         @Nullable final String from) {
     return false;
   }
 
@@ -257,13 +256,25 @@ public final class SynergyNetwork extends Synergy implements Network {
       this.onClose();
       return;
     }
-    this.channel = future.channel();
+    this.setChannel(future.channel());
     SynergyNetwork.log.info(Languages.getLanguageValue("bound"));
     this.running.set(true);
   }
 
   @Override
   protected void onTick() {
+  }
+
+  /**
+   * registers the network commands.
+   */
+  private void registerCommands() {
+    // Restart command.
+    this.getCommandDispatcher().register(LiteralArgumentBuilder.<CommandSender>literal("restart")
+      .executes(context -> {
+        this.onClose();
+        return Command.SINGLE_SUCCESS;
+      }));
   }
 
   /**
@@ -275,7 +286,7 @@ public final class SynergyNetwork extends Synergy implements Network {
    * @return {@code true} if the packet was sent successfully.
    */
   private boolean sendDetachConsole(@NotNull final String target, @NotNull final String consoleId) {
-    final var coord = this.coordinators.get(target);
+    final var coord = this.getCoordinators().get(target);
     if (coord == null) {
       SynergyNetwork.log.error(Languages.getLanguageValue("cannot-send-detach-console"), target);
       return false;
@@ -288,7 +299,7 @@ public final class SynergyNetwork extends Synergy implements Network {
       .setDetachConsole(detach)
       .build();
     final var info = this.transactionManager.generateInfo();
-    final var infoId = info.getId();
+    final var infoId = info.getIdOptional();
     if (infoId.isEmpty()) {
       return false;
     }

@@ -23,102 +23,77 @@
  *
  */
 
-package io.github.portlek.synergy.api;
+package io.github.portlek.synergy.core.coordinator;
 
+import io.github.portlek.synergy.api.Coordinator;
+import io.github.portlek.synergy.api.KeyStore;
+import io.github.portlek.synergy.api.Server;
+import io.netty.channel.Channel;
+import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+import java.util.Optional;
+import java.util.concurrent.ConcurrentHashMap;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
+import lombok.experimental.Delegate;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
- * an interface to determine package.json file.
+ * a class that represents simple coordinators.
  */
-public interface Package extends Id {
+@RequiredArgsConstructor
+public final class SimpleCoordinator implements Coordinator {
 
   /**
-   * obtains the attributes.
-   *
-   * @return attributes.
+   * the attributes.
    */
   @NotNull
-  Set<String> getAttributes();
+  @Getter
+  private final List<String> attributes;
 
   /**
-   * obtains the checksum.
-   *
-   * @return checksum.
+   * the key store.
    */
   @NotNull
-  String getChecksum();
+  @Delegate
+  private final KeyStore keyStore;
 
   /**
-   * obtains the dependencies.
-   *
-   * @return dependencies.
+   * the resources.
    */
   @NotNull
-  List<Package> getDependencies();
+  @Getter
+  private final Map<String, Integer> resources;
 
   /**
-   * obtains the execution steps.
-   *
-   * @return execution steps.
+   * the servers.
    */
   @NotNull
-  List<PackageStepConfig> getExecutionSteps();
+  @Getter
+  private final Map<String, Server> servers;
 
   /**
-   * obtains the local path.
-   *
-   * @return local path.
+   * the channel.
    */
+  @Nullable
+  @Setter
+  private Channel channel;
+
+  /**
+   * ctor.
+   *
+   * @param keyStore the key store.
+   */
+  public SimpleCoordinator(@NotNull final KeyStore keyStore) {
+    this(new ObjectArrayList<>(), keyStore, new ConcurrentHashMap<>(), new ConcurrentHashMap<>());
+  }
+
   @NotNull
-  String getLocalPath();
-
-  /**
-   * obtains the provision steps.
-   *
-   * @return provision steps.
-   */
-  @NotNull
-  List<PackageStepConfig> getProvisionSteps();
-
-  /**
-   * obtains the resources.
-   *
-   * @return resources.
-   */
-  @NotNull
-  Map<String, Integer> getResources();
-
-  /**
-   * obtains the shutdown steps.
-   *
-   * @return shutdown steps.
-   */
-  @NotNull
-  List<PackageStepConfig> getShutdownSteps();
-
-  /**
-   * obtains the strings.
-   *
-   * @return strings.
-   */
-  @NotNull
-  Map<String, String> getStrings();
-
-  /**
-   * obtains the version.
-   *
-   * @return version.
-   */
-  @NotNull
-  String getVersion();
-
-  /**
-   * obtains the resolved.
-   *
-   * @return resolved.
-   */
-  boolean isResolved();
+  @Override
+  public Optional<Channel> getChannel() {
+    return Optional.ofNullable(this.channel);
+  }
 }

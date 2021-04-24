@@ -92,7 +92,7 @@ public final class SimpleTransactionInfo implements TransactionInfo {
 
   @NotNull
   @Override
-  public Optional<String> getId() {
+  public Optional<String> getIdOptional() {
     return Optional.ofNullable(this.id);
   }
 
