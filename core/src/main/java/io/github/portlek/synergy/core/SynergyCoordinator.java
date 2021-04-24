@@ -28,8 +28,8 @@ package io.github.portlek.synergy.core;
 import com.google.protobuf.ByteString;
 import com.google.protobuf.InvalidProtocolBufferException;
 import io.github.portlek.synergy.api.Coordinator;
+import io.github.portlek.synergy.api.KeyStore;
 import io.github.portlek.synergy.api.Server;
-import io.github.portlek.synergy.api.SimpleKeyStore;
 import io.github.portlek.synergy.api.TransactionInfo;
 import io.github.portlek.synergy.core.coordinator.SimpleCoordinator;
 import io.github.portlek.synergy.core.netty.SynergyInitializer;
@@ -98,16 +98,12 @@ public final class SynergyCoordinator extends BaseSynergy implements Coordinator
    *
    * @param address the address to start.
    * @param attributes the attributes to start.
-   * @param id the id to start.
-   * @param name the name to start.
-   * @param password the password to start.
+   * @param key the key to start.
    * @param resources the resources to start.
    */
   public static void start(@NotNull final InetSocketAddress address, @NotNull final List<String> attributes,
-                           @NotNull final String id, @NotNull final String name, @NotNull final String password,
-                           @NotNull final Map<String, Integer> resources) {
-    final var keyStore = new SimpleKeyStore(id, name, password);
-    final var coordinator = new SimpleCoordinator(attributes, keyStore, resources, new ConcurrentHashMap<>());
+                           @NotNull final KeyStore key, @NotNull final Map<String, Integer> resources) {
+    final var coordinator = new SimpleCoordinator(attributes, key, resources, new ConcurrentHashMap<>());
     new SynergyCoordinator(address, coordinator).start();
   }
 

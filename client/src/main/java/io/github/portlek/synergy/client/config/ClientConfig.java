@@ -29,6 +29,7 @@ import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
 import io.github.portlek.configs.configuration.FileConfiguration;
 import io.github.portlek.configs.json.JsonType;
+import io.github.portlek.synergy.api.SimpleKeyStore;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -40,19 +41,14 @@ import org.jetbrains.annotations.NotNull;
 public final class ClientConfig implements ConfigHolder {
 
   /**
-   * the coordinator id.
+   * the key store.
    */
-  public static String id = "default-client-id";
+  public static SimpleKeyStore key = new SimpleKeyStore("default-client-id", "client", "default-client-password");
 
   /**
    * the client's language.
    */
   public static Locale lang = Locale.US;
-
-  /**
-   * the password.
-   */
-  public static String password = "default-client-password";
 
   /**
    * the configuration.
@@ -89,6 +85,7 @@ public final class ClientConfig implements ConfigHolder {
       .setConfigType(JsonType.get())
       .setFileName("client")
       .setFolder(SystemUtils.getHomePath())
+      .addLoaders(SimpleKeyStore.Loader.INSTANCE)
       .build()
       .load(true);
   }

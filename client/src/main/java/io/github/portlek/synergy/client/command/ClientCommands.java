@@ -25,7 +25,7 @@
 
 package io.github.portlek.synergy.client.command;
 
-import io.github.portlek.synergy.api.KeyStore;
+import io.github.portlek.synergy.api.SimpleKeyStore;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.client.config.CoordinatorConfig;
 import io.github.portlek.synergy.client.config.NetworkConfig;
@@ -36,13 +36,10 @@ import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.core.LoggerContext;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import picocli.CommandLine;
 
@@ -103,9 +100,7 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
    *
    * @param address the address to run.
    * @param attributes the attributes to run.
-   * @param id the id to run.
-   * @param name the name to run.
-   * @param password the password to run.
+   * @param key the key to run.
    * @param resources the resources to run.
    */
   @CommandLine.Command(
@@ -114,15 +109,13 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
   void coordinator(
     @CommandLine.Option(names = "--address", description = "Coordinator address to connect.", converter = InetSocketAddressConverter.class) final InetSocketAddress address,
     @CommandLine.Option(names = "--attributes", description = "Coordinator attributes.") final String[] attributes,
-    @CommandLine.Option(names = "--id", description = "Coordinator id.") final String id,
-    @CommandLine.Option(names = "--name", description = "Coordinator name.") final String name,
-    @CommandLine.Option(names = "--password", description = "Coordinator password.") final String password,
+    @CommandLine.Option(names = "--key", description = "Coordinator key.") final SimpleKeyStore key,
     @CommandLine.Option(names = "--resources", description = "Coordinator resources.") final Map<String, Integer> resources
   ) {
     this.run();
-    CoordinatorConfig.load(address, attributes, id, name, password, resources);
-    SynergyCoordinator.start(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.id,
-      CoordinatorConfig.name, CoordinatorConfig.password, CoordinatorConfig.resources);
+    CoordinatorConfig.load(address, attributes, key, resources);
+    SynergyCoordinator.start(CoordinatorConfig.address, CoordinatorConfig.attributes, CoordinatorConfig.key,
+      CoordinatorConfig.resources);
   }
 
   /**
@@ -138,44 +131,12 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
   )
   void network(
     @CommandLine.Option(names = "--address", description = "Network address to bind.") final InetSocketAddress address,
-    @CommandLine.Option(names = "--coordinators", description = "Network's coordinators.")
-    @CommandLine.ArgGroup(exclusive = false, multiplicity = "1..*") final List<SimpleKeyStore> coordinators,
+    @CommandLine.Option(names = "--coordinators", description = "Network's coordinators.") final List<SimpleKeyStore> coordinators,
     @CommandLine.Option(names = "--id", description = "Network id.") final String id,
     @CommandLine.Option(names = "--name", description = "Network name.") final String name
   ) {
     this.run();
     NetworkConfig.load(address, coordinators, id, name);
     SynergyNetwork.start(NetworkConfig.address, NetworkConfig.coordinators, NetworkConfig.id, NetworkConfig.name);
-  }
-
-  /**
-   * a simple implementation of {@link KeyStore}.
-   */
-  @RequiredArgsConstructor
-  private static final class SimpleKeyStore implements KeyStore {
-
-    /**
-     * the id.
-     */
-    @NotNull
-    @Getter
-    @CommandLine.Parameters(index = "0")
-    private final String id;
-
-    /**
-     * the name.
-     */
-    @NotNull
-    @Getter
-    @CommandLine.Parameters(index = "1")
-    private final String name;
-
-    /**
-     * the password.
-     */
-    @NotNull
-    @Getter
-    @CommandLine.Parameters(index = "2")
-    private final String password;
   }
 }

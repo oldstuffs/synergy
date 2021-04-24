@@ -61,5 +61,9 @@
       <artifactId>netty-all</artifactId>
       <scope>provided</scope>
     </dependency>
+    <dependency>
+      <groupId>io.github.portlek</groupId>
+      <artifactId>configs-core</artifactId>
+    </dependency>
   </dependencies>
 </project>

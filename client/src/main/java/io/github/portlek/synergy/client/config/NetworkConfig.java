@@ -29,7 +29,7 @@ import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
 import io.github.portlek.configs.configuration.ConfigurationSection;
 import io.github.portlek.configs.json.JsonType;
-import io.github.portlek.synergy.api.KeyStore;
+import io.github.portlek.synergy.api.SimpleKeyStore;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import it.unimi.dsi.fastutil.objects.ObjectArrayList;
 import java.net.InetSocketAddress;
@@ -51,7 +51,9 @@ public final class NetworkConfig implements ConfigHolder {
   /**
    * the coordinators.
    */
-  public static List<? extends KeyStore> coordinators = new ObjectArrayList<>();
+  public static List<SimpleKeyStore> coordinators = new ObjectArrayList<>() {{
+    this.add(new SimpleKeyStore("default-client-id", "client", "default-client-password"));
+  }};
 
   /**
    * the coordinator id.
@@ -87,13 +89,14 @@ public final class NetworkConfig implements ConfigHolder {
    * @param id the id to load.
    * @param name the name to load.
    */
-  public static void load(@Nullable final InetSocketAddress address, @Nullable final List<? extends KeyStore> coordinators,
+  public static void load(@Nullable final InetSocketAddress address, @Nullable final List<SimpleKeyStore> coordinators,
                           @Nullable final String id, @Nullable final String name) {
     ConfigLoader.builder()
       .setConfigHolder(new NetworkConfig())
       .setConfigType(JsonType.get())
       .setFileName("network")
       .setFolder(SystemUtils.getHomePath())
+      .addLoaders(SimpleKeyStore.Loader.INSTANCE)
       .build()
       .load(true);
     var saveNeeded = NetworkConfig.loadAddress(address);
@@ -131,7 +134,7 @@ public final class NetworkConfig implements ConfigHolder {
    *
    * @return {@code true} if the save is needed.
    */
-  private static boolean loadCoordinators(@Nullable final List<? extends KeyStore> coordinators) {
+  private static boolean loadCoordinators(@Nullable final List<SimpleKeyStore> coordinators) {
     final var finalCoordinators = Objects.isNull(coordinators)
       ? NetworkConfig.coordinators
       : coordinators;

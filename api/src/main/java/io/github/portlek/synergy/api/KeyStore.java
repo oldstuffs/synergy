@@ -25,12 +25,13 @@
 
 package io.github.portlek.synergy.api;
 
+import io.github.portlek.configs.loaders.DataSerializer;
 import org.jetbrains.annotations.NotNull;
 
 /**
  * an interface to determine key stores.
  */
-public interface KeyStore extends Id, Named {
+public interface KeyStore extends Id, Named, DataSerializer {
 
   /**
    * obtains the password.

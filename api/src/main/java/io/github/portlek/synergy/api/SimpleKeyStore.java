@@ -25,13 +25,19 @@
 
 package io.github.portlek.synergy.api;
 
+import io.github.portlek.configs.configuration.ConfigurationSection;
+import io.github.portlek.configs.loaders.SectionFieldLoader;
+import java.util.Optional;
+import java.util.function.Supplier;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * a simple implementation of {@link KeyStore}.
  */
+@Getter
 @RequiredArgsConstructor
 public final class SimpleKeyStore implements KeyStore {
 
@@ -39,20 +45,60 @@ public final class SimpleKeyStore implements KeyStore {
    * the id.
    */
   @NotNull
-  @Getter
   private final String id;
 
   /**
    * the name.
    */
   @NotNull
-  @Getter
   private final String name;
 
   /**
    * the password.
    */
   @NotNull
-  @Getter
   private final String password;
+
+  /**
+   * deserializes the given section.
+   *
+   * @param section the section to deserialize.
+   *
+   * @return key store instance.
+   */
+  @NotNull
+  public static Optional<KeyStore> deserialize(@NotNull final ConfigurationSection section) {
+    final var id = section.getString("id");
+    final var name = section.getString("name");
+    final var password = section.getString("password");
+    if (id == null || name == null || password == null) {
+      return Optional.empty();
+    }
+    return Optional.of(new SimpleKeyStore(id, name, password));
+  }
+
+  @Override
+  public void serialize(@NotNull final ConfigurationSection section) {
+    section.set("id", this.id);
+    section.set("name", this.name);
+    section.set("password", this.password);
+  }
+
+  /**
+   * a class that loads the key store.
+   */
+  public static final class Loader extends SectionFieldLoader<KeyStore> {
+
+    /**
+     * the instance.
+     */
+    public static final Supplier<Loader> INSTANCE = Loader::new;
+
+    @NotNull
+    @Override
+    public Optional<KeyStore> toFinal(@NotNull final ConfigurationSection section,
+                                      @Nullable final KeyStore fieldValue) {
+      return SimpleKeyStore.deserialize(section);
+    }
+  }
 }
