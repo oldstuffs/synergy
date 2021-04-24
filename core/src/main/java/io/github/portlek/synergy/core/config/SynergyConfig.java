@@ -40,7 +40,7 @@ public final class SynergyConfig implements ConfigHolder {
    * the transaction timeout.
    */
   @Route("transaction-timeout")
-  public static long transactionTimeout;
+  public static long transactionTimeout = 340L;
 
   /**
    * ctor.
