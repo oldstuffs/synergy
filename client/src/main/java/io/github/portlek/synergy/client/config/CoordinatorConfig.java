@@ -48,7 +48,7 @@ public final class CoordinatorConfig implements ConfigHolder {
    * the address.
    */
   @NotNull
-  public static InetSocketAddress address = InetSocketAddress.createUnresolved("localhost", 25501);
+  public static InetSocketAddress address = new InetSocketAddress("localhost", 25501);
 
   /**
    * the attributes..
