@@ -150,7 +150,7 @@ public final class SynergyCoordinator extends Synergy implements Coordinator {
   public void onClose() throws InterruptedException {
     this.running.set(false);
     SynergyCoordinator.log.info(Languages.getLanguageValue("connection-closed"));
-    SynergyCoordinator.log.info(Languages.getLanguageValue("restarting"));
+    SynergyCoordinator.log.debug(Languages.getLanguageValue("restarting"));
     Thread.sleep(1000L * 5L);
     try {
       this.onStart();
