@@ -95,6 +95,13 @@ public final class SimpleKeyStore implements KeyStore, DataSerializer {
      */
     public static final Supplier<Loader> INSTANCE = Loader::new;
 
+    /**
+     * ctor.
+     */
+    private Loader() {
+      super(KeyStore.class);
+    }
+
     @NotNull
     @Override
     public Optional<KeyStore> toFinal(@NotNull final ConfigurationSection section,
