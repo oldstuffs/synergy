@@ -110,7 +110,7 @@
     <dependency>
       <groupId>org.cactoos</groupId>
       <artifactId>cactoos</artifactId>
-      <version>0.49</version>
+      <version>0.50</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
