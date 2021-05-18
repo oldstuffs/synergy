@@ -39,7 +39,6 @@
     <dependency>
       <groupId>com.destroystokyo.paper</groupId>
       <artifactId>paper-api</artifactId>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>

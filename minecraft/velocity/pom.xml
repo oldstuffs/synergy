@@ -39,7 +39,6 @@
     <dependency>
       <groupId>com.velocitypowered</groupId>
       <artifactId>velocity-api</artifactId>
-      <scope>provided</scope>
     </dependency>
   </dependencies>
 </project>
