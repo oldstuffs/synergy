@@ -91,6 +91,14 @@
   </repositories>
   <dependencies>
     <dependency>
+      <groupId>org.jetbrains</groupId>
+      <artifactId>annotations</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+    </dependency>
+    <dependency>
       <groupId>org.cactoos</groupId>
       <artifactId>cactoos</artifactId>
     </dependency>
