@@ -30,7 +30,6 @@ import io.github.portlek.configs.ConfigLoader;
 import io.github.portlek.configs.configuration.FileConfiguration;
 import io.github.portlek.configs.json.JsonType;
 import io.github.portlek.synergy.api.KeyStore;
-import io.github.portlek.synergy.api.SimpleKeyStore;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import java.util.Locale;
 import java.util.ResourceBundle;
@@ -44,7 +43,7 @@ public final class ClientConfig implements ConfigHolder {
   /**
    * the key store.
    */
-  public static SimpleKeyStore key = new SimpleKeyStore("default-client-id", "client", "default-client-password");
+  public static KeyStore key = new KeyStore.Impl("default-client-id", "client", "default-client-password");
 
   /**
    * the client's language.
