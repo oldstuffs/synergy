@@ -60,7 +60,7 @@
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-javadoc-plugin</artifactId>
-        <version>3.2.0</version>
+        <version>${maven-javadoc.version}</version>
         <configuration>
           <source>${java.version}</source>
           <failOnError>true</failOnError>
@@ -102,6 +102,7 @@
     <dependency>
       <groupId>org.cactoos</groupId>
       <artifactId>cactoos</artifactId>
+      <scope>compile</scope>
     </dependency>
   </dependencies>
   <profiles>
@@ -111,12 +112,12 @@
           <plugin>
             <groupId>org.apache.maven.plugins</groupId>
             <artifactId>maven-checkstyle-plugin</artifactId>
-            <version>3.1.2</version>
+            <version>${maven-checkstyle.version}</version>
             <dependencies>
               <dependency>
                 <groupId>com.puppycrawl.tools</groupId>
                 <artifactId>checkstyle</artifactId>
-                <version>8.42</version>
+                <version>${checkstyle.version}</version>
               </dependency>
             </dependencies>
             <executions>
