@@ -29,36 +29,36 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.github.portlek</groupId>
-    <artifactId>synergy</artifactId>
+    <artifactId>Synergy</artifactId>
     <version>1.0.0-SNAPSHOT</version>
   </parent>
   <groupId>io.github.portlek.synergy</groupId>
-  <artifactId>core</artifactId>
+  <artifactId>Core</artifactId>
   <name>Core</name>
   <dependencies>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>api</artifactId>
+      <artifactId>Api</artifactId>
     </dependency>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>log</artifactId>
+      <artifactId>Log</artifactId>
     </dependency>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>netty</artifactId>
+      <artifactId>Netty</artifactId>
     </dependency>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>proto</artifactId>
+      <artifactId>Proto</artifactId>
     </dependency>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>languages</artifactId>
+      <artifactId>Languages</artifactId>
     </dependency>
     <dependency>
       <groupId>io.github.portlek.synergy</groupId>
-      <artifactId>console</artifactId>
+      <artifactId>Console</artifactId>
     </dependency>
     <dependency>
       <groupId>com.google.guava</groupId>
