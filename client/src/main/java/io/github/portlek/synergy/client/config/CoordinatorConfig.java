@@ -29,7 +29,7 @@ import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
 import io.github.portlek.configs.configuration.ConfigurationSection;
 import io.github.portlek.configs.json.JsonType;
-import io.github.portlek.synergy.api.SimpleKeyStore;
+import io.github.portlek.synergy.api.KeyStore;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.net.InetSocketAddress;
@@ -60,7 +60,7 @@ public final class CoordinatorConfig implements ConfigHolder {
   /**
    * the key.
    */
-  public static SimpleKeyStore key = new SimpleKeyStore(UUID.randomUUID().toString(), UUID.randomUUID().toString(),
+  public static KeyStore key = new KeyStore.Impl(UUID.randomUUID().toString(), UUID.randomUUID().toString(),
     UUID.randomUUID().toString());
 
   /**
@@ -93,13 +93,13 @@ public final class CoordinatorConfig implements ConfigHolder {
    * @param resources the resources to load.
    */
   public static void load(@Nullable final InetSocketAddress address, @Nullable final String[] attributes,
-                          @Nullable final SimpleKeyStore key, @Nullable final Map<String, Integer> resources) {
+                          @Nullable final KeyStore.Impl key, @Nullable final Map<String, Integer> resources) {
     ConfigLoader.builder()
       .setConfigHolder(new CoordinatorConfig())
       .setConfigType(JsonType.get())
       .setFileName("coordinator")
       .setFolder(SystemUtils.getHomePath())
-      .addLoaders(SimpleKeyStore.Loader.INSTANCE)
+      .addLoaders(KeyStore.Loader.INSTANCE)
       .build()
       .load(true);
     var saveNeeded = CoordinatorConfig.loadAddress(address);
@@ -156,7 +156,7 @@ public final class CoordinatorConfig implements ConfigHolder {
    *
    * @return {@code true} if the save is needed.
    */
-  private static boolean loadKey(@Nullable final SimpleKeyStore key) {
+  private static boolean loadKey(@Nullable final KeyStore key) {
     final var finalKey = Objects.isNull(key)
       ? CoordinatorConfig.key
       : key;

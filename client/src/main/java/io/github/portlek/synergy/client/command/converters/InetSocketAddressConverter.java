@@ -23,24 +23,25 @@
  *
  */
 
-package io.github.portlek.synergy.client.command;
+package io.github.portlek.synergy.client.command.converters;
 
-import java.util.Locale;
-import org.jetbrains.annotations.Nullable;
+import java.net.InetSocketAddress;
 import picocli.CommandLine;
 
 /**
- * a class that converts user's inputs into locale.
+ * a class that converts user's inputs into inet socket address.
  */
-public final class LocaleConverter implements CommandLine.ITypeConverter<Locale> {
+public final class InetSocketAddressConverter implements CommandLine.ITypeConverter<InetSocketAddress> {
 
-  @Nullable
   @Override
-  public Locale convert(final String value) {
-    final var split = value.trim().replace("-", "_").split("_");
-    if (split.length != 2) {
-      return null;
+  public InetSocketAddress convert(final String value) {
+    final var position = value.lastIndexOf(':');
+    if (position < 0) {
+      throw new CommandLine.TypeConversionException(String.format("Invalid format: must be 'host:port' but was '%s'",
+        value));
     }
-    return new Locale(split[0].toLowerCase(Locale.ROOT), split[1].toUpperCase(Locale.ROOT));
+    final var address = value.substring(0, position);
+    final var port = Integer.parseInt(value.substring(position + 1));
+    return new InetSocketAddress(address, port);
   }
 }
