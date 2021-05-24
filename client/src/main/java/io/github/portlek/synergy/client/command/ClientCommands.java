@@ -25,7 +25,7 @@
 
 package io.github.portlek.synergy.client.command;
 
-import io.github.portlek.synergy.api.SimpleKeyStore;
+import io.github.portlek.synergy.api.KeyStore;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.client.config.CoordinatorConfig;
 import io.github.portlek.synergy.client.config.NetworkConfig;
@@ -67,7 +67,7 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
   /**
    * the client language.
    */
-  @CommandLine.Option(names = {"-l", "--lang"}, description = "Client language.", converter = LocaleConverter.class)
+  @CommandLine.Option(names = {"-l", "--lang"}, description = "Client language.")
   @Nullable
   private Locale lang;
 
@@ -107,9 +107,9 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
     name = "coordinator"
   )
   void coordinator(
-    @CommandLine.Option(names = "--address", description = "Coordinator address to connect.", converter = InetSocketAddressConverter.class) final InetSocketAddress address,
+    @CommandLine.Option(names = "--address", description = "Coordinator address to connect.") final InetSocketAddress address,
     @CommandLine.Option(names = "--attributes", description = "Coordinator attributes.") final String[] attributes,
-    @CommandLine.Option(names = "--key", description = "Coordinator key.") final SimpleKeyStore key,
+    @CommandLine.Option(names = "--key", description = "Coordinator key.") final KeyStore.Impl key,
     @CommandLine.Option(names = "--resources", description = "Coordinator resources.") final Map<String, Integer> resources
   ) {
     this.run();
@@ -131,12 +131,15 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
   )
   void network(
     @CommandLine.Option(names = "--address", description = "Network address to bind.") final InetSocketAddress address,
-    @CommandLine.Option(names = "--coordinators", description = "Network's coordinators.") final List<SimpleKeyStore> coordinators,
+    @CommandLine.Option(names = "--coordinators", description = "Network's coordinators.") final List<KeyStore.Impl> coordinators,
     @CommandLine.Option(names = "--id", description = "Network id.") final String id,
     @CommandLine.Option(names = "--name", description = "Network name.") final String name
   ) {
     this.run();
-    NetworkConfig.load(address, coordinators, id, name);
+    final var pool = coordinators == null
+      ? null
+      : new KeyStore.Pool(coordinators);
+    NetworkConfig.load(address, pool, id, name);
     SynergyNetwork.start(NetworkConfig.address, NetworkConfig.coordinators, NetworkConfig.id, NetworkConfig.name);
   }
 }

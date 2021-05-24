@@ -11,7 +11,7 @@
           <option name="goals">
             <list>
               <option value="clean"/>
-              <option value="install"/>
+              <option value="package"/>
               <option value="-Pcheckstyle"/>
               <option value="-T"/>
               <option value="6"/>

@@ -26,10 +26,13 @@
 package io.github.portlek.synergy.client;
 
 import io.github.portlek.synergy.client.command.ClientCommands;
+import io.github.portlek.synergy.client.command.converters.InetSocketAddressConverter;
+import io.github.portlek.synergy.client.command.converters.LocaleConverter;
 import io.github.portlek.synergy.client.config.ClientConfig;
 import io.github.portlek.synergy.core.config.SynergyConfig;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import io.github.portlek.synergy.languages.Languages;
+import java.net.InetSocketAddress;
 import java.nio.file.Path;
 import java.util.Arrays;
 import java.util.Locale;
@@ -93,7 +96,10 @@ public final class Bootstrap {
     SynergyConfig.load();
     System.setProperty("io.netty.tryReflectionSetAccessible", "true");
     Bootstrap.disableWarning();
-    final var exitCode = new CommandLine(ClientCommands.class).execute(args);
+    final var exitCode = new CommandLine(ClientCommands.class)
+      .registerConverter(InetSocketAddress.class, new InetSocketAddressConverter())
+      .registerConverter(Locale.class, new LocaleConverter())
+      .execute(args);
     if (exitCode == -1) {
       Languages.init(ClientConfig.getLanguageBundle());
     }

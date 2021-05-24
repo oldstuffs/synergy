@@ -47,7 +47,6 @@ import io.github.portlek.synergy.proto.Protocols;
 import io.netty.channel.Channel;
 import io.netty.channel.socket.nio.NioSocketChannel;
 import java.net.InetSocketAddress;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -90,15 +89,14 @@ public final class SynergyNetwork extends BaseSynergy implements Network {
    * starts a network instance.
    *
    * @param address the address to start.
-   * @param coordinators the coordinators to start.
+   * @param pool the pool to start.
    * @param id the id to start.
    * @param name the name to start.
    */
-  public static void start(@NotNull final InetSocketAddress address,
-                           @NotNull final List<? extends KeyStore> coordinators, @NotNull final String id,
-                           @NotNull final String name) {
+  public static void start(@NotNull final InetSocketAddress address, @NotNull final KeyStore.Pool pool,
+                           @NotNull final String id, @NotNull final String name) {
     final var coordinatorMap = new ConcurrentHashMap<String, Coordinator>();
-    coordinators.stream()
+    pool.getKeyStores().stream()
       .map(SimpleCoordinator::new)
       .forEach(coordinator -> coordinatorMap.put(coordinator.getId(), coordinator));
     final var network = new SynergyNetwork(address, new SimpleNetwork(coordinatorMap, id, name));

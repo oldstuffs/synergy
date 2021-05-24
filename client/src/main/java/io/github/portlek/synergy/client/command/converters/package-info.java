@@ -22,26 +22,7 @@
  * SOFTWARE.
  *
  */
-
-package io.github.portlek.synergy.client.command;
-
-import java.net.InetSocketAddress;
-import picocli.CommandLine;
-
 /**
- * a class that converts user's inputs into inet socket address.
+ * the package that contains client's custom argument converters.
  */
-public final class InetSocketAddressConverter implements CommandLine.ITypeConverter<InetSocketAddress> {
-
-  @Override
-  public InetSocketAddress convert(final String value) {
-    final var position = value.lastIndexOf(':');
-    if (position < 0) {
-      throw new CommandLine.TypeConversionException(String.format("Invalid format: must be 'host:port' but was '%s'",
-        value));
-    }
-    final var address = value.substring(0, position);
-    final var port = Integer.parseInt(value.substring(position + 1));
-    return new InetSocketAddress(address, port);
-  }
-}
+package io.github.portlek.synergy.client.command.converters;

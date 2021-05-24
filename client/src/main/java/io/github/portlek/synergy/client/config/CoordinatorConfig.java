@@ -29,7 +29,7 @@ import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.ConfigLoader;
 import io.github.portlek.configs.configuration.ConfigurationSection;
 import io.github.portlek.configs.json.JsonType;
-import io.github.portlek.synergy.api.SimpleKeyStore;
+import io.github.portlek.synergy.api.KeyStore;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.net.InetSocketAddress;
@@ -60,7 +60,7 @@ public final class CoordinatorConfig implements ConfigHolder {
   /**
    * the key.
    */
-  public static SimpleKeyStore key = new SimpleKeyStore(UUID.randomUUID().toString(), UUID.randomUUID().toString(),
+  public static KeyStore key = new KeyStore.Impl(UUID.randomUUID().toString(), UUID.randomUUID().toString(),
     UUID.randomUUID().toString());
 
   /**
@@ -93,13 +93,13 @@ public final class CoordinatorConfig implements ConfigHolder {
    * @param resources the resources to load.
    */
   public static void load(@Nullable final InetSocketAddress address, @Nullable final String[] attributes,
-                          @Nullable final SimpleKeyStore key, @Nullable final Map<String, Integer> resources) {
+                          @Nullable final KeyStore.Impl key, @Nullable final Map<String, Integer> resources) {
     ConfigLoader.builder()
       .setConfigHolder(new CoordinatorConfig())
       .setConfigType(JsonType.get())
       .setFileName("coordinator")
       .setFolder(SystemUtils.getHomePath())
-      .addLoaders(SimpleKeyStore.Loader.INSTANCE)
+      .addLoaders(KeyStore.Loader.INSTANCE)
       .build()
       .load(true);
     var saveNeeded = CoordinatorConfig.loadAddress(address);
@@ -119,15 +119,12 @@ public final class CoordinatorConfig implements ConfigHolder {
    * @return {@code true} if the save is needed.
    */
   private static boolean loadAddress(@Nullable final InetSocketAddress address) {
-    final var finalAddress = Objects.isNull(address)
-      ? CoordinatorConfig.address
-      : address;
-    if (!CoordinatorConfig.address.equals(finalAddress)) {
-      CoordinatorConfig.address = finalAddress;
-      CoordinatorConfig.section.set("address", finalAddress);
-      return true;
+    if (address == null) {
+      return false;
     }
-    return false;
+    CoordinatorConfig.address = address;
+    CoordinatorConfig.section.set("address", address);
+    return true;
   }
 
   /**
@@ -138,15 +135,12 @@ public final class CoordinatorConfig implements ConfigHolder {
    * @return {@code true} if the save is needed.
    */
   private static boolean loadAttributes(@Nullable final String[] attributes) {
-    final var finalAttributes = Objects.isNull(attributes)
-      ? CoordinatorConfig.attributes
-      : List.of(attributes);
-    if (!CoordinatorConfig.attributes.equals(finalAttributes)) {
-      CoordinatorConfig.attributes = finalAttributes;
-      CoordinatorConfig.section.set("attributes", finalAttributes);
-      return true;
+    if (attributes == null) {
+      return false;
     }
-    return false;
+    CoordinatorConfig.attributes = List.of(attributes);
+    CoordinatorConfig.section.set("attributes", attributes);
+    return true;
   }
 
   /**
@@ -156,16 +150,13 @@ public final class CoordinatorConfig implements ConfigHolder {
    *
    * @return {@code true} if the save is needed.
    */
-  private static boolean loadKey(@Nullable final SimpleKeyStore key) {
-    final var finalKey = Objects.isNull(key)
-      ? CoordinatorConfig.key
-      : key;
-    if (!CoordinatorConfig.key.equals(finalKey)) {
-      CoordinatorConfig.key = finalKey;
-      CoordinatorConfig.section.set("password", finalKey);
-      return true;
+  private static boolean loadKey(@Nullable final KeyStore key) {
+    if (key == null) {
+      return false;
     }
-    return false;
+    CoordinatorConfig.key = key;
+    CoordinatorConfig.section.set("password", key);
+    return true;
   }
 
   /**
@@ -176,14 +167,11 @@ public final class CoordinatorConfig implements ConfigHolder {
    * @return {@code true} if the save is needed.
    */
   private static boolean loadResources(@Nullable final Map<String, Integer> resources) {
-    final var finalResources = Objects.isNull(resources)
-      ? CoordinatorConfig.resources
-      : resources;
-    if (CoordinatorConfig.resources != finalResources) {
-      CoordinatorConfig.resources = finalResources;
-      CoordinatorConfig.section.set("resources", finalResources);
-      return true;
+    if (resources == null) {
+      return false;
     }
-    return false;
+    CoordinatorConfig.resources = resources;
+    CoordinatorConfig.section.set("resources", resources);
+    return true;
   }
 }

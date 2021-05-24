@@ -23,7 +23,7 @@
  *
  */
 
-package io.github.portlek.synergy.client.command;
+package io.github.portlek.synergy.client.command.converters;
 
 import java.util.Locale;
 import org.jetbrains.annotations.Nullable;
