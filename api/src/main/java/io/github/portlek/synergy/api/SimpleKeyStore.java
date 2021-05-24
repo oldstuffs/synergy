@@ -98,7 +98,7 @@ public final class SimpleKeyStore implements KeyStore, DataSerializer {
     /**
      * ctor.
      *
-     * @param holder the holdeeer.
+     * @param holder the holder.
      * @param section the section.
      */
     private Loader(@NotNull final ConfigHolder holder, @NotNull final ConfigurationSection section) {
