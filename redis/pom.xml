@@ -13,8 +13,9 @@
   <name>Redis</name>
   <dependencies>
     <dependency>
-      <groupId>redis.clients</groupId>
-      <artifactId>jedis</artifactId>
+      <groupId>io.lettuce</groupId>
+      <artifactId>lettuce-core</artifactId>
+      <version>6.1.2.RELEASE</version>
     </dependency>
   </dependencies>
 </project>
