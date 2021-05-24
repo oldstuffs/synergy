@@ -33,7 +33,6 @@ import io.github.portlek.synergy.core.SynergyCoordinator;
 import io.github.portlek.synergy.core.SynergyNetwork;
 import io.github.portlek.synergy.languages.Languages;
 import java.net.InetSocketAddress;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -137,7 +136,9 @@ public final class ClientCommands implements Runnable, CommandLine.IExitCodeGene
     @CommandLine.Option(names = "--name", description = "Network name.") final String name
   ) {
     this.run();
-    final var pool = new KeyStore.Pool(coordinators == null ? Collections.emptyList() : coordinators);
+    final var pool = coordinators == null
+      ? null
+      : new KeyStore.Pool(coordinators);
     NetworkConfig.load(address, pool, id, name);
     SynergyNetwork.start(NetworkConfig.address, NetworkConfig.coordinators, NetworkConfig.id, NetworkConfig.name);
   }

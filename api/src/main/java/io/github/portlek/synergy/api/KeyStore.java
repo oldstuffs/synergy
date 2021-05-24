@@ -141,6 +141,7 @@ public interface KeyStore extends Id, Named, DataSerializer {
    * an interface to determine pool of key stores.
    */
   @ToString
+  @EqualsAndHashCode
   @RequiredArgsConstructor
   final class Pool {
 
