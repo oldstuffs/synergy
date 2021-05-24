@@ -18,7 +18,6 @@
   </properties>
   <modules>
     <module>proto</module>
-    <module>pulsar</module>
     <module>client</module>
     <module>core</module>
     <module>minecraft</module>
