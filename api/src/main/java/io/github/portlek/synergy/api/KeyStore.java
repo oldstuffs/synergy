@@ -36,8 +36,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
+import lombok.ToString;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -83,6 +85,8 @@ public interface KeyStore extends Id, Named, DataSerializer {
    * a simple implementation of {@link KeyStore}.
    */
   @Getter
+  @ToString
+  @EqualsAndHashCode
   @RequiredArgsConstructor
   final class Impl implements KeyStore {
 
@@ -136,6 +140,7 @@ public interface KeyStore extends Id, Named, DataSerializer {
   /**
    * an interface to determine pool of key stores.
    */
+  @ToString
   @RequiredArgsConstructor
   final class Pool {
 
@@ -163,7 +168,7 @@ public interface KeyStore extends Id, Named, DataSerializer {
       /**
        * the instance.
        */
-      public static final FieldLoader.Func INSTANCE = Loader::new;
+      public static final Func INSTANCE = Loader::new;
 
       /**
        * ctor.
@@ -172,7 +177,7 @@ public interface KeyStore extends Id, Named, DataSerializer {
        * @param section the section.
        */
       private Loader(@NotNull final ConfigHolder holder, @NotNull final ConfigurationSection section) {
-        super(holder, section, KeyStore.Pool.class);
+        super(holder, section, Pool.class);
       }
 
       @NotNull
@@ -191,15 +196,9 @@ public interface KeyStore extends Id, Named, DataSerializer {
 
       @NotNull
       @Override
-      public Optional<Pool> toFinal(@NotNull final ConfigurationSection section, @NotNull final String path,
-                                    @Nullable final KeyStore.Pool fieldValue) {
-        return Optional.of(new Pool(section.getMapList(path).stream()
-          .map(map -> {
-            final var finalMap = new HashMap<String, Object>();
-            map.forEach((o, o2) ->
-              finalMap.put(String.valueOf(o), o2));
-            return finalMap;
-          })
+      public Optional<Pool> toFinal(@NotNull final List<Map<String, Object>> rawValue,
+                                    @Nullable final Pool fieldValue) {
+        return Optional.of(new Pool(rawValue.stream()
           .map(map -> new Impl(
             (String) map.get("id"),
             (String) map.get("name"),
@@ -210,13 +209,12 @@ public interface KeyStore extends Id, Named, DataSerializer {
       @NotNull
       @Override
       public Optional<List<Map<String, Object>>> toRaw(@NotNull final Pool finalValue) {
-        final var collect = finalValue.getKeyStores().stream()
-          .map(keyStore -> Map.of(
-            "id", (Object) keyStore.getId(),
+        return Optional.of(finalValue.getKeyStores().stream()
+          .map(keyStore -> Map.<String, Object>of(
+            "id", keyStore.getId(),
             "name", keyStore.getName(),
             "password", keyStore.getPassword()))
-          .collect(Collectors.toList());
-        return Optional.of(collect);
+          .collect(Collectors.toList()));
       }
     }
   }
