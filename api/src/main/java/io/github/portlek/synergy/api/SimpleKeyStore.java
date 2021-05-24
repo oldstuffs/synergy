@@ -25,11 +25,11 @@
 
 package io.github.portlek.synergy.api;
 
+import io.github.portlek.configs.ConfigHolder;
 import io.github.portlek.configs.configuration.ConfigurationSection;
 import io.github.portlek.configs.loaders.DataSerializer;
 import io.github.portlek.configs.loaders.SectionFieldLoader;
 import java.util.Optional;
-import java.util.function.Supplier;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import org.jetbrains.annotations.NotNull;
@@ -93,20 +93,23 @@ public final class SimpleKeyStore implements KeyStore, DataSerializer {
     /**
      * the instance.
      */
-    public static final Supplier<Loader> INSTANCE = Loader::new;
+    public static final Func INSTANCE = Loader::new;
 
     /**
      * ctor.
+     *
+     * @param holder the holdeeer.
+     * @param section the section.
      */
-    private Loader() {
-      super(KeyStore.class);
+    private Loader(@NotNull final ConfigHolder holder, @NotNull final ConfigurationSection section) {
+      super(holder, section, KeyStore.class);
     }
 
     @NotNull
     @Override
-    public Optional<KeyStore> toFinal(@NotNull final ConfigurationSection section,
+    public Optional<KeyStore> toFinal(@NotNull final ConfigurationSection section, @NotNull final String path,
                                       @Nullable final KeyStore fieldValue) {
-      return SimpleKeyStore.deserialize(section);
+      return SimpleKeyStore.deserialize(section.getSectionOrCreate(path));
     }
   }
 }
