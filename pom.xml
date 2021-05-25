@@ -14,7 +14,7 @@
   <name>Synergy</name>
   <packaging>pom</packaging>
   <properties>
-    <java.version>16</java.version>
+    <java.version>15</java.version>
   </properties>
   <modules>
     <module>proto</module>
