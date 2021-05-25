@@ -140,6 +140,7 @@ public interface KeyStore extends Id, Named, DataSerializer {
   /**
    * an interface to determine pool of key stores.
    */
+  @Getter
   @ToString
   @EqualsAndHashCode
   @RequiredArgsConstructor
@@ -149,7 +150,6 @@ public interface KeyStore extends Id, Named, DataSerializer {
      * the key stores.
      */
     @NotNull
-    @Getter
     private final List<Impl> keyStores;
 
     /**
