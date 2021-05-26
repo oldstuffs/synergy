@@ -49,18 +49,6 @@ import sun.misc.Unsafe;
 public final class Bootstrap {
 
   /**
-   * the home.
-   */
-  @NotNull
-  public static final String HOME = SystemUtils.getHome();
-
-  /**
-   * the home path.
-   */
-  @NotNull
-  public static final Path HOME_PATH = Path.of(Bootstrap.HOME);
-
-  /**
    * the synergy client version.
    */
   public static final String VERSION = "1.0.0-SNAPSHOT";
@@ -68,16 +56,28 @@ public final class Bootstrap {
   /**
    * the ascii art for Synergy Client text.
    */
-  private static final String ART = "" +
-    " ▄█▀▀▀█▄█                                                       \n" +
-    "▄██    ▀█                                                       \n" +
-    "▀███▄   ▀██▀   ▀██▀████████▄   ▄▄█▀██▀███▄███ ▄█▀███████▀   ▀██▀\n" +
-    "  ▀█████▄ ██   ▄█   ██    ██  ▄█▀   ██ ██▀ ▀▀▄██  ██   ██   ▄█  \n" +
-    "▄     ▀██  ██ ▄█    ██    ██  ██▀▀▀▀▀▀ ██    ▀█████▀    ██ ▄█   \n" +
-    "██     ██   ███     ██    ██  ██▄    ▄ ██    ██          ███    \n" +
-    "█▀█████▀    ▄█    ▄████  ████▄ ▀█████▀████▄   ███████    ▄█     \n" +
-    "          ▄█                                 █▀     ██ ▄█       \n" +
-    "        ██▀                                  ██████▀ ██▀        ";
+  private static final String ART = """
+     ▄█▀▀▀█▄█                                                      \s
+    ▄██    ▀█                                                      \s
+    ▀███▄   ▀██▀   ▀██▀████████▄   ▄▄█▀██▀███▄███ ▄█▀███████▀   ▀██▀
+      ▀█████▄ ██   ▄█   ██    ██  ▄█▀   ██ ██▀ ▀▀▄██  ██   ██   ▄█ \s
+    ▄     ▀██  ██ ▄█    ██    ██  ██▀▀▀▀▀▀ ██    ▀█████▀    ██ ▄█  \s
+    ██     ██   ███     ██    ██  ██▄    ▄ ██    ██          ███   \s
+    █▀█████▀    ▄█    ▄████  ████▄ ▀█████▀████▄   ███████    ▄█    \s
+              ▄█                                 █▀     ██ ▄█      \s
+            ██▀                                  ██████▀ ██▀       \s""";
+
+  /**
+   * the home.
+   */
+  @NotNull
+  private static final String HOME = SystemUtils.getHome();
+
+  /**
+   * the home path.
+   */
+  @NotNull
+  private static final Path HOME_PATH = Path.of(Bootstrap.HOME);
 
   /**
    * ctor.
