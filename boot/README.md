@@ -1,4 +1,4 @@
-# boot project
+# Boot project
 
 This project uses Quarkus, the Supersonic Subatomic Java Framework.
 
