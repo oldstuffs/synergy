@@ -33,7 +33,6 @@ import io.github.portlek.synergy.api.KeyStore;
 import io.github.portlek.synergy.core.util.SystemUtils;
 import java.net.InetSocketAddress;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import java.util.stream.Collectors;
 import org.jetbrains.annotations.Nullable;
