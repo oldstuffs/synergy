@@ -35,7 +35,6 @@ import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import java.net.InetSocketAddress;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.UUID;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
