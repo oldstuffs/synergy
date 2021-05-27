@@ -137,7 +137,7 @@ public final class SimpleTransactionManager implements TransactionManager {
   public void receive(@NotNull final Protocol.Transaction message, @Nullable final String from) {
     final Optional<TransactionInfo> transactionInfo;
     switch (message.getMode()) {
-      case CREATE:
+      case CREATE -> {
         if (this.transactions.containsKey(message.getId())) {
           SimpleTransactionManager.log.error(Languages.getLanguageValue("received-create-already-exists"),
             message.getId());
@@ -148,13 +148,13 @@ public final class SimpleTransactionManager implements TransactionManager {
         info0.setTarget(from);
         this.transactions.put(message.getId(), info0);
         transactionInfo = Optional.of(info0);
-        break;
-      case SINGLE:
+      }
+      case SINGLE -> {
         final var info1 = new SimpleTransactionInfo();
         info1.setDone(true);
         transactionInfo = Optional.of(info1);
-        break;
-      case CONTINUE:
+      }
+      case CONTINUE -> {
         final var info2 = this.getTransactionInfo(message.getId());
         if (info2.isEmpty()) {
           SimpleTransactionManager.log.error(Languages.getLanguageValue("received-continue-does-not-exist",
@@ -164,8 +164,8 @@ public final class SimpleTransactionManager implements TransactionManager {
         final var info3 = info2.get();
         info3.getListener().ifPresent(listener -> listener.onReceive(this, info3, message));
         transactionInfo = Optional.of(info3);
-        break;
-      case COMPLETE:
+      }
+      case COMPLETE -> {
         final var info4 = this.getTransactionInfo(message.getId());
         if (info4.isEmpty()) {
           SimpleTransactionManager.log.error(Languages.getLanguageValue("received-complete-does-not-exist"),
@@ -181,10 +181,8 @@ public final class SimpleTransactionManager implements TransactionManager {
           return;
         }
         transactionInfo = Optional.of(info5);
-        break;
-      default:
-        transactionInfo = Optional.empty();
-        break;
+      }
+      default -> transactionInfo = Optional.empty();
     }
     transactionInfo.ifPresent(info ->
       this.synergy.process(message.getPayload(), info, from));
